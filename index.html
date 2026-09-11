@@ -263,7 +263,6 @@
 
     // HELPER: Función para Compartir Invitación por WhatsApp (Mantiene los husos horarios específicos)
     function shareTableInvitation(elementId, tableName, platform, utcISO, playersCount, discord) {
-      // 1. Formatear horarios para el mensaje de WhatsApp
       const date = new Date(utcISO);
       const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
       const optionsDate = { weekday: 'short', month: 'short', day: 'numeric' };
@@ -272,10 +271,8 @@
       const timeEsp = `${date.toLocaleTimeString('es-ES', { ...optionsTime, timeZone: 'Europe/Madrid' })} (${date.toLocaleDateString('es-ES', { ...optionsDate, timeZone: 'Europe/Madrid' })})`;
       const timeChi = `${date.toLocaleTimeString('es-CL', { ...optionsTime, timeZone: 'America/Santiago' })} (${date.toLocaleDateString('es-CL', { ...optionsDate, timeZone: 'America/Santiago' })})`;
 
-      // 2. Obtener URL actual del sitio
       const siteUrl = window.location.href.split('#')[0];
 
-      // 3. Crear mensaje formateado
       let msg = `🦇 *¡INVITACIÓN A MESA DE VTES!* 🦇\n\n`;
       msg += `⚔️ *Mesa:* ${tableName}\n`;
       msg += `💻 *Plataforma:* ${platform}\n`;
@@ -324,87 +321,107 @@
       renderAll(currentGlobalData);
     });
 
-    // Guardar disponibilidad individual
-    document.getElementById('availabilityForm').addEventListener('submit', (e) => {
+    // Guardar disponibilidad individual (Corregido)
+    document.getElementById('availabilityForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const nick = document.getElementById('playerNick').value.trim();
-      const localInput = document.getElementById('localDateTime').value;
-      const platform = document.getElementById('playerPlatform').value;
-      const deletePin = document.getElementById('playerDeletePin').value.trim();
+      try {
+        const nick = document.getElementById('playerNick').value.trim();
+        const localInput = document.getElementById('localDateTime').value;
+        const platform = document.getElementById('playerPlatform').value;
+        const deletePin = document.getElementById('playerDeletePin').value.trim();
 
-      if (!localInput) return alert('Selecciona una fecha y hora.');
+        if (!localInput) return alert('Selecciona una fecha y hora.');
 
-      const selectedDate = new Date(localInput.replace(' ', 'T'));
-      if (selectedDate.getTime() < Date.now()) {
-        return alert('❌ Error: No puedes registrar un horario en el pasado. Por favor selecciona una fecha y hora futura.');
+        // Parseo seguro de fecha
+        const selectedDate = new Date(localInput.includes('T') ? localInput : localInput.replace(' ', 'T'));
+        if (isNaN(selectedDate.getTime())) {
+          return alert('❌ Formato de fecha/hora inválido. Vuelve a seleccionar la fecha del calendario.');
+        }
+
+        if (selectedDate.getTime() < Date.now()) {
+          return alert('❌ Error: No puedes registrar un horario en el pasado. Por favor selecciona una fecha y hora futura.');
+        }
+
+        const utcISO = selectedDate.toISOString();
+        const isDuplicate = currentGlobalData.some(item => {
+          return (item.type === 'individual' || !item.type) &&
+                 item.nick.toLowerCase() === nick.toLowerCase() &&
+                 item.utcTime === utcISO;
+        });
+
+        if (isDuplicate) {
+          return alert(`El jugador "${nick}" ya tiene una disponibilidad registrada para esta misma fecha y hora.`);
+        }
+
+        const newRef = recordsRef.push();
+        const newId = newRef.key;
+
+        localStorage.setItem(`vtes_owner_${newId}`, nick.toLowerCase());
+
+        await newRef.set({
+          type: 'individual',
+          nick: nick,
+          platform: platform,
+          utcTime: utcISO,
+          deletePin: deletePin,
+          originTz: userTimezone
+        });
+
+        document.getElementById('availabilityForm').reset();
+        if (pickerAvailability) pickerAvailability.clear();
+      } catch (err) {
+        console.error('Error al guardar disponibilidad:', err);
+        alert('❌ Ocurrió un error al guardar en Firebase: ' + err.message);
       }
-
-      const utcISO = selectedDate.toISOString();
-      const isDuplicate = currentGlobalData.some(item => {
-        return (item.type === 'individual' || !item.type) &&
-               item.nick.toLowerCase() === nick.toLowerCase() &&
-               item.utcTime === utcISO;
-      });
-
-      if (isDuplicate) {
-        return alert(`El jugador "${nick}" ya tiene una disponibilidad registrada para esta misma fecha y hora.`);
-      }
-
-      const newRef = recordsRef.push();
-      const newId = newRef.key;
-
-      localStorage.setItem(`vtes_owner_${newId}`, nick.toLowerCase());
-
-      newRef.set({
-        type: 'individual',
-        nick: nick,
-        platform: platform,
-        utcTime: utcISO,
-        deletePin: deletePin,
-        originTz: userTimezone
-      });
-
-      document.getElementById('availabilityForm').reset();
-      pickerAvailability.clear();
     });
 
-    // Abrir una Mesa de Juego
-    document.getElementById('customTableForm').addEventListener('submit', (e) => {
+    // Abrir una Mesa de Juego (Corregido)
+    document.getElementById('customTableForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('tableName').value.trim();
-      const localInput = document.getElementById('tableDateTime').value;
-      const creator = document.getElementById('tableCreator').value.trim();
-      const platform = document.getElementById('tablePlatform').value;
-      const discord = document.getElementById('tableDiscord').value.trim();
-      const gamePassword = document.getElementById('tableGamePassword').value.trim();
-      const deletePin = document.getElementById('tableDeletePin').value.trim();
+      try {
+        const name = document.getElementById('tableName').value.trim();
+        const localInput = document.getElementById('tableDateTime').value;
+        const creator = document.getElementById('tableCreator').value.trim();
+        const platform = document.getElementById('tablePlatform').value;
+        const discord = document.getElementById('tableDiscord').value.trim();
+        const gamePassword = document.getElementById('tableGamePassword').value.trim();
+        const deletePin = document.getElementById('tableDeletePin').value.trim();
 
-      if (!localInput) return alert('Selecciona una fecha y hora.');
+        if (!localInput) return alert('Selecciona una fecha y hora.');
 
-      const selectedDate = new Date(localInput.replace(' ', 'T'));
-      if (selectedDate.getTime() < Date.now()) {
-        return alert('❌ Error: No puedes crear una mesa en el pasado. Por favor selecciona una fecha y hora futura.');
+        // Parseo seguro de fecha
+        const selectedDate = new Date(localInput.includes('T') ? localInput : localInput.replace(' ', 'T'));
+        if (isNaN(selectedDate.getTime())) {
+          return alert('❌ Formato de fecha/hora inválido. Vuelve a seleccionar la fecha del calendario.');
+        }
+
+        if (selectedDate.getTime() < Date.now()) {
+          return alert('❌ Error: No puedes crear una mesa en el pasado. Por favor selecciona una fecha y hora futura.');
+        }
+
+        const newRef = recordsRef.push();
+        const newId = newRef.key;
+
+        localStorage.setItem(`vtes_owner_${newId}`, creator.toLowerCase());
+
+        await newRef.set({
+          type: 'custom_table',
+          name: name,
+          utcTime: selectedDate.toISOString(),
+          players: [creator],
+          platform: platform,
+          discord: discord || '',
+          gamePassword: gamePassword || '',
+          deletePin: deletePin,
+          originTz: userTimezone
+        });
+
+        document.getElementById('customTableForm').reset();
+        if (pickerCustomTable) pickerCustomTable.clear();
+      } catch (err) {
+        console.error('Error al crear la mesa:', err);
+        alert('❌ Ocurrió un error al guardar en Firebase: ' + err.message);
       }
-
-      const newRef = recordsRef.push();
-      const newId = newRef.key;
-
-      localStorage.setItem(`vtes_owner_${newId}`, creator.toLowerCase());
-
-      newRef.set({
-        type: 'custom_table',
-        name: name,
-        utcTime: selectedDate.toISOString(),
-        players: [creator],
-        platform: platform,
-        discord: discord || '',
-        gamePassword: gamePassword || '',
-        deletePin: deletePin,
-        originTz: userTimezone
-      });
-
-      document.getElementById('customTableForm').reset();
-      pickerCustomTable.clear();
     });
 
     function setAutoTablePassword(autoKey) {
@@ -453,10 +470,7 @@
         }
 
         players.push(cleanNick);
-        
-        // Guardamos en el navegador local que ESTE usuario se unió con este Nick
         localStorage.setItem(`vtes_joined_${tableId}_${cleanNick.toLowerCase()}`, cleanNick);
-
         tableRef.update({ players: players });
       });
     }
@@ -469,11 +483,8 @@
         const table = snapshot.val();
         let players = table.players || [];
 
-        // 1. Identificar si el usuario actual es el creador de la mesa
         const localOwnerKey = `vtes_owner_${tableId}`;
         const isCreator = !!localStorage.getItem(localOwnerKey);
-
-        // 2. Identificar si el usuario actual es el propio jugador
         const userJoinedAs = localStorage.getItem(`vtes_joined_${tableId}_${playerToRemove.toLowerCase()}`);
         const isSelf = !!userJoinedAs;
 
@@ -516,7 +527,6 @@
       if (el) el.classList.toggle('hidden');
     }
 
-    // ELIMINAR O CERRAR REGISTRO / MESA (LocalStorage + Confirmación + PIN Antiborrado)
     function deleteEntry(id) {
       const tableRef = db.ref(`vtes_records/${id}`);
 
