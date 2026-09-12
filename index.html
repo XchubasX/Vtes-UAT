@@ -236,7 +236,7 @@
     firebase.initializeApp(firebaseConfig);
 
     // ACTIVACIÓN DE APP CHECK CON RECAPTCHA V3
-    const RECAPTCHA_SITE_KEY = "6LfWd7YtAAAAAMg-IhiLw8ukgxp2ejhX-i7RaBl-"; // Reemplaza con la Clave de Sitio pública de Google reCAPTCHA
+    const RECAPTCHA_SITE_KEY = "6Lc2QLYtAAAAAHI6pH3gABXBdG4m2X1rPKmegI0P"; // Reemplaza con la Clave de Sitio pública de Google reCAPTCHA
     const appCheck = firebase.appCheck();
     appCheck.activate(
       new firebase.appCheck.ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),
