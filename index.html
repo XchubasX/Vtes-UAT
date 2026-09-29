@@ -297,11 +297,23 @@
       <div id="userTimezone" class="inline-block bg-zinc-800 border border-zinc-700 text-wine-400 text-xs px-3 py-1 rounded-full font-mono mt-2">
         Detectando tu zona horaria...
       </div>
-      <div id="authBar" class="text-xs text-zinc-400 pt-1"></div>
+      <div id="authBar" class="pt-2"></div>
     </header>
 
     <!-- MESAS Y EVENTOS: pestañas arriba, luego el botón para crear, luego la lista -->
     <section class="space-y-4">
+
+      <!-- AVISO DE BIENVENIDA AL INICIO DE SESIÓN (solo sin sesión, hasta que se cierre) -->
+      <div id="loginNotice" class="hidden bg-wine-950/60 border border-wine-600/60 rounded-xl p-4 flex flex-col md:flex-row md:items-center gap-3">
+        <div class="flex-1 space-y-1">
+          <p class="text-sm font-bold text-white">🔐 Novedad: para crear o unirte a una mesa, ahora entras con Google</p>
+          <p class="text-xs text-zinc-300">Ver las mesas y eventos sigue siendo libre. Nadie ve tu correo: la cuenta solo sirve para evitar abusos. Lo haces una sola vez en este dispositivo.</p>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <button type="button" onclick="requireLogin()" class="bg-white hover:bg-zinc-200 text-zinc-900 font-bold px-4 py-2 rounded-lg text-sm transition">Entrar con Google</button>
+          <button type="button" onclick="dismissLoginNotice()" class="text-zinc-300 hover:text-white border border-zinc-600 px-3 py-2 rounded-lg text-xs transition">Entendido</button>
+        </div>
+      </div>
 
       <!-- PESTAÑAS VIRTUAL / PRESENCIAL (controlan la lista y el formulario, con contador) -->
       <div class="flex gap-2 bg-zinc-800 p-1.5 rounded-xl border border-zinc-700">
@@ -538,17 +550,33 @@
       renderAll(currentGlobalData);
     });
 
+    // Aviso de bienvenida: se muestra sin sesión hasta que la persona lo
+    // cierra con "Entendido" (se recuerda solo en su navegador).
+    const LOGIN_NOTICE_KEY = 'vtes_login_notice_dismissed';
+    function loginNoticeDismissed() {
+      try { return localStorage.getItem(LOGIN_NOTICE_KEY) === '1'; } catch (e) { return false; }
+    }
+    function dismissLoginNotice() {
+      try { localStorage.setItem(LOGIN_NOTICE_KEY, '1'); } catch (e) { /* sin almacenamiento: solo se oculta ahora */ }
+      document.getElementById('loginNotice').classList.add('hidden');
+    }
+
     function renderAuthBar() {
       const bar = document.getElementById('authBar');
+      document.getElementById('loginNotice').classList.toggle('hidden', !!currentUser || loginNoticeDismissed());
       if (!currentUser) {
-        bar.innerHTML = `Ver las mesas es libre. Para crear o unirte: <button type="button" onclick="requireLogin()" class="text-wine-400 hover:text-wine-300 underline font-semibold">Entrar con Google</button>`;
+        bar.innerHTML = `<button type="button" onclick="requireLogin()" class="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-zinc-900 font-bold px-4 py-2 rounded-lg text-sm transition shadow-md">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+            Entrar con Google
+          </button>
+          <p class="text-[11px] text-zinc-500 mt-1">Ver es libre · para crear o unirte necesitas entrar</p>`;
         return;
       }
       const name = currentUser.displayName ? escapeHtml(currentUser.displayName) : 'tu cuenta de Google';
-      bar.innerHTML = `✅ Sesión iniciada: <span class="text-zinc-200">${name}</span>`
+      bar.innerHTML = `<p class="text-xs text-zinc-400">✅ Sesión iniciada: <span class="text-zinc-200">${name}</span>`
         + (isAdmin ? ' · <span class="text-amber-300 font-semibold">👑 Administrador</span>' : '')
         + (isBanned ? ' · <span class="text-red-400 font-semibold">🚫 Cuenta bloqueada</span>' : '')
-        + ` · <button type="button" onclick="signOutUser()" class="text-zinc-400 hover:text-white underline">Cerrar sesión</button>`;
+        + ` · <button type="button" onclick="signOutUser()" class="text-zinc-400 hover:text-white underline">Cerrar sesión</button></p>`;
     }
 
     function signOutUser() {
