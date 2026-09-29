@@ -6,216 +6,468 @@
   <title>VTES Matchmaking & Mesas Abiertas</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- EmailJS: envía el formulario de "Reportar bug / Sugerencia" directo a un correo,
+       sin guardar ningún dato en Firebase (ver botón flotante 💬 más abajo) -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            wine: {
+              50: '#fdf2f4', 100: '#fbe4e8', 200: '#f0c2cb', 300: '#d98fa0',
+              400: '#c05a72', 500: '#a8425a', 600: '#8c2f45', 700: '#6d2436',
+              800: '#551c2a', 900: '#3f141f', 950: '#2a0d15'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <!-- Flatpickr (Calendario) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
   <!-- Firebase App & Database SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <!-- Firebase App Check SDK (Compat) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <!-- Firebase App Check (protege la base de datos: solo funciona desde el dominio autorizado) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script>
   <!-- html2canvas para Screenshots (opcional) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen p-4 md:p-8 font-sans">
+<body class="bg-zinc-900 text-zinc-100 min-h-screen p-4 md:p-8 font-sans">
+<div style="background:#b45309;color:#fff;text-align:center;font:600 13px sans-serif;padding:6px;margin:0 0 8px">⚠️ SITIO DE PRUEBAS — los datos aquí no son reales</div>
+
+<!-- SELLO DARK PACK FLOTANTE (Esquina Inferior Izquierda) -->
+  <!-- BOTÓN FLOTANTE: REPORTAR BUG / SUGERENCIA -->
+  <button type="button" onclick="openFeedbackModal()" title="Reportar un bug o sugerencia" class="fixed bottom-4 right-4 z-40 bg-wine-600 hover:bg-wine-500 text-white rounded-full w-12 h-12 shadow-lg shadow-wine-900/40 flex items-center justify-center text-xl transition transform hover:scale-105">
+    💬
+  </button>
+
+  <!-- MODAL: ACERCA DE (botón "?" del encabezado) -->
+  <div id="aboutModal" onclick="if (event.target === this) closeAboutModal()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div role="dialog" aria-modal="true" aria-labelledby="aboutTitle" class="bg-zinc-800 border border-zinc-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between gap-3 border-b border-zinc-700 pb-3">
+        <h3 id="aboutTitle" class="text-lg font-bold text-wine-400">❓ Acerca de</h3>
+        <button type="button" onclick="closeAboutModal()" aria-label="Cerrar" class="text-zinc-400 hover:text-white text-xl leading-none px-2">✕</button>
+      </div>
+      <div class="space-y-4 text-sm text-zinc-300 leading-relaxed">
+        <section>
+          <h4 class="text-sm font-bold text-white mb-1">Acerca de VTES Scheduler</h4>
+          <p>VTES Scheduler es una herramienta gratuita, hecha por y para la comunidad de <em>Vampire: The Eternal Struggle</em>, para organizar partidas. Puedes abrir una mesa virtual y encontrar jugadores para completarla, o convocar un evento presencial en tu ciudad y ver quién va a llegar. No necesitas cuenta ni registro: solo tu nick.</p>
+        </section>
+        <section>
+          <h4 class="text-sm font-bold text-white mb-1">Cómo funciona</h4>
+          <p><strong>💻 Mesas virtuales</strong>: partidas en LackeyCCG o Succubus Club, de 4 a 5 jugadores.<br>
+          <strong>📍 Eventos presenciales</strong>: reuniones en una tienda o casa, sin límite de asistentes.<br>
+          Cambia entre las dos con las pestañas de arriba.</p>
+        </section>
+        <section>
+          <h4 class="text-sm font-bold text-white mb-1">Unirte</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Toca <strong>➕ ¡Unirme!</strong> o <strong>¡Confirmar asistencia!</strong> y escribe tu nick. En eventos puedes poner tu hora estimada de llegada.</li>
+            <li>Para salir, usa <strong>🚪 Salir</strong>.</li>
+            <li>Si una mesa virtual está llena, puedes apuntarte como <strong>⏳ suplente</strong> (hasta 3). Si alguien sale de la mesa, el primer suplente entra automáticamente en su lugar.</li>
+            <li>Si ya hay 3 suplentes, puedes <strong>➕ abrir otra mesa a la misma hora</strong>: se copian la hora, la plataforma y el formato.</li>
+          </ul>
+        </section>
+        <section>
+          <h4 class="text-sm font-bold text-white mb-1">Crear una mesa o evento</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Toca <strong>➕ Crear</strong>, llena los datos y elige un <strong>PIN de 4 números</strong>.</li>
+            <li>El PIN te deja editar o cerrar tu mesa desde otro dispositivo. No se puede recuperar, así que guárdalo.</li>
+            <li>Si eliges una hora de madrugada (00:00 a 05:59), el sitio te pregunta qué noche quieres decir.</li>
+            <li>Los eventos presenciales pueden repetirse <strong>🔁 cada semana</strong>: el enlace no cambia y la lista de asistentes empieza vacía cada semana.</li>
+          </ul>
+        </section>
+        <section>
+          <h4 class="text-sm font-bold text-white mb-1">Horarios</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Las mesas virtuales se muestran en <strong>tu hora</strong>.</li>
+            <li>Los eventos presenciales se muestran en la <strong>hora del lugar</strong>.</li>
+          </ul>
+        </section>
+        <section>
+          <h4 class="text-sm font-bold text-white mb-1">Compartir</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>📲 WhatsApp</strong> o <strong>🔗 Compartir</strong> envían un enlace directo a la mesa.</li>
+            <li><strong>📅 Calendario</strong> la agrega a tu agenda.</li>
+          </ul>
+        </section>
+        <p class="text-zinc-400">¿Un error o una idea? Usa el botón 💬.</p>
+      </div>
+      <div class="flex justify-end pt-1">
+        <button type="button" onclick="closeAboutModal()" class="bg-wine-600 hover:bg-wine-500 text-white font-bold px-5 py-2 rounded-xl text-xs transition shadow-md">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REPORTAR BUG / SUGERENCIA (no guarda nada en Firebase, se envía por correo vía EmailJS) -->
+  <div id="feedbackModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-800 border border-zinc-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 border-b border-zinc-700 pb-3">
+        <span class="text-2xl">💬</span>
+        <h3 class="text-lg font-bold text-wine-400">Reportar un bug o sugerencia</h3>
+      </div>
+      <p class="text-xs text-zinc-400">Tu mensaje se envía directo por correo. No se guarda nada en la base de datos del sitio.</p>
+      <form id="feedbackForm" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-zinc-400 mb-1">Mensaje</label>
+          <textarea id="feedbackMessage" required rows="4" maxlength="2000" placeholder="Describe el bug o la funcionalidad que te gustaría..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-wine-500 resize-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-zinc-400 mb-1">Tu correo (opcional, solo si quieres que te respondamos)</label>
+          <input type="email" id="feedbackEmail" placeholder="tucorreo@ejemplo.com" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-wine-500">
+        </div>
+        <p id="feedbackStatus" class="text-xs hidden"></p>
+        <div class="flex gap-2 pt-1">
+          <button type="submit" id="feedbackSubmitBtn" class="flex-1 bg-wine-600 hover:bg-wine-500 text-white font-bold py-2 rounded-lg text-sm transition disabled:opacity-50 disabled:cursor-not-allowed">
+            Enviar
+          </button>
+          <button type="button" onclick="closeFeedbackModal()" class="text-sm font-medium text-zinc-400 hover:text-zinc-200 border border-zinc-700 rounded-lg px-4 transition">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <aside aria-label="Dark Pack Certified" class="fixed bottom-4 left-4 z-40 block group">
+    <a href="https://www.paradoxinteractive.com/games/world-of-darkness/community/dark-pack-agreement" target="_blank" rel="noopener" class="block transition transform hover:scale-105" title="Material amparado bajo el acuerdo Dark Pack de Paradox Interactive">
+      <img src="./darkpack_logo_small.webp?w=375&q=75&fm=webp" data-fallback-alt="Logo Dark Pack Oficial" class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-red-600/80 shadow-2xl object-cover bg-black" alt="Dark Pack Logo" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'48\' fill=\'black\' stroke=\'%23dc2626\' stroke-width=\'4\'/><text x=\'50\' y=\'45\' fill=\'white\' font-size=\'14\' font-weight=\'bold\' text-anchor=\'middle\' font-family=\'sans-serif\'>DARK</text><text x=\'50\' y=\'65\' fill=\'white\' font-size=\'14\' font-weight=\'bold\' text-anchor=\'middle\' font-family=\'sans-serif\'>PACK</text></svg>';">
+    </a>
+  </aside>
+
 
   <!-- MODAL EXPLICATIVO DE SEGURIDAD (VENTANA FLOTANTE) -->
   <div id="securityModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-gray-800 border border-amber-600/50 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
-      <div class="flex items-center gap-3 border-b border-gray-700 pb-3">
+    <div class="bg-zinc-800 border border-wine-600/50 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 border-b border-zinc-700 pb-3">
         <span class="text-2xl">🔒</span>
-        <h3 class="text-lg font-bold text-amber-400">PIN Antiborrado de Seguridad</h3>
+        <h3 class="text-lg font-bold text-wine-400">PIN Antiborrado de Seguridad</h3>
       </div>
-      <div class="space-y-3 text-xs md:text-sm text-gray-300 leading-relaxed">
+      <div class="space-y-3 text-xs md:text-sm text-zinc-300 leading-relaxed">
         <p>
-          Estás creando un registro protegido. El <strong class="text-amber-400">PIN Antiborrado de 4 dígitos</strong> que definas tiene un único propósito: autorizar el cierre, eliminación manual o gestión de jugadores en caso de que intentes hacerlo desde un dispositivo diferente al actual.
+          Estás creando un registro protegido. El <strong class="text-wine-400">PIN Antiborrado de 4 dígitos</strong> que definas tiene un único propósito: autorizar el cierre, eliminación manual o gestión de jugadores en caso de que intentes hacerlo desde un dispositivo diferente al actual.
         </p>
-        <p class="text-gray-400">
+        <p class="text-zinc-400">
           Por motivos de seguridad, este PIN <strong>no se puede recuperar ni visualizar</strong> en pantalla una vez guardado. Si lo olvidas y estás en otro equipo, la entrada solo podrá ser eliminada automáticamente por la barredora del sistema tras cumplirse su tiempo.
         </p>
       </div>
       <div class="pt-2 flex justify-end">
-        <button type="button" onclick="closeSecurityModal()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-5 py-2 rounded-xl text-xs md:text-sm transition shadow-md">
+        <button type="button" onclick="closeSecurityModal()" class="bg-wine-600 hover:bg-wine-500 text-white font-bold px-5 py-2 rounded-xl text-xs md:text-sm transition shadow-md">
           Entendido
         </button>
       </div>
     </div>
   </div>
 
+  <!-- MODAL EDITAR HORARIO -->
+  <div id="editScheduleModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-800 border border-wine-600/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 border-b border-zinc-700 pb-3">
+        <span class="text-2xl">📅</span>
+        <h3 class="text-lg font-bold text-wine-400">Editar Horario</h3>
+      </div>
+      <p id="editScheduleTableName" class="text-xs text-zinc-400"></p>
+      <form id="editScheduleForm" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-zinc-400 mb-1">Nueva Fecha y Hora</label>
+          <input type="text" id="editScheduleDateTime" required placeholder="Seleccionar..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-white cursor-pointer focus:outline-none focus:border-wine-500">
+        </div>
+        <!-- ¿QUÉ NOCHE? (solo aparece si la hora es de madrugada: 00:00 a 05:59) -->
+        <fieldset id="editNightQ" class="hidden border border-indigo-600/70 bg-indigo-950/40 rounded-xl p-3 space-y-2">
+          <legend class="text-sm font-bold text-indigo-200 px-1">🌙 ¿Qué noche?</legend>
+          <p class="text-xs text-zinc-400">Elegiste una hora de madrugada. Toca la noche que quieres.</p>
+          <label class="flex gap-2.5 items-start bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 cursor-pointer has-[:checked]:border-indigo-400 has-[:checked]:bg-indigo-950">
+            <input type="radio" name="editNight" id="editNightPrev" value="prev" class="mt-1 accent-indigo-400">
+            <span class="text-sm text-zinc-200"><span id="editNightPrevText"></span><span id="editNightPrevSub" class="block text-xs text-zinc-400 font-mono"></span></span>
+          </label>
+          <label class="flex gap-2.5 items-start bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 cursor-pointer has-[:checked]:border-indigo-400 has-[:checked]:bg-indigo-950">
+            <input type="radio" name="editNight" id="editNightThis" value="this" class="mt-1 accent-indigo-400">
+            <span class="text-sm text-zinc-200"><span id="editNightThisText"></span><span id="editNightThisSub" class="block text-xs text-zinc-400 font-mono"></span></span>
+          </label>
+        </fieldset>
+        <p id="editSummary" class="hidden text-xs rounded-lg px-3 py-2 border" aria-live="polite"></p>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeEditScheduleModal()" class="text-xs text-zinc-400 hover:text-white px-4 py-2 rounded-lg transition">Cancelar</button>
+          <button type="submit" id="editScheduleSaveBtn" class="bg-wine-600 hover:bg-wine-500 text-white font-bold px-5 py-2 rounded-xl text-xs transition shadow-md disabled:opacity-40 disabled:cursor-not-allowed">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: MESA / EVENTO CREADO CON ÉXITO -->
+  <div id="createdModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-800 border border-green-600/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-3 text-center">
+      <div class="text-4xl">✅</div>
+      <h3 id="createdModalTitle" class="text-lg font-bold text-green-400">¡Mesa creada con éxito!</h3>
+      <p id="createdModalName" class="text-base font-semibold text-white"></p>
+      <p id="createdModalWhen" class="text-xs text-zinc-400"></p>
+      <p class="text-xs text-zinc-400 leading-relaxed pt-1">
+        Ya aparece en la lista. Recuerda tu <strong class="text-wine-400">PIN Antiborrado</strong>: lo necesitarás para editar o cerrar desde otro dispositivo.
+      </p>
+      <div class="pt-2">
+        <button type="button" onclick="closeCreatedModal()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 rounded-xl text-sm transition shadow-md">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VENTANA GENÉRICA (reemplaza las ventanas grises del navegador:
+       pedir PIN, confirmar, editar Discord / contraseña / mapa / hora) -->
+  <div id="uiDialog" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-800 border border-wine-600/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <h3 id="uiDialogTitle" class="text-lg font-bold text-wine-400 border-b border-zinc-700 pb-3"></h3>
+      <p id="uiDialogMessage" class="text-sm text-zinc-300 leading-relaxed"></p>
+      <form id="uiDialogForm" class="space-y-3" novalidate>
+        <div id="uiDialogInputGroup" class="hidden">
+          <label id="uiDialogLabel" for="uiDialogInput" class="block text-xs font-semibold text-zinc-400 mb-1"></label>
+          <input id="uiDialogInput" autocomplete="off" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-wine-500">
+          <p id="uiDialogError" class="text-xs text-red-400 mt-1 hidden"></p>
+        </div>
+        <div class="flex justify-end gap-2 pt-1">
+          <button type="button" id="uiDialogCancel" class="text-xs text-zinc-400 hover:text-white px-4 py-2 rounded-lg transition">Cancelar</button>
+          <button type="submit" id="uiDialogConfirm" class="bg-wine-600 hover:bg-wine-500 text-white font-bold px-5 py-2 rounded-xl text-xs transition shadow-md">Aceptar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: AGREGAR A MI CALENDARIO -->
+  <div id="calendarModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-800 border border-zinc-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 border-b border-zinc-700 pb-3">
+        <span class="text-2xl">📅</span>
+        <h3 class="text-lg font-bold text-wine-400">Agregar a mi calendario</h3>
+      </div>
+      <p id="calendarModalName" class="text-xs text-zinc-400"></p>
+      <div class="grid gap-2">
+        <a id="calendarGoogleLink" href="#" target="_blank" rel="noopener" onclick="setTimeout(closeCalendarModal, 300)" class="text-center bg-zinc-900 hover:bg-zinc-700 border border-zinc-600 text-white font-semibold py-2.5 rounded-lg text-sm transition">Google Calendar</a>
+        <button type="button" onclick="downloadCalendarFile()" class="bg-zinc-900 hover:bg-zinc-700 border border-zinc-600 text-white font-semibold py-2.5 rounded-lg text-sm transition">iPhone / Outlook / otro (.ics)</button>
+      </div>
+      <div class="flex justify-end">
+        <button type="button" onclick="closeCalendarModal()" class="text-xs text-zinc-400 hover:text-white px-4 py-2 rounded-lg transition">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVISOS BREVES (toasts): "✅ Te uniste a la mesa", etc. -->
+  <div id="toastContainer" aria-live="polite" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2 pointer-events-none w-[calc(100%-2rem)] max-w-sm"></div>
+
+  <!-- MODAL UNIRSE / CONFIRMAR ASISTENCIA (con hora de llegada para eventos presenciales) -->
+  <div id="joinModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-800 border border-emerald-600/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 border-b border-zinc-700 pb-3">
+        <span class="text-2xl">🧛</span>
+        <h3 id="joinModalTitle" class="text-lg font-bold text-emerald-400">Confirmar Asistencia</h3>
+      </div>
+      <p id="joinModalEventName" class="text-xs text-zinc-400"></p>
+      <form id="joinForm" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-zinc-400 mb-1">Tu Nick</label>
+          <input type="text" id="joinNick" required placeholder="ej. Hardestadt" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500">
+          <p id="joinNickError" class="text-xs text-red-400 mt-1 hidden"></p>
+        </div>
+        <div id="joinArrivalGroup">
+          <label class="block text-xs font-semibold text-zinc-400 mb-1">Hora estimada de llegada (opcional)</label>
+          <input type="text" id="joinArrival" placeholder="Seleccionar hora..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm cursor-pointer focus:outline-none focus:border-emerald-500">
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeJoinModal()" class="text-xs text-zinc-400 hover:text-white px-4 py-2 rounded-lg transition">Cancelar</button>
+          <button type="submit" id="joinSubmitBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2 rounded-xl text-xs transition shadow-md">Confirmar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="max-w-5xl mx-auto space-y-8">
-    
+
     <!-- Encabezado -->
-    <header class="text-center space-y-2 border-b border-red-800 pb-4">
-      <h1 class="text-3xl md:text-5xl font-extrabold text-red-600 tracking-wider">VAMPIRE: THE ETERNAL STRUGGLE</h1>
-      <p class="text-gray-400 text-sm md:text-base">Coordinador Internacional de Mesas y Disponibilidad</p>
-      <div id="userTimezone" class="inline-block bg-gray-800 border border-gray-700 text-red-400 text-xs px-3 py-1 rounded-full font-mono mt-2">
+    <header class="relative text-center space-y-2 border-b border-wine-800 pb-4 px-10">
+      <button type="button" onclick="openAboutModal()" aria-label="Acerca de: cómo funciona" title="Acerca de" class="absolute top-0 right-0 w-8 h-8 rounded-full bg-zinc-800 border border-zinc-600 text-zinc-300 hover:text-white hover:border-wine-500 font-bold text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-wine-400">?</button>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-wine-500 tracking-wider">VAMPIRE: THE ETERNAL SCHEDULE</h1>
+      <p class="text-zinc-400 text-sm md:text-base">Coordinador de Mesas</p>
+      <div id="userTimezone" class="inline-block bg-zinc-800 border border-zinc-700 text-wine-400 text-xs px-3 py-1 rounded-full font-mono mt-2">
         Detectando tu zona horaria...
       </div>
     </header>
 
-    <!-- MANUAL DE USUARIO -->
-    <section class="bg-gray-800/80 border border-red-900/50 rounded-xl overflow-hidden shadow-lg">
-      <details class="group">
-        <summary class="flex justify-between items-center font-bold cursor-pointer p-4 text-red-400 hover:text-red-300 transition bg-gray-800">
-          <span class="flex items-center gap-2 text-base md:text-lg">
-            <span>📖</span> ¿Cómo usar esta herramienta? (Manual de Usuario)
-          </span>
-          <span class="transform group-open:rotate-180 transition-transform text-xs bg-gray-900 px-2.5 py-1 rounded-full text-gray-400">
-            Ver instrucciones ▼
-          </span>
-        </summary>
-        
-        <div class="p-5 border-t border-gray-700/60 space-y-6 text-sm text-gray-300 bg-gray-900/40">
-          <div class="bg-gray-900 p-3.5 rounded-lg border-l-4 border-red-600 text-xs">
-            <strong class="text-white block mb-1">🌍 Conversión Automática de Horarios:</strong>
-            El sistema detecta automáticamente tu zona horaria. Todos los horarios seleccionados o mostrados se adaptan a tu <strong>hora local</strong>.
-          </div>
+    <!-- MESAS Y EVENTOS: pestañas arriba, luego el botón para crear, luego la lista -->
+    <section class="space-y-4">
 
-          <div class="space-y-2">
-            <h3 class="text-amber-400 font-bold flex items-center gap-1.5 text-base">
-              <span>⚔️</span> 1. Abrir o Unirte a una Mesa de Juego
-            </h3>
-            <ul class="list-disc list-inside space-y-1 text-xs pl-2">
-              <li><strong class="text-white">Abrir una Mesa:</strong> Ingresa el nombre de la partida, fecha/hora (solo fechas futuras), tu Nick, plataforma (**LackeyCCG** o **Succubus Club**), servidor de Discord, la contraseña de la partida, y un <strong class="text-amber-400">PIN Antiborrado de 4 dígitos</strong> exclusivo.</li>
-              <li><strong class="text-white">Unirse a una Mesa:</strong> Haz clic en <span class="text-amber-400 font-semibold">"¡Unirme a esta Mesa!"</span>. El sistema no permitirá nombres duplicados en la misma mesa.</li>
-            </ul>
-          </div>
-
-          <div class="space-y-2">
-            <h3 class="text-red-400 font-bold flex items-center gap-1.5 text-base">
-              <span>🛡️</span> 2. Seguridad y Limpieza Automática
-            </h3>
-            <p class="text-xs text-gray-400 pl-2">
-              Tus registros o mesas requieren confirmación previa antes de cerrarse o remover jugadores. Solo el propio jugador o el creador de la mesa (mediante confirmación en su dispositivo original o ingresando el PIN Antiborrado desde otro equipo) pueden remover participantes.<br>
-              <span class="text-gray-300">🧹 <strong>Barredora Silenciosa:</strong> El sistema eliminará automáticamente las mesas y disponabilidades transcurridas 3 horas después de su horario programado.</span>
-            </p>
-          </div>
-        </div>
-      </details>
-    </section>
-
-    <!-- CREAR MESA ABIERTA -->
-    <section class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-xl space-y-4">
-      <div class="border-b border-gray-700 pb-3">
-        <h2 class="text-xl font-bold text-amber-500 flex items-center gap-2">
-          <span>⚔️</span> Abrir Nueva Mesa de Juego
-        </h2>
-        <p class="text-xs text-gray-400 mt-1">Crea una mesa en tu plataforma preferida con horario fijo para que otros se sumen.</p>
+      <!-- PESTAÑAS VIRTUAL / PRESENCIAL (controlan la lista y el formulario, con contador) -->
+      <div class="flex gap-2 bg-zinc-800 p-1.5 rounded-xl border border-zinc-700">
+        <button type="button" id="modeVirtualBtn" onclick="setTableModality('virtual')" class="flex-1 bg-wine-600 text-white font-bold py-2.5 px-3 rounded-lg text-sm transition flex items-center justify-center gap-2">
+          💻 Virtual <span id="countVirtual" class="font-mono text-[11px] bg-black/30 px-2 py-0.5 rounded-full">0</span>
+        </button>
+        <button type="button" id="modePresencialBtn" onclick="setTableModality('presencial')" class="flex-1 bg-zinc-800 text-zinc-400 font-bold py-2.5 px-3 rounded-lg text-sm transition flex items-center justify-center gap-2">
+          📍 Presencial <span id="countPresencial" class="font-mono text-[11px] bg-black/30 px-2 py-0.5 rounded-full">0</span>
+        </button>
       </div>
 
-      <form id="customTableForm" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-8 gap-3 bg-gray-900 p-4 rounded-lg border border-gray-700">
+      <!-- BOTÓN PARA ABRIR EL FORMULARIO DE CREACIÓN -->
+      <button type="button" id="openCreateFormBtn" onclick="openCreateForm()" class="w-full md:w-auto bg-wine-600 hover:bg-wine-500 text-white font-bold py-2.5 px-5 rounded-lg text-sm transition shadow-md">
+        ➕ <span id="openCreateFormLabel">Crear mesa</span>
+      </button>
+
+    <!-- FORMULARIO DE CREACIÓN (oculto hasta que se pulsa "Crear") -->
+    <div id="createFormPanel" class="hidden bg-zinc-800 border border-zinc-700 rounded-xl p-6 shadow-xl space-y-4">
+      <div class="border-b border-zinc-700 pb-3 flex items-start justify-between gap-3">
         <div>
-          <label class="block text-xs font-semibold text-gray-400 mb-1">Nombre de Mesa</label>
-          <input type="text" id="tableName" required placeholder="ej. Liga Casual" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-amber-500">
+          <h2 class="text-xl font-bold text-wine-500 flex items-center gap-2">
+            <span id="tableSectionIcon">⚔️</span> <span id="tableSectionTitle">Abrir Nueva Mesa de Juego</span>
+          </h2>
+          <p id="tableSectionSubtitle" class="text-xs text-zinc-400 mt-1">Crea una mesa en tu plataforma preferida con horario fijo para que otros se sumen.</p>
+        </div>
+        <button type="button" onclick="closeCreateForm()" class="text-xs text-zinc-400 hover:text-white border border-zinc-700 rounded-lg px-3 py-1.5 transition shrink-0">Cancelar</button>
+      </div>
+
+      <form id="customTableForm" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-8 gap-3 bg-zinc-900 p-4 rounded-lg border border-zinc-700">
+        <input type="hidden" id="tableModality" value="virtual">
+        <div id="createCopyHint" class="hidden col-span-full bg-amber-950/40 border border-amber-700/50 text-amber-200 text-xs rounded-lg px-3 py-2"></div>
+        <div>
+          <label id="tableNameLabel" class="block text-xs font-semibold text-zinc-400 mb-1">Nombre de Mesa</label>
+          <input type="text" id="tableName" required placeholder="ej. Liga Casual" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-wine-500">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-gray-400 mb-1">Fecha y Hora</label>
-          <input type="text" id="tableDateTime" required placeholder="Seleccionar..." class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-white text-sm cursor-pointer focus:outline-none focus:border-amber-500">
+          <label class="block text-xs font-semibold text-zinc-400 mb-1">Fecha y Hora</label>
+          <input type="text" id="tableDateTime" required placeholder="Seleccionar..." class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-white text-sm cursor-pointer focus:outline-none focus:border-wine-500">
+        </div>
+        <!-- ¿QUÉ NOCHE? + RESUMEN (ocupa todo el ancho; la pregunta solo aparece si la hora es de madrugada: 00:00 a 05:59) -->
+        <div id="createNightBlock" class="hidden col-span-full space-y-2">
+          <fieldset id="createNightQ" class="hidden border border-indigo-600/70 bg-indigo-950/40 rounded-xl p-3 space-y-2">
+            <legend class="text-sm font-bold text-indigo-200 px-1">🌙 ¿Qué noche?</legend>
+            <p class="text-xs text-zinc-400">Elegiste una hora de madrugada. Toca la noche que quieres; no hay ninguna marcada.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <label class="flex gap-2.5 items-start bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 cursor-pointer has-[:checked]:border-indigo-400 has-[:checked]:bg-indigo-950">
+                <input type="radio" name="createNight" id="createNightPrev" value="prev" class="mt-1 accent-indigo-400">
+                <span class="text-sm text-zinc-200"><span id="createNightPrevText"></span><span id="createNightPrevSub" class="block text-xs text-zinc-400 font-mono"></span></span>
+              </label>
+              <label class="flex gap-2.5 items-start bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 cursor-pointer has-[:checked]:border-indigo-400 has-[:checked]:bg-indigo-950">
+                <input type="radio" name="createNight" id="createNightThis" value="this" class="mt-1 accent-indigo-400">
+                <span class="text-sm text-zinc-200"><span id="createNightThisText"></span><span id="createNightThisSub" class="block text-xs text-zinc-400 font-mono"></span></span>
+              </label>
+            </div>
+          </fieldset>
+          <p id="createSummary" class="text-xs rounded-lg px-3 py-2 border" aria-live="polite"></p>
         </div>
         <div>
-          <label class="block text-xs font-semibold text-gray-400 mb-1">Tu Nick</label>
-          <input type="text" id="tableCreator" required placeholder="ej. Hardestadt" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-amber-500">
+          <label class="block text-xs font-semibold text-zinc-400 mb-1">Tu Nick</label>
+          <input type="text" id="tableCreator" required placeholder="ej. Hardestadt" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-wine-500">
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-400 mb-1">Plataforma</label>
-          <select id="tablePlatform" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-amber-500">
-            <option value="Lackey">LackeyCCG</option>
-            <option value="Succubus Club">Succubus Club</option>
-          </select>
+
+        <div id="virtualFieldsGroup" style="display: contents;">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Plataforma</label>
+            <select id="tablePlatform" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-wine-500">
+              <option value="Lackey">LackeyCCG</option>
+              <option value="Succubus Club">Succubus Club</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-400 mb-1">Formato</label>
+            <select id="tableFormat" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-wine-500">
+              <option value="standard">Standard (Legacy)</option>
+              <option value="v5">V5</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-indigo-400 mb-1">🎧 Discord</label>
+            <input type="text" id="tableDiscord" placeholder="ej. VTES Español" class="w-full bg-zinc-800 border border-indigo-700/60 rounded-lg px-3 py-1.5 text-indigo-200 text-sm focus:outline-none focus:border-indigo-400">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-blue-400 mb-1">🔑 Pass Partida</label>
+            <input type="text" id="tableGamePassword" placeholder="ej. vtes123" class="w-full bg-zinc-800 border border-blue-700/60 rounded-lg px-3 py-1.5 text-blue-200 text-sm focus:outline-none focus:border-blue-400">
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-indigo-400 mb-1">🎧 Discord</label>
-          <input type="text" id="tableDiscord" placeholder="ej. VTES Español" class="w-full bg-gray-800 border border-indigo-700/60 rounded-lg px-3 py-1.5 text-indigo-200 text-sm focus:outline-none focus:border-indigo-400">
+
+        <div id="presencialFieldsGroup" style="display: none;">
+          <div>
+            <label class="block text-xs font-semibold text-emerald-400 mb-1">📍 Lugar</label>
+            <input type="text" id="tableVenue" placeholder="ej. Tienda Vórtice" class="w-full bg-zinc-800 border border-emerald-700/60 rounded-lg px-3 py-1.5 text-emerald-200 text-sm focus:outline-none focus:border-emerald-400">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-emerald-400 mb-1">🕒 Tu hora de llegada (opcional)</label>
+            <input type="text" id="tableCreatorArrival" placeholder="Seleccionar hora..." class="w-full bg-zinc-800 border border-emerald-700/60 rounded-lg px-3 py-1.5 text-emerald-200 text-sm cursor-pointer focus:outline-none focus:border-emerald-400">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-emerald-400 mb-1">País</label>
+            <select id="tableCountry" class="w-full bg-zinc-800 border border-emerald-700/60 rounded-lg px-3 py-1.5 text-emerald-200 text-sm focus:outline-none focus:border-emerald-400">
+              <option value="México">México</option>
+              <option value="Chile">Chile</option>
+              <option value="España">España</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-emerald-400 mb-1">Ciudad</label>
+            <input type="text" id="tableCity" placeholder="ej. CDMX" class="w-full bg-zinc-800 border border-emerald-700/60 rounded-lg px-3 py-1.5 text-emerald-200 text-sm focus:outline-none focus:border-emerald-400">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-emerald-400 mb-1">Link de Google Maps (opcional)</label>
+            <input type="text" id="tableMapsLink" inputmode="url" autocomplete="off" placeholder="https://maps.app.goo.gl/..." class="w-full bg-zinc-800 border border-emerald-700/60 rounded-lg px-3 py-1.5 text-emerald-200 text-sm focus:outline-none focus:border-emerald-400">
+            <p id="tableMapsLinkError" class="text-[11px] text-red-400 mt-1 hidden">Pega un link que empiece con https:// (por ejemplo, de Google Maps).</p>
+          </div>
+          <div class="flex items-end">
+            <label for="tableRecurring" class="flex items-center gap-2 text-sm text-emerald-200 cursor-pointer py-1.5">
+              <input type="checkbox" id="tableRecurring" class="w-4 h-4 accent-emerald-500">
+              🔁 Repetir cada semana
+            </label>
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-blue-400 mb-1">🎮 Pass Partida</label>
-          <input type="text" id="tableGamePassword" placeholder="ej. vtes123" class="w-full bg-gray-800 border border-blue-700/60 rounded-lg px-3 py-1.5 text-blue-200 text-sm focus:outline-none focus:border-blue-400">
+
+        <div class="col-span-full">
+          <label for="tableNotes" class="block text-xs font-semibold text-zinc-400 mb-1">Notas (opcional)</label>
+          <input type="text" id="tableNotes" maxlength="150" autocomplete="off" placeholder="ej. Principiantes bienvenidos · partida de máximo 2 horas" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-wine-500">
         </div>
+
         <div>
           <div class="flex items-center justify-between mb-1">
-            <label class="block text-xs font-semibold text-amber-400">🔒 PIN Antiborrado</label>
-            <button type="button" onclick="showSecurityModal()" class="text-[10px] text-amber-400 hover:text-amber-300 underline bg-transparent border-0 cursor-pointer p-0">¿Para qué es?</button>
+            <label class="block text-xs font-semibold text-wine-400">🔒 PIN Antiborrado</label>
+            <button type="button" onclick="showSecurityModal()" class="text-[10px] text-wine-400 hover:text-wine-300 underline bg-transparent border-0 cursor-pointer p-0">¿Para qué es?</button>
           </div>
-          <input type="text" id="tableDeletePin" required maxlength="4" pattern="[0-9]{4}" placeholder="ej. 1234" class="w-full bg-gray-800 border border-amber-700/60 rounded-lg px-3 py-1.5 text-amber-300 text-sm font-mono focus:outline-none focus:border-amber-400">
+          <input type="text" id="tableDeletePin" required maxlength="4" pattern="[0-9]{4}" inputmode="numeric" autocomplete="off" title="4 números" placeholder="ej. 1234" class="w-full bg-zinc-800 border border-wine-700/60 rounded-lg px-3 py-1.5 text-wine-300 text-sm font-mono focus:outline-none focus:border-wine-400">
         </div>
         <div class="flex items-end">
-          <button type="submit" id="createTableBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-1.5 px-3 rounded-lg text-sm transition">
-            Abrir Mesa
+          <button type="submit" id="createTableBtn" class="w-full bg-wine-600 hover:bg-wine-500 text-white font-bold py-1.5 px-3 rounded-lg text-sm transition disabled:opacity-40 disabled:cursor-not-allowed">
+            <span id="createTableBtnLabel">Abrir Mesa</span>
           </button>
         </div>
       </form>
+    </div>
 
-      <div id="customTablesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2"></div>
-    </section>
-
-    <!-- DISPONIBILIDAD INDIVIDUAL -->
-    <section class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-xl">
-      <h2 class="text-xl font-bold text-gray-200 mb-4 flex items-center gap-2">
-        <span>🩸</span> Registrar disponibilidad personal (Horario Libre)
-      </h2>
-      <form id="availabilityForm" class="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div>
-          <label class="block text-xs font-semibold text-gray-400 mb-1">Nick / Nombre</label>
-          <input type="text" id="playerNick" required placeholder="ej. Malkavian_Mex" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-600">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-400 mb-1">Fecha y Hora Local</label>
-          <input type="text" id="localDateTime" required placeholder="Seleccionar..." class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white cursor-pointer focus:outline-none focus:border-red-600">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-400 mb-1">Plataforma Elegida</label>
-          <select id="playerPlatform" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-600">
-            <option value="Lackey">LackeyCCG</option>
-            <option value="Succubus Club">Succubus Club</option>
+      <div id="presencialFiltersBar" style="display: none;" class="flex flex-wrap items-end gap-3 bg-zinc-900/60 border border-emerald-700/30 rounded-lg p-3">
+        <div class="flex-1 min-w-[140px]">
+          <label class="block text-[11px] font-semibold text-emerald-400 mb-1">País</label>
+          <select id="filterCountry" class="w-full bg-zinc-800 border border-emerald-700/60 rounded-lg px-3 py-1.5 text-emerald-200 text-xs focus:outline-none focus:border-emerald-400">
+            <option value="">Todos</option>
           </select>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-amber-400 mb-1">🔒 PIN Antiborrado</label>
-          <input type="text" id="playerDeletePin" required maxlength="4" pattern="[0-9]{4}" placeholder="ej. 1234" class="w-full bg-gray-900 border border-amber-700/60 rounded-lg px-3 py-2 text-amber-300 font-mono focus:outline-none focus:border-amber-400">
+        <div class="flex-1 min-w-[140px]">
+          <label class="block text-[11px] font-semibold text-emerald-400 mb-1">Ciudad</label>
+          <select id="filterCity" class="w-full bg-zinc-800 border border-emerald-700/60 rounded-lg px-3 py-1.5 text-emerald-200 text-xs focus:outline-none focus:border-emerald-400">
+            <option value="">Todas</option>
+          </select>
         </div>
-        <div class="flex items-end">
-          <button type="submit" id="submitBtn" class="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 shadow-md">
-            Publicar Hora
-          </button>
+        <div class="flex-1 min-w-[140px]">
+          <label class="block text-[11px] font-semibold text-emerald-400 mb-1">Fecha</label>
+          <input type="text" id="filterDate" placeholder="Cualquier fecha" class="w-full bg-zinc-800 border border-emerald-700/60 rounded-lg px-3 py-1.5 text-emerald-200 text-xs cursor-pointer focus:outline-none focus:border-emerald-400">
         </div>
-      </form>
-    </section>
-
-    <!-- MATCHMAKING AUTOMÁTICO -->
-    <section class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-xl space-y-4">
-      <div class="border-b border-gray-700 pb-3">
-        <h2 class="text-xl font-bold text-red-500 flex items-center gap-2">
-          <span>🏰</span> Coincidencias Automáticas (Separadas por Plataforma)
-        </h2>
-        <p class="text-xs text-gray-400 mt-1">Sincronizado en tiempo real. Agrupado strictly por Horario y Plataforma.</p>
+        <button type="button" id="clearFiltersBtn" onclick="clearPresencialFilters()" class="text-[11px] text-zinc-400 hover:text-red-400 underline bg-transparent border-0 cursor-pointer px-1 py-2">
+          Limpiar filtros
+        </button>
       </div>
-      <div id="autoTablesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
 
-    <!-- REGISTROS INDIVIDUALES -->
-    <section class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-xl">
-      <h2 class="text-lg font-bold text-gray-300 mb-4 flex items-center gap-2">
-        <span>📜</span> Todos los registros individuales
-      </h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="border-b border-gray-700 text-gray-400 text-xs uppercase font-mono">
-              <th class="py-3 px-4">Jugador</th>
-              <th class="py-3 px-4">Plataforma</th>
-              <th class="py-3 px-4">Fecha (Tu Hora)</th>
-              <th class="py-3 px-4">Hora (Tu Hora)</th>
-              <th class="py-3 px-4">Zona Origen</th>
-              <th class="py-3 px-4 text-right">Acción</th>
-            </tr>
-          </thead>
-          <tbody id="scheduleTable" class="divide-y divide-gray-700/50 text-sm">
-            <tr><td colspan="6" class="py-8 text-center text-gray-500">Conectando a Firebase...</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <div id="customTablesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2"></div>
     </section>
 
   </div>
@@ -235,19 +487,23 @@
     // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
 
-    // ACTIVACIÓN DE APP CHECK CON RECAPTCHA V3
-    const RECAPTCHA_SITE_KEY = "6Lc2QLYtAAAAAHI6pH3gABXBdG4m2X1rPKmegI0P"; // Reemplaza con la Clave de Sitio pública de Google reCAPTCHA
+    // ---------------------------------------------------------------------
+    // FIREBASE APP CHECK (reCAPTCHA Enterprise)
+    // Esto valida que las peticiones a la base de datos vengan realmente
+    // desde tu página publicada en xchubasx.github.io, y no desde una copia
+    // del HTML abierta en otro dominio o en un equipo local.
+    // Reemplaza el texto de abajo por tu Site Key de reCAPTCHA Enterprise
+    // (la que creaste en console.cloud.google.com/security/recaptcha).
+    // ---------------------------------------------------------------------
     const appCheck = firebase.appCheck();
     appCheck.activate(
-      new firebase.appCheck.ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),
-      true // Autorrefresco automático de token
+      new firebase.appCheck.ReCaptchaEnterpriseProvider('6Lc2QLYtAAAAAHI6pH3gABXBdG4m2X1rPKmegI0P'),
+      true // refresca el token automáticamente en segundo plano
     );
 
     const db = firebase.database();
     const recordsRef = db.ref('vtes_records');
-    const autoPassRef = db.ref('vtes_auto_passwords');
 
-    let autoPasswords = {};
     let currentGlobalData = [];
 
     const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -261,8 +517,525 @@
       minDate: "today"
     };
 
-    let pickerAvailability = flatpickr("#localDateTime", configFlatpickr);
-    let pickerCustomTable = flatpickr("#tableDateTime", configFlatpickr);
+    let pickerCustomTable = flatpickr("#tableDateTime", { ...configFlatpickr, onChange: () => updateNightUI('create') });
+    let pickerEditSchedule = flatpickr("#editScheduleDateTime", { ...configFlatpickr, onChange: () => updateNightUI('edit') });
+
+    // ---------------------------------------------------------------------
+    // ¿QUÉ NOCHE? — evita la confusión de la medianoche
+    // Mucha gente piensa en las 00:00 como el FINAL del día, cuando en
+    // realidad es el INICIO del día siguiente (caso real: "viernes 00:00"
+    // creado para jugar el viernes en la noche quedó en la noche del
+    // jueves). Si la hora elegida es de madrugada (00:00 a 05:59), se
+    // pregunta qué noche se quiso decir; no hay ninguna opción marcada y
+    // no se puede guardar sin elegir. Para cualquier otra hora no aparece
+    // nada. El calendario no se mueve: el día elegido se queda como está.
+    //   - "prev": la noche del día anterior al elegido → se guarda tal cual
+    //   - "this": la noche del día elegido al siguiente → se guarda +1 día
+    // En Firebase se sigue guardando la misma fecha/hora exacta (utcTime).
+    // ---------------------------------------------------------------------
+    const NIGHT_END_HOUR = 6; // de 00:00 a 05:59 se considera madrugada
+    const nightUiKey = { create: null, edit: null };
+
+    function parsePickerValue(value) {
+      if (!value) return null;
+      const d = new Date(value.replace(' ', 'T'));
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function addDays(date, n) {
+      const d = new Date(date.getTime());
+      d.setDate(d.getDate() + n);
+      return d;
+    }
+
+    function weekdayName(date) {
+      return date.toLocaleDateString('es-ES', { weekday: 'long' });
+    }
+
+    function shortDayLabel(date) {
+      return date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' }).replace(',', '');
+    }
+
+    function hhmm(date) {
+      return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    }
+
+    function getNightChoice(prefix) {
+      const checked = document.querySelector(`input[name="${prefix}Night"]:checked`);
+      return checked ? checked.value : null;
+    }
+
+    // Devuelve { date, isNight, needsChoice } con la fecha/hora que se guardará
+    function resolveChosenDate(prefix) {
+      const inputId = prefix === 'create' ? 'tableDateTime' : 'editScheduleDateTime';
+      const picked = parsePickerValue(document.getElementById(inputId).value);
+      if (!picked) return { date: null, isNight: false, needsChoice: false };
+      const isNight = picked.getHours() < NIGHT_END_HOUR;
+      if (!isNight) return { date: picked, isNight, needsChoice: false };
+      const choice = getNightChoice(prefix);
+      if (!choice) return { date: null, isNight, needsChoice: true };
+      return { date: choice === 'this' ? addDays(picked, 1) : picked, isNight, needsChoice: false };
+    }
+
+    const SUMMARY_BASE = 'text-xs rounded-lg px-3 py-2 border';
+
+    function updateNightUI(prefix, { preselect = null } = {}) {
+      const inputId = prefix === 'create' ? 'tableDateTime' : 'editScheduleDateTime';
+      const picked = parsePickerValue(document.getElementById(inputId).value);
+      const question = document.getElementById(`${prefix}NightQ`);
+      const summary = document.getElementById(`${prefix}Summary`);
+      const saveBtn = document.getElementById(prefix === 'create' ? 'createTableBtn' : 'editScheduleSaveBtn');
+      const container = prefix === 'create' ? document.getElementById('createNightBlock') : summary;
+
+      if (!picked) {
+        container.classList.add('hidden');
+        question.classList.add('hidden');
+        nightUiKey[prefix] = null;
+        saveBtn.disabled = false; // el campo vacío lo sigue validando el formulario
+        return;
+      }
+      container.classList.remove('hidden');
+      summary.classList.remove('hidden');
+
+      const isNight = picked.getHours() < NIGHT_END_HOUR;
+      // Si cambia el día o se entra/sale de la madrugada, se borra la elección previa
+      const key = `${picked.toDateString()}|${isNight}`;
+      if (nightUiKey[prefix] !== key) {
+        document.querySelectorAll(`input[name="${prefix}Night"]`).forEach(r => { r.checked = false; });
+        nightUiKey[prefix] = key;
+      }
+      if (preselect) {
+        const r = document.getElementById(`${prefix}Night${preselect === 'prev' ? 'Prev' : 'This'}`);
+        if (r) r.checked = true;
+      }
+
+      question.classList.toggle('hidden', !isNight);
+      if (isNight) {
+        const prevDay = addDays(picked, -1), nextDay = addDays(picked, 1);
+        document.getElementById(`${prefix}NightPrevText`).innerHTML = `La noche del <b>${weekdayName(prevDay)} al ${weekdayName(picked)}</b>`;
+        document.getElementById(`${prefix}NightPrevSub`).textContent = `se guarda: ${shortDayLabel(picked)}, ${hhmm(picked)}`;
+        document.getElementById(`${prefix}NightThisText`).innerHTML = `La noche del <b>${weekdayName(picked)} al ${weekdayName(nextDay)}</b>`;
+        document.getElementById(`${prefix}NightThisSub`).textContent = `se guarda: ${shortDayLabel(nextDay)}, ${hhmm(picked)}`;
+      }
+
+      const isPresencial = prefix === 'create'
+        ? document.getElementById('tableModality').value === 'presencial'
+        : (currentGlobalData.find(t => t.id === currentEditTableId) || {}).modality === 'presencial';
+      const noun = isPresencial ? 'Tu evento' : 'Tu mesa';
+      const resolved = resolveChosenDate(prefix);
+
+      if (resolved.needsChoice) {
+        summary.className = `${SUMMARY_BASE} border-dashed border-indigo-500 text-indigo-200`;
+        summary.textContent = `🌙 Elige qué noche para poder ${prefix === 'create' ? 'crear' : 'guardar'}.`;
+        saveBtn.disabled = true;
+      } else if (resolved.date.getTime() < Date.now()) {
+        summary.className = `${SUMMARY_BASE} border-red-800 text-red-300`;
+        summary.textContent = isNight
+          ? '❌ Esa noche ya pasó. Elige la otra noche u otro día.'
+          : '❌ Esa fecha y hora ya pasaron. Elige una futura.';
+        saveBtn.disabled = true;
+      } else {
+        const d = resolved.date;
+        const dateText = d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+        const nightText = isNight ? ` · la noche del ${weekdayName(addDays(d, -1))} al ${weekdayName(d)}` : '';
+        summary.className = `${SUMMARY_BASE} border-zinc-700 bg-zinc-900 text-zinc-300`;
+        summary.innerHTML = `📅 ${noun}: <b class="text-white">${escapeHtml(dateText)} a las ${hhmm(d)}</b>${escapeHtml(nightText)} · tu hora`;
+        saveBtn.disabled = false;
+      }
+    }
+
+    ['create', 'edit'].forEach(prefix => {
+      document.querySelectorAll(`input[name="${prefix}Night"]`).forEach(r => r.addEventListener('change', () => updateNightUI(prefix)));
+      const inputId = prefix === 'create' ? 'tableDateTime' : 'editScheduleDateTime';
+      document.getElementById(inputId).addEventListener('change', () => updateNightUI(prefix));
+      document.getElementById(inputId).addEventListener('input', () => updateNightUI(prefix));
+    });
+
+    // Etiqueta "🌙 noche del viernes": si en la zona horaria indicada la hora
+    // cae de madrugada, devuelve el nombre del día anterior; si no, ''.
+    function nightOfName(utcISO, timeZone) {
+      const d = new Date(utcISO);
+      const hour = Number(new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hourCycle: 'h23', timeZone: timeZone || undefined }).format(d));
+      if (!(hour < NIGHT_END_HOUR)) return '';
+      // 7 horas antes siempre cae en la tarde/noche del día anterior
+      return new Date(d.getTime() - 7 * 3600 * 1000).toLocaleDateString('es-ES', { weekday: 'long', timeZone: timeZone || undefined });
+    }
+    let pickerFilterDate = flatpickr("#filterDate", {
+      dateFormat: "Y-m-d",
+      locale: "es",
+      onChange: () => renderAll(currentGlobalData)
+    });
+
+    // Selector de solo-hora para la llegada estimada en el modal de Unirse (eventos presenciales)
+    let pickerJoinArrival = flatpickr("#joinArrival", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
+      locale: "es"
+    });
+
+    // Selector de solo-hora para la llegada estimada del organizador al crear un evento presencial
+    let pickerCreatorArrival = flatpickr("#tableCreatorArrival", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
+      locale: "es"
+    });
+
+    let currentTableModalityFilter = 'virtual';
+
+    // Ciudad indicada por la URL (ej. .../Organizador-Vtes/Zaragoza), o null si no aplica.
+    // Tiene prioridad sobre el filtro manual de ciudad hasta que el usuario lo toque o
+    // le dé clic a "Limpiar filtros".
+    let urlCityFilter = null;
+
+    function clearUrlCityFilter() {
+      if (!urlCityFilter) return;
+      urlCityFilter = null;
+      const basePath = window.location.pathname.replace(/[^/]+\/?$/, '');
+      window.history.replaceState({}, '', basePath || '/');
+    }
+
+    function setTableModality(mode) {
+      document.getElementById('tableModality').value = mode;
+      const virtualGroup = document.getElementById('virtualFieldsGroup');
+      const presencialGroup = document.getElementById('presencialFieldsGroup');
+      const btnVirtual = document.getElementById('modeVirtualBtn');
+      const btnPresencial = document.getElementById('modePresencialBtn');
+
+      const isVirtual = mode === 'virtual';
+      virtualGroup.style.display = isVirtual ? 'contents' : 'none';
+      presencialGroup.style.display = isVirtual ? 'none' : 'contents';
+
+      btnVirtual.classList.toggle('bg-wine-600', isVirtual);
+      btnVirtual.classList.toggle('text-white', isVirtual);
+      btnVirtual.classList.toggle('bg-zinc-800', !isVirtual);
+      btnVirtual.classList.toggle('text-zinc-400', !isVirtual);
+
+      btnPresencial.classList.toggle('bg-wine-600', !isVirtual);
+      btnPresencial.classList.toggle('text-white', !isVirtual);
+      btnPresencial.classList.toggle('bg-zinc-800', isVirtual);
+      btnPresencial.classList.toggle('text-zinc-400', isVirtual);
+
+      document.getElementById('tableSectionIcon').textContent = isVirtual ? '⚔️' : '📍';
+      document.getElementById('tableSectionTitle').textContent = isVirtual ? 'Abrir Nueva Mesa de Juego' : 'Crear Nuevo Evento Presencial';
+      document.getElementById('tableNameLabel').textContent = isVirtual ? 'Nombre de Mesa' : 'Nombre de Evento';
+      document.getElementById('tableSectionSubtitle').textContent = isVirtual
+        ? 'Crea una mesa en tu plataforma preferida con horario fijo para que otros se sumen.'
+        : 'Organiza una quedada presencial para que otros confirmen asistencia.';
+      document.getElementById('createTableBtnLabel').textContent = isVirtual ? 'Abrir Mesa' : 'Crear Evento';
+      document.getElementById('openCreateFormLabel').textContent = isVirtual ? 'Crear mesa' : 'Crear evento presencial';
+      document.getElementById('presencialFiltersBar').style.display = isVirtual ? 'none' : 'flex';
+      updateNightUI('create'); // el resumen dice "Tu mesa" o "Tu evento"
+
+      // La lista de abajo se filtra para mostrar solo lo que coincide con la modalidad seleccionada
+      currentTableModalityFilter = mode;
+      renderAll(currentGlobalData);
+    }
+
+    // ---------------------------------------------------------------------
+    // FORMULARIO PLEGABLE: la lista se ve primero; el formulario de
+    // creación solo se abre al pulsar "➕ Crear mesa / evento".
+    // ---------------------------------------------------------------------
+    function openCreateForm() {
+      document.getElementById('createFormPanel').classList.remove('hidden');
+      document.getElementById('openCreateFormBtn').classList.add('hidden');
+      prefillCreatorNick();
+      document.getElementById('tableName').focus();
+    }
+
+    function closeCreateForm() {
+      document.getElementById('createFormPanel').classList.add('hidden');
+      document.getElementById('createCopyHint').classList.add('hidden');
+      document.getElementById('openCreateFormBtn').classList.remove('hidden');
+    }
+
+    // ---------------------------------------------------------------------
+    // RECORDAR EL NICK
+    // El último nick usado se guarda solo en el navegador de cada persona
+    // (no se envía nada nuevo a Firebase) y se deja escrito al crear o
+    // unirse a una mesa. Siempre se puede cambiar.
+    // ---------------------------------------------------------------------
+    const LAST_NICK_KEY = 'vtes_last_nick';
+
+    function getSavedNick() {
+      try { return localStorage.getItem(LAST_NICK_KEY) || ''; } catch (e) { return ''; }
+    }
+
+    function saveNick(nick) {
+      try { if (nick) localStorage.setItem(LAST_NICK_KEY, nick); } catch (e) { /* sin almacenamiento: no pasa nada */ }
+    }
+
+    function prefillCreatorNick() {
+      const input = document.getElementById('tableCreator');
+      if (!input.value) input.value = getSavedNick();
+      // También se deja elegida la última plataforma usada (LackeyCCG / Succubus Club)
+      const platform = getSavedPlatform();
+      const select = document.getElementById('tablePlatform');
+      if (platform && [...select.options].some(o => o.value === platform)) select.value = platform;
+      // Y el último formato usado (Standard (Legacy) / V5)
+      const format = getSavedFormat();
+      if (format === 'standard' || format === 'v5') document.getElementById('tableFormat').value = format;
+    }
+
+    // ---------------------------------------------------------------------
+    // RECORDAR LA ÚLTIMA PLATAFORMA (solo en el navegador de cada persona)
+    // ---------------------------------------------------------------------
+    const LAST_PLATFORM_KEY = 'vtes_last_platform';
+
+    function getSavedPlatform() {
+      try { return localStorage.getItem(LAST_PLATFORM_KEY) || ''; } catch (e) { return ''; }
+    }
+
+    const LAST_FORMAT_KEY = 'vtes_last_format';
+    function getSavedFormat() {
+      try { return localStorage.getItem(LAST_FORMAT_KEY) || ''; } catch (e) { return ''; }
+    }
+    function saveFormat(format) {
+      try { if (format) localStorage.setItem(LAST_FORMAT_KEY, format); } catch (e) { /* sin almacenamiento: no pasa nada */ }
+    }
+
+    // Notas de la mesa: texto libre corto, visible para todos y editable por cualquiera
+    const NOTES_MAX = 150;
+
+    function savePlatform(platform) {
+      try { if (platform) localStorage.setItem(LAST_PLATFORM_KEY, platform); } catch (e) { /* sin almacenamiento: no pasa nada */ }
+    }
+
+    // ---------------------------------------------------------------------
+    // VENTANA DE CONFIRMACIÓN: MESA / EVENTO CREADO CON ÉXITO
+    // Aparece solo cuando Firebase confirma que se guardó. Al cerrarla,
+    // la página baja hasta la tarjeta nueva y la resalta unos segundos.
+    // ---------------------------------------------------------------------
+    let lastCreatedId = null;
+
+    function showCreatedModal(newId, recordData) {
+      lastCreatedId = newId;
+      const isPresencial = recordData.modality === 'presencial';
+      const f = formatPresencialDateTime(recordData.utcTime, recordData.originTz, { weekday: 'long', day: 'numeric', month: 'long' }, { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('createdModalTitle').textContent = isPresencial ? '¡Evento creado con éxito!' : '¡Mesa creada con éxito!';
+      document.getElementById('createdModalName').textContent = recordData.name;
+      const night = nightOfName(recordData.utcTime, recordData.originTz);
+      const weekly = recordData.recurrence === 'weekly' ? ` · se repite cada ${weekdayInZone(recordData.utcTime, recordData.originTz)}` : '';
+      document.getElementById('createdModalWhen').textContent = `${f.date} - ${f.time}${night ? ` (noche del ${night})` : ''}${isPresencial ? ` · ${recordData.venue}, ${recordData.city}` : ` · ${recordData.platform}`}${weekly}`;
+      document.getElementById('createdModal').classList.remove('hidden');
+    }
+
+    function closeCreatedModal() {
+      document.getElementById('createdModal').classList.add('hidden');
+      if (lastCreatedId) highlightCard(lastCreatedId);
+      lastCreatedId = null;
+    }
+
+    function highlightCard(tableId) {
+      const card = document.getElementById(`card-custom-${tableId}`);
+      if (!card) return;
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.add('ring-2', 'ring-green-400');
+      setTimeout(() => card.classList.remove('ring-2', 'ring-green-400'), 4000);
+    }
+
+    // ---------------------------------------------------------------------
+    // AVISOS BREVES (toasts)
+    // showToast('✅ Te uniste a la mesa')           → verde
+    // showToast('❌ PIN incorrecto', 'error')        → rojo
+    // ---------------------------------------------------------------------
+    function showToast(message, kind = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const styles = kind === 'error'
+        ? 'bg-red-950 border-red-600 text-red-200'
+        : 'bg-green-950 border-green-600 text-green-200';
+      toast.className = `pointer-events-auto border ${styles} text-sm font-semibold px-4 py-2.5 rounded-xl shadow-2xl text-center transition-opacity duration-300`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; }, kind === 'error' ? 4500 : 2800);
+      setTimeout(() => toast.remove(), kind === 'error' ? 4900 : 3200);
+    }
+
+    // ---------------------------------------------------------------------
+    // VENTANA GENÉRICA (reemplaza prompt / confirm / alert del navegador)
+    // Devuelve una promesa:
+    //   - con campo de texto: el texto escrito, o null si canceló
+    //   - sin campo:          true si aceptó, o null si canceló
+    // "validate" (opcional) revisa lo escrito ANTES de cerrar: si regresa un
+    // mensaje, se muestra en rojo y la ventana sigue abierta para corregir.
+    // ---------------------------------------------------------------------
+    let uiDialogResolve = null;
+    let uiDialogValidate = null;
+
+    function uiDialog({ title, message = '', input = null, confirmLabel = 'Aceptar', cancelLabel = 'Cancelar', danger = false, validate = null }) {
+      if (uiDialogResolve) uiDialogResolve(null); // cierra cualquier ventana anterior
+      const dlg = document.getElementById('uiDialog');
+      const group = document.getElementById('uiDialogInputGroup');
+      const field = document.getElementById('uiDialogInput');
+      const errorEl = document.getElementById('uiDialogError');
+      const confirmBtn = document.getElementById('uiDialogConfirm');
+
+      document.getElementById('uiDialogTitle').textContent = title;
+      const msgEl = document.getElementById('uiDialogMessage');
+      msgEl.textContent = message;
+      msgEl.classList.toggle('hidden', !message);
+      errorEl.classList.add('hidden');
+
+      if (input) {
+        group.classList.remove('hidden');
+        document.getElementById('uiDialogLabel').textContent = input.label || '';
+        field.type = input.type === 'pin' ? 'password' : (input.type || 'text');
+        field.inputMode = input.type === 'pin' ? 'numeric' : (input.type === 'url' ? 'url' : 'text');
+        field.maxLength = input.type === 'pin' ? 4 : (input.maxLength || 500);
+        field.placeholder = input.placeholder || '';
+        field.value = input.value || '';
+        field.classList.toggle('font-mono', input.type === 'pin');
+      } else {
+        group.classList.add('hidden');
+      }
+
+      confirmBtn.textContent = confirmLabel;
+      document.getElementById('uiDialogCancel').textContent = cancelLabel;
+      confirmBtn.classList.toggle('bg-red-700', danger);
+      confirmBtn.classList.toggle('hover:bg-red-600', danger);
+      confirmBtn.classList.toggle('bg-wine-600', !danger);
+      confirmBtn.classList.toggle('hover:bg-wine-500', !danger);
+
+      uiDialogValidate = validate;
+      dlg.classList.remove('hidden');
+      setTimeout(() => (input ? field : confirmBtn).focus(), 50);
+
+      return new Promise(resolve => {
+        uiDialogResolve = (value) => {
+          uiDialogResolve = null;
+          uiDialogValidate = null;
+          dlg.classList.add('hidden');
+          resolve(value);
+        };
+      });
+    }
+
+    document.getElementById('uiDialogForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!uiDialogResolve) return;
+      const hasInput = !document.getElementById('uiDialogInputGroup').classList.contains('hidden');
+      const value = hasInput ? document.getElementById('uiDialogInput').value.trim() : true;
+      if (uiDialogValidate) {
+        const problem = uiDialogValidate(value);
+        if (problem) {
+          const errorEl = document.getElementById('uiDialogError');
+          errorEl.textContent = problem;
+          errorEl.classList.remove('hidden');
+          document.getElementById('uiDialogInput').select();
+          return;
+        }
+      }
+      uiDialogResolve(value);
+    });
+    document.getElementById('uiDialogCancel').addEventListener('click', () => uiDialogResolve && uiDialogResolve(null));
+
+    // Tecla Escape: cierra la ventana que esté abierta
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (uiDialogResolve) return uiDialogResolve(null);
+      ['joinModal', 'calendarModal', 'editScheduleModal', 'securityModal', 'feedbackModal', 'aboutModal'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && !el.classList.contains('hidden')) {
+          if (id === 'joinModal') closeJoinModal();
+          else if (id === 'editScheduleModal') closeEditScheduleModal();
+          else if (id === 'feedbackModal') closeFeedbackModal();
+          else el.classList.add('hidden');
+        }
+      });
+      if (!document.getElementById('createdModal').classList.contains('hidden')) closeCreatedModal();
+    });
+
+    // ---------------------------------------------------------------------
+    // AUTORIZACIÓN (dueño del dispositivo o PIN Antiborrado)
+    // Si este navegador creó la mesa, pide solo confirmación (si se indica).
+    // Si no, pide el PIN en la ventana propia; un PIN equivocado se avisa
+    // ahí mismo y se puede volver a intentar sin empezar de nuevo.
+    // Devuelve true si quedó autorizado.
+    // ---------------------------------------------------------------------
+    async function authorizeTableAction(tableId, table, { actionText, confirmTitle = null, confirmMessage = '', confirmLabel = 'Aceptar', danger = false }) {
+      if (isOwner(tableId)) {
+        if (!confirmTitle) return true;
+        return !!(await uiDialog({ title: confirmTitle, message: confirmMessage, confirmLabel, danger }));
+      }
+      const pin = await uiDialog({
+        title: '🔒 PIN Antiborrado',
+        message: `Este navegador no creó "${table.name}". Ingresa el PIN Antiborrado de 4 dígitos para ${actionText}.`,
+        input: { type: 'pin', label: 'PIN', placeholder: '••••' },
+        confirmLabel: confirmLabel,
+        danger,
+        validate: (value) => (table.deletePin && value === table.deletePin) ? null : 'PIN incorrecto. Revisa e inténtalo de nuevo.'
+      });
+      return pin !== null;
+    }
+
+    // ---------------------------------------------------------------------
+    // ¿QUÉ ES MÍO? (según lo guardado en este navegador)
+    // ---------------------------------------------------------------------
+    function isOwner(tableId) {
+      try { return !!localStorage.getItem(`vtes_owner_${tableId}`); } catch (e) { return false; }
+    }
+
+    function isMyNick(tableId, nick) {
+      try { return !!localStorage.getItem(`vtes_joined_${tableId}_${(nick || '').toLowerCase()}`); } catch (e) { return false; }
+    }
+
+    // ---------------------------------------------------------------------
+    // LINKS SEGUROS: solo se aceptan links que empiezan con http:// o https://
+    // ---------------------------------------------------------------------
+    function isValidHttpUrl(str) {
+      try {
+        const u = new URL(str);
+        return u.protocol === 'https:' || u.protocol === 'http:';
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // Texto seguro para usar dentro de onclick="miFuncion('...')"
+    // (evita que un nick con apóstrofe, como D'Artagnan, rompa el botón)
+    function escapeJsAttr(str) {
+      return escapeHtml(String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
+    }
+
+    // ---------------------------------------------------------------------
+    // TIEMPO RELATIVO: "⏰ en 2 h", "🔥 ¡Empezando!", "🩸 En curso"
+    // Se recalcula cada minuto sin volver a dibujar las tarjetas.
+    // ---------------------------------------------------------------------
+    function relativeTimeLabel(utcISO) {
+      const diffMin = Math.round((new Date(utcISO).getTime() - Date.now()) / 60000);
+      if (diffMin > 0) {
+        if (diffMin < 60) return { text: `⏰ en ${diffMin} min`, soon: true };
+        const hours = Math.round(diffMin / 60);
+        if (hours < 24) return { text: `⏰ en ${hours} h`, soon: hours <= 3 };
+        const days = Math.round(diffMin / 1440);
+        return { text: `⏰ en ${days} día${days === 1 ? '' : 's'}`, soon: false };
+      }
+      if (diffMin > -30) return { text: '🔥 ¡Empezando!', soon: true };
+      return { text: '🩸 En curso', soon: true };
+    }
+
+    // Etiqueta de la tarjeta: presenciales en la hora del lugar, virtuales en la de quien mira
+    function nightBadgeHtml(t) {
+      const tz = t.modality === 'presencial' ? t.originTz : undefined;
+      const night = nightOfName(t.utcTime, tz);
+      return night ? `<span class="bg-indigo-950 text-indigo-200 border border-indigo-600/70 text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap">🌙 noche del ${escapeHtml(night)}</span>` : '';
+    }
+
+    function relativeBadgeHtml(utcISO) {
+      const r = relativeTimeLabel(utcISO);
+      return `<span class="rel-time ${r.soon ? 'bg-amber-950 text-amber-300 border-amber-700/70' : 'bg-zinc-800 text-zinc-300 border-zinc-600'} border text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap" data-time="${escapeHtml(utcISO)}">${r.text}</span>`;
+    }
+
+    setInterval(() => {
+      document.querySelectorAll('.rel-time').forEach(el => {
+        const r = relativeTimeLabel(el.dataset.time);
+        el.textContent = r.text;
+      });
+    }, 60000);
 
     function showSecurityModal() {
       document.getElementById('securityModal').classList.remove('hidden');
@@ -272,38 +1045,663 @@
       document.getElementById('securityModal').classList.add('hidden');
     }
 
+    // ---------------------------------------------------------------------
+    // NORMALIZACIÓN DE JUGADORES (retrocompatible)
+    // Cada entrada de "players" puede venir en 3 formatos posibles:
+    //   1. Objeto nuevo:      { nick: "Jesus", arrival: "18:00" }
+    //   2. String simple:     "Gabi"                (registros antiguos)
+    //   3. String con hora "pegada" a mano por el usuario: "Jesus 18:00"
+    // normalizePlayer() interpreta cualquiera de los 3 y siempre entrega
+    // { nick, arrival }. Esto no modifica nada en Firebase: la separación
+    // ocurre solo al momento de mostrar/ordenar, por lo que es 100% seguro
+    // para los eventos ya creados.
+    // ---------------------------------------------------------------------
+    function normalizePlayer(p) {
+      if (p && typeof p === 'object') {
+        return { nick: p.nick || '', arrival: p.arrival || null };
+      }
+      const str = (p || '').toString();
+      const match = str.match(/^(.*\S)\s+(\d{1,2}):(\d{2})\s*$/);
+      if (match) {
+        const hh = match[2].padStart(2, '0');
+        const mm = match[3];
+        return { nick: match[1], arrival: `${hh}:${mm}` };
+      }
+      return { nick: str, arrival: null };
+    }
+
+    function arrivalToMinutes(arrival) {
+      if (!arrival) return Infinity;
+      const parts = arrival.split(':').map(Number);
+      if (parts.length < 2 || isNaN(parts[0]) || isNaN(parts[1])) return Infinity;
+      return parts[0] * 60 + parts[1];
+    }
+
+    // Convierte un texto (nombre de ciudad o nick de jugador) en una llave
+    // válida para Firebase (no permite . # $ [ ] / en las llaves). Usada
+    // para las estadísticas agregadas por ciudad y por jugador; el texto
+    // original se guarda aparte para mostrar.
+    function sanitizeStatsKey(str) {
+      const clean = (str || '').trim().replace(/[.#$\[\]\/]/g, '_');
+      return clean || 'Desconocido';
+    }
+
+    // ---------------------------------------------------------------------
+    // FICHA POR MESA PARA ESTADÍSTICAS (stats/tablesLog/{id})
+    // Se guarda una ficha por cada mesa/evento que NO se borra cuando la
+    // mesa se cierra o vence (estadisticas.html la usa para las gráficas y
+    // borra sola las fichas de más de 12 meses). Contiene solo: tipo, fecha
+    // de juego, fecha de creación, zona horaria, ciudad/país, nicks que se
+    // unieron y si una mesa virtual llegó a 4+ jugadores.
+    // Los datos base (tipo, fecha, zona, ciudad) se reescriben en cada
+    // escritura: así las mesas creadas antes de que existiera la ficha
+    // también quedan registradas en cuanto alguien se une o edita.
+    // ---------------------------------------------------------------------
+    // Fecha local (AAAAMMDD) de un instante en una zona horaria
+    function localYMD(utcISO, tz) {
+      return new Intl.DateTimeFormat('en-CA', { timeZone: tz || undefined, year: 'numeric', month: '2-digit', day: '2-digit' })
+        .format(new Date(utcISO)).replace(/-/g, '');
+    }
+
+    // Llave de la ficha: los eventos semanales tienen UNA FICHA POR SEMANA
+    // (id_AAAAMMDD), para que cada jueves cuente como un evento distinto.
+    function tableLogKey(tableId, t) {
+      return t.recurrence === 'weekly' ? `${tableId}_${localYMD(t.utcTime, t.originTz)}` : tableId;
+    }
+
+    // Escribe los datos base de la ficha y devuelve su llave
+    function addTableLogBase(updates, tableId, t) {
+      const key = tableLogKey(tableId, t);
+      const base = `stats/tablesLog/${key}`;
+      const isPresencial = t.modality === 'presencial';
+      updates[`${base}/modality`] = isPresencial ? 'presencial' : 'virtual';
+      updates[`${base}/startAt`] = t.utcTime;
+      updates[`${base}/originTz`] = t.originTz || '';
+      if (isPresencial) {
+        updates[`${base}/city`] = t.city || '';
+        updates[`${base}/country`] = t.country || '';
+      } else if (t.format === 'standard' || t.format === 'v5') {
+        // Formato de la mesa virtual (requiere la regla "format" en stats/tablesLog)
+        updates[`${base}/format`] = t.format;
+      }
+      return key;
+    }
+
+    // ---------------------------------------------------------------------
+    // EVENTOS SEMANALES (recurrence: "weekly", solo presenciales)
+    // Cuando pasa la semana, el MISMO evento salta al mismo día y hora
+    // local de la semana siguiente (el enlace no cambia) y la lista de
+    // asistentes empieza vacía. La semana se suma en el calendario DEL
+    // LUGAR (originTz), no en horas: así un evento de los jueves 19:00 en
+    // Zaragoza sigue siendo a las 19:00 aunque cambie el horario de verano.
+    // ---------------------------------------------------------------------
+    function tzOffsetMinutes(tz, date) {
+      const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: tz || undefined, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' })
+        .formatToParts(date).map(x => [x.type, x.value]));
+      const asUtc = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second);
+      return Math.round((asUtc - Math.floor(date.getTime() / 1000) * 1000) / 60000);
+    }
+
+    // Mismo día de la semana y hora local, n semanas después
+    function addWeeksInZone(utcISO, tz, n) {
+      const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: tz || undefined, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+        .formatToParts(new Date(utcISO)).map(x => [x.type, x.value]));
+      const wall = Date.UTC(+p.year, +p.month - 1, +p.day + 7 * n, +p.hour, +p.minute);
+      let guess = wall;
+      for (let k = 0; k < 3; k++) guess = wall - tzOffsetMinutes(tz, new Date(guess)) * 60000;
+      return new Date(guess).toISOString();
+    }
+
+    // Próxima fecha de un evento semanal que todavía no haya vencido.
+    // Se calcula siempre desde la fecha guardada: si dos navegadores lo
+    // hacen al mismo tiempo, llegan al mismo resultado (no salta dos veces).
+    function nextWeeklyOccurrence(t, nowMs) {
+      let n = 0, iso = t.utcTime;
+      while (Date.parse(iso) + PRESENCIAL_WINDOW_MS <= nowMs && n < 520) {
+        n++;
+        iso = addWeeksInZone(t.utcTime, t.originTz, n);
+      }
+      return iso;
+    }
+
+    function weekdayInZone(utcISO, tz) {
+      return new Date(utcISO).toLocaleDateString('es-ES', { weekday: 'long', timeZone: tz || undefined });
+    }
+
+    // Llave del nick en la ficha: sin distinguir mayúsculas ("Ana" = "ana")
+    function tableLogNickKey(nick) {
+      return sanitizeStatsKey((nick || '').toLowerCase());
+    }
+
+    // ---------------------------------------------------------------------
+    // FORMATO DE FECHA/HORA "SIN CONVERTIR" PARA EVENTOS PRESENCIALES
+    // Un evento presencial ocurre en un lugar físico real, así que su hora
+    // debe verse igual para todos sin importar desde qué huso horario lo
+    // consulten (a diferencia de las mesas virtuales, donde sí interesa
+    // convertir). Usamos el huso horario "originTz" guardado al crear el
+    // evento para formatear la fecha/hora tal como la vive el lugar.
+    // ---------------------------------------------------------------------
+    function formatPresencialDateTime(utcISO, originTz, dateOpts, timeOpts) {
+      const d = new Date(utcISO);
+      const tz = originTz || undefined;
+      return {
+        date: d.toLocaleDateString('es-ES', { ...dateOpts, timeZone: tz }),
+        time: d.toLocaleTimeString('es-ES', { ...timeOpts, hour12: false, timeZone: tz })
+      };
+    }
+
+    // EDITAR HORARIO (con la misma autorización que Cerrar Mesa: dueño local o PIN)
+    let currentEditTableId = null;
+
+    function editTableSchedule(tableId) {
+      const tableRef = db.ref(`vtes_records/${tableId}`);
+
+      tableRef.get().then(async snapshot => {
+        if (!snapshot.exists()) return showToast('❌ Esta mesa ya no existe.', 'error');
+        const table = snapshot.val();
+
+        const ok = await authorizeTableAction(tableId, table, { actionText: 'editar el horario', confirmLabel: 'Continuar' });
+        if (ok) openEditScheduleModal(tableId, table.name, table.utcTime);
+      });
+    }
+
+    function openEditScheduleModal(tableId, tableName, currentUtcTime) {
+      currentEditTableId = tableId;
+      document.getElementById('editScheduleTableName').textContent = `"${tableName}" — horario actual: ${new Date(currentUtcTime).toLocaleString()}`;
+      const current = new Date(currentUtcTime);
+      pickerEditSchedule.setDate(current);
+      // Si la mesa es de madrugada, la pregunta ya viene con su noche marcada
+      nightUiKey.edit = null;
+      updateNightUI('edit', { preselect: current.getHours() < NIGHT_END_HOUR ? 'prev' : null });
+      document.getElementById('editScheduleModal').classList.remove('hidden');
+    }
+
+    function closeEditScheduleModal() {
+      document.getElementById('editScheduleModal').classList.add('hidden');
+      currentEditTableId = null;
+    }
+
+    document.getElementById('editScheduleForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newLocalInput = document.getElementById('editScheduleDateTime').value;
+      if (!newLocalInput || !currentEditTableId) return;
+
+      const resolved = resolveChosenDate('edit');
+      if (resolved.needsChoice) {
+        return showToast('🌙 Elige qué noche antes de guardar.', 'error');
+      }
+      const newDate = resolved.date;
+      if (newDate.getTime() < Date.now()) {
+        return showToast('❌ No puedes mover el horario al pasado. Elige una fecha y hora futura.', 'error');
+      }
+
+      // Se actualiza la mesa y su ficha de estadísticas en un solo paso
+      const updates = {};
+      updates[`vtes_records/${currentEditTableId}/utcTime`] = newDate.toISOString();
+      const editedTable = currentGlobalData.find(t => t.id === currentEditTableId);
+      if (editedTable) {
+        const newKey = addTableLogBase(updates, currentEditTableId, { ...editedTable, utcTime: newDate.toISOString() });
+        const oldKey = tableLogKey(currentEditTableId, editedTable);
+        if (oldKey !== newKey) {
+          // Evento semanal movido a otro día: la ficha de esta semana se
+          // mueve también (con sus asistentes) en lugar de quedar duplicada
+          updates[`stats/tablesLog/${oldKey}`] = null;
+          (editedTable.players || []).map(normalizePlayer).forEach(pl => {
+            if (pl.nick) updates[`stats/tablesLog/${newKey}/players/${tableLogNickKey(pl.nick)}`] = pl.nick;
+          });
+        }
+      }
+      db.ref().update(updates)
+        .then(() => showToast('✅ Horario actualizado'))
+        .catch(() => showToast('❌ No se pudo guardar. Revisa tu conexión.', 'error'));
+      closeEditScheduleModal();
+    });
+
+    // ---------------------------------------------------------------------
+    // UNIRSE A UNA MESA / CONFIRMAR ASISTENCIA
+    // En modalidad virtual se conserva el flujo simple de siempre (prompt).
+    // En modalidad presencial se abre un modal para capturar Nick + hora
+    // estimada de llegada (opcional).
+    // ---------------------------------------------------------------------
+    let currentJoinTableId = null;
+    let currentJoinAsSub = false; // true = apuntarse como suplente de una mesa virtual llena
+
+    // Suplentes: solo mesas virtuales llenas, máximo 3, en orden de llegada.
+    // Si un jugador sale (o lo remueven), el primer suplente entra solo.
+    const MAX_PLAYERS = 5;
+    const SUBS_MAX = 3;
+
+    function joinTable(tableId, asSub = false) {
+      const tableRef = db.ref(`vtes_records/${tableId}`);
+
+      tableRef.get().then(snapshot => {
+        if (!snapshot.exists()) return showToast('❌ Esta mesa ya no existe.', 'error');
+        openJoinModal(tableId, snapshot.val(), asSub);
+      });
+    }
+
+    // Misma ventana para mesas virtuales y eventos presenciales; en las
+    // virtuales se oculta el campo de hora de llegada.
+    function openJoinModal(tableId, table, asSub = false) {
+      const isPresencial = table.modality === 'presencial';
+      currentJoinTableId = tableId;
+      currentJoinAsSub = !isPresencial && asSub;
+      document.getElementById('joinModalTitle').textContent = isPresencial ? 'Confirmar Asistencia' : (currentJoinAsSub ? 'Apuntarte como suplente' : 'Unirte a la Mesa');
+      document.getElementById('joinSubmitBtn').textContent = isPresencial ? 'Confirmar' : (currentJoinAsSub ? 'Apuntarme' : 'Unirme');
+      document.getElementById('joinArrivalGroup').classList.toggle('hidden', !isPresencial);
+      document.getElementById('joinModalEventName').textContent = `"${table.name}"`;
+      document.getElementById('joinNickError').classList.add('hidden');
+      document.getElementById('joinNick').value = getSavedNick();
+      pickerJoinArrival.clear();
+      if (isPresencial && table.utcTime) {
+        pickerJoinArrival.setDate(new Date(table.utcTime));
+      }
+      document.getElementById('joinModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('joinNick').focus(), 50);
+    }
+
+    function closeJoinModal() {
+      document.getElementById('joinModal').classList.add('hidden');
+      document.getElementById('joinForm').reset();
+      document.getElementById('joinNickError').classList.add('hidden');
+      currentJoinTableId = null;
+      currentJoinAsSub = false;
+    }
+
+    document.getElementById('joinForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nick = document.getElementById('joinNick').value.trim();
+      const arrival = document.getElementById('joinArrival').value.trim();
+      if (!nick || !currentJoinTableId) return;
+
+      const btn = document.getElementById('joinSubmitBtn');
+      btn.disabled = true;
+      const askedAsSub = currentJoinAsSub;
+      const result = await addPlayerToTable(currentJoinTableId, nick, arrival || null, askedAsSub);
+      btn.disabled = false;
+
+      if (result.error) {
+        // El error se muestra dentro de la ventana, para corregir sin volver a empezar
+        const errorEl = document.getElementById('joinNickError');
+        errorEl.textContent = result.error;
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      closeJoinModal();
+      if (result.substitute) showToast('✅ Te apuntaste como suplente');
+      else if (result.presencial) showToast('✅ Asistencia confirmada');
+      else showToast(askedAsSub ? '✅ Se liberó una plaza: te uniste a la mesa' : '✅ Te uniste a la mesa');
+    });
+
+    // Devuelve una promesa con { error } si algo impide unirse, o
+    // { presencial } cuando Firebase confirma que se guardó.
+    function addPlayerToTable(tableId, nick, arrival, asSub = false) {
+      const tableRef = db.ref(`vtes_records/${tableId}`);
+
+      return tableRef.get().then(snapshot => {
+        if (!snapshot.exists()) return { error: 'Esta mesa ya no existe.' };
+        const table = snapshot.val();
+        const players = table.players || [];
+        const subs = table.modality === 'presencial' ? [] : (table.substitutes || []);
+
+        const existingNicks = players.map(p => normalizePlayer(p).nick.toLowerCase());
+        if (existingNicks.includes(nick.toLowerCase())) {
+          return { error: `"${nick}" ya está registrado en esta mesa. Usa otro nick.` };
+        }
+        if (subs.some(s => s.toLowerCase() === nick.toLowerCase())) {
+          return { error: `"${nick}" ya está apuntado como suplente. Usa otro nick.` };
+        }
+        if (table.modality !== 'presencial' && players.length >= MAX_PLAYERS) {
+          if (!asSub) return { error: 'La mesa se acaba de llenar. Cierra esta ventana y apúntate como suplente.' };
+          if (subs.length >= SUBS_MAX) return { error: `Ya hay ${SUBS_MAX} suplentes. Puedes abrir otra mesa a la misma hora.` };
+          // Suplente: se agrega a la lista. No cuenta como jugador hasta que entre
+          // a la mesa, pero queda anotado en la ficha (subs) para medir el uso.
+          localStorage.setItem(`vtes_joined_${tableId}_${nick.toLowerCase()}`, nick);
+          saveNick(nick);
+          const subUpdates = {};
+          subUpdates[`vtes_records/${tableId}/substitutes`] = subs.concat(nick);
+          const subLogKey = addTableLogBase(subUpdates, tableId, table);
+          subUpdates[`stats/tablesLog/${subLogKey}/subs/${tableLogNickKey(nick)}`] = nick;
+          return db.ref().update(subUpdates)
+            .then(() => ({ substitute: true }))
+            .catch(() => {
+              localStorage.removeItem(`vtes_joined_${tableId}_${nick.toLowerCase()}`);
+              return { error: 'No se pudo guardar. Revisa tu conexión e inténtalo de nuevo.' };
+            });
+        }
+
+        const newEntry = table.modality === 'presencial'
+          ? { nick: nick, arrival: arrival || null }
+          : nick;
+
+        players.push(newEntry);
+
+        // Estadísticas: se agrupan en la misma llamada que guarda al jugador,
+        // para no duplicar el número de escrituras a Firebase. Estos
+        // contadores son históricos (no se borran aunque la mesa expire).
+        const updates = {};
+        updates[`vtes_records/${tableId}/players`] = players;
+
+        if (table.modality === 'presencial') {
+          const cityKey = sanitizeStatsKey(table.city);
+          updates['stats/presencialJoins'] = firebase.database.ServerValue.increment(1);
+          updates[`stats/presencialByCity/${cityKey}/joins`] = firebase.database.ServerValue.increment(1);
+          updates[`stats/presencialByCity/${cityKey}/name`] = table.city || 'Desconocido';
+          updates[`stats/presencialByCity/${cityKey}/country`] = table.country || '';
+
+          // Registro de nicks por evento presencial (para el detalle en
+          // estadísticas.html). Si el evento es anterior a esta función y
+          // todavía no tiene ciudad/país registrados aquí, se completan de
+          // una vez. La fecha de creación solo se guarda al crear el evento.
+          const nickKey = sanitizeStatsKey(nick);
+          updates[`stats/presencialEventsLog/${tableId}/players/${nickKey}`] = nick;
+          updates[`stats/presencialEventsLog/${tableId}/city`] = table.city || 'Desconocido';
+          updates[`stats/presencialEventsLog/${tableId}/country`] = table.country || '';
+        } else {
+          updates['stats/virtualJoins'] = firebase.database.ServerValue.increment(1);
+        }
+
+        // Ficha para estadísticas: el nick y, si una mesa virtual llega a 4+, se marca como llena
+        const logKey = addTableLogBase(updates, tableId, table);
+        updates[`stats/tablesLog/${logKey}/players/${tableLogNickKey(nick)}`] = nick;
+        if (table.modality !== 'presencial' && players.length >= 4) {
+          updates[`stats/tablesLog/${logKey}/filled`] = true;
+        }
+
+        // Guardamos en el navegador local que ESTE usuario se unió con este Nick
+        // (se marca antes de guardar para que la tarjeta ya salga con "tú")
+        localStorage.setItem(`vtes_joined_${tableId}_${nick.toLowerCase()}`, nick);
+        saveNick(nick);
+
+        return db.ref().update(updates)
+          .then(() => ({ presencial: table.modality === 'presencial' }))
+          .catch(() => {
+            localStorage.removeItem(`vtes_joined_${tableId}_${nick.toLowerCase()}`);
+            return { error: 'No se pudo guardar. Revisa tu conexión e inténtalo de nuevo.' };
+          });
+      }).catch(() => ({ error: 'No se pudo conectar. Revisa tu conexión e inténtalo de nuevo.' }));
+    }
+
+    // ---------------------------------------------------------------------
+    // EDITAR MI HORA DE LLEGADA (solo eventos presenciales)
+    // Acceso libre, sin PIN Antiborrado: es un dato informativo de bajo
+    // riesgo (no borra ni remueve a nadie), igual que los botones de
+    // Editar Discord / Pass Partida / Link de Maps que ya existían. Así
+    // cualquier asistente puede corregir su horario desde el celular sin
+    // fricción si le surge un imprevisto.
+    // ---------------------------------------------------------------------
+    async function editPlayerArrival(tableId, nick, currentArrival) {
+      const TIME_RE = /^(\d{1,2}):(\d{2})$/;
+      const input = await uiDialog({
+        title: '🕒 Hora de llegada',
+        message: `Hora de llegada de "${nick}". Déjala vacía para quitarla.`,
+        input: { type: 'time', label: 'Hora (24 horas)', value: currentArrival || '' },
+        confirmLabel: 'Guardar',
+        validate: (value) => (value === '' || TIME_RE.test(value)) ? null : 'Usa el formato HH:MM, por ejemplo 18:30.'
+      });
+      if (input === null) return; // Canceló
+
+      let newArrival = null;
+      if (input !== '') {
+        const match = input.match(TIME_RE);
+        newArrival = `${match[1].padStart(2, '0')}:${match[2]}`;
+      }
+
+      const tableRef = db.ref(`vtes_records/${tableId}`);
+      tableRef.get().then(snapshot => {
+        if (!snapshot.exists()) return showToast('❌ Esta mesa ya no existe.', 'error');
+        const table = snapshot.val();
+        const players = (table.players || []).map(p => {
+          const norm = normalizePlayer(p);
+          if (norm.nick.toLowerCase() === nick.toLowerCase()) {
+            return { nick: norm.nick, arrival: newArrival };
+          }
+          return p;
+        });
+        return tableRef.update({ players: players }).then(() => showToast('✅ Hora de llegada actualizada'));
+      }).catch(() => showToast('❌ No se pudo guardar. Revisa tu conexión.', 'error'));
+    }
+
     // HELPER: Función para Compartir Invitación por WhatsApp (Mantiene los husos horarios específicos)
-    function shareTableInvitation(elementId, tableName, platform, utcISO, playersCount, discord) {
-      // 1. Formatear horarios para el mensaje de WhatsApp
-      const date = new Date(utcISO);
-      const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
-      const optionsDate = { weekday: 'short', month: 'short', day: 'numeric' };
+    function shareTableInvitation(tableId) {
+      const t = currentGlobalData.find(item => item.id === tableId);
+      if (!t) return showToast('❌ Esta mesa ya no existe.', 'error');
 
-      const timeMex = `${date.toLocaleTimeString('es-MX', { ...optionsTime, timeZone: 'America/Mexico_City' })} (${date.toLocaleDateString('es-MX', { ...optionsDate, timeZone: 'America/Mexico_City' })})`;
-      const timeEsp = `${date.toLocaleTimeString('es-ES', { ...optionsTime, timeZone: 'Europe/Madrid' })} (${date.toLocaleDateString('es-ES', { ...optionsDate, timeZone: 'Europe/Madrid' })})`;
-      const timeChi = `${date.toLocaleTimeString('es-CL', { ...optionsTime, timeZone: 'America/Santiago' })} (${date.toLocaleDateString('es-CL', { ...optionsDate, timeZone: 'America/Santiago' })})`;
+      const date = new Date(t.utcTime);
+      const modality = t.modality || 'virtual';
+      const players = (t.players || []).map(normalizePlayer);
+      const playersCount = players.length;
 
-      // 2. Obtener URL actual del sitio
-      const siteUrl = window.location.href.split('#')[0];
-
-      // 3. Crear mensaje formateado
       let msg = `🦇 *¡INVITACIÓN A MESA DE VTES!* 🦇\n\n`;
-      msg += `⚔️ *Mesa:* ${tableName}\n`;
-      msg += `💻 *Plataforma:* ${platform}\n`;
-      msg += `👥 *Jugadores:* ${playersCount}/5\n`;
-      if (discord) msg += `🎧 *Discord:* ${discord}\n`;
-      msg += `\n🌍 *HORARIOS INTERNACIONALES:*\n`;
-      msg += `🇲🇽 ${timeMex}\n`;
-      msg += `🇪🇸 ${timeEsp}\n`;
-      msg += `🇨🇱 ${timeChi}\n\n`;
-      msg += `👉 *Regístrate o únete aquí:* ${siteUrl}\n\n`;
+      msg += `⚔️ *${modality === 'presencial' ? 'Evento' : 'Mesa'}:* ${t.name}\n`;
+
+      if (modality === 'presencial') {
+        // Mensaje para mesa PRESENCIAL: lugar, ciudad y hora local del evento
+        // (huso de origen, sin conversión al huso de quien recibe el mensaje)
+        const fPresencial = formatPresencialDateTime(t.utcTime, t.originTz, { weekday: 'long', month: 'short', day: 'numeric' }, { hour: '2-digit', minute: '2-digit' });
+        const nightP = nightOfName(t.utcTime, t.originTz);
+        const localWhen = `${fPresencial.date} - ${fPresencial.time} (hora local${nightP ? `, noche del ${nightP}` : ''})`;
+
+        msg += `📍 *Lugar:* ${t.venue || ''}\n`;
+        if (t.city || t.country) msg += `🌆 *Ciudad:* ${t.city || ''}${t.country ? ', ' + t.country : ''}\n`;
+        if (t.recurrence === 'weekly') msg += `🔁 *Se repite:* cada ${weekdayInZone(t.utcTime, t.originTz)}\n`;
+        msg += `👥 *Asistentes confirmados:* ${playersCount}\n`;
+        msg += `📅 *Cuándo:* ${localWhen}\n`;
+        if (t.mapsLink) msg += `🗺️ *Ubicación:* ${t.mapsLink}\n`;
+        if (t.notes) msg += `📝 *Notas:* ${t.notes}\n`;
+
+        // Agrupar asistentes por hora de llegada
+        const withTime = players.filter(p => p.arrival);
+        const withoutTime = players.filter(p => !p.arrival);
+
+        if (withTime.length > 0) {
+          msg += `\n🕒 *Horarios de llegada:*\n`;
+          const groups = {};
+          withTime.forEach(p => {
+            if (!groups[p.arrival]) groups[p.arrival] = [];
+            groups[p.arrival].push(p.nick);
+          });
+          Object.keys(groups)
+            .sort((a, b) => arrivalToMinutes(a) - arrivalToMinutes(b))
+            .forEach(time => {
+              msg += `${time} — ${groups[time].join(', ')}\n`;
+            });
+        }
+        if (withoutTime.length > 0) {
+          msg += `${withTime.length > 0 ? '' : '\n'}Sin hora especificada: ${withoutTime.map(p => p.nick).join(', ')}\n`;
+        }
+      } else {
+        // Mensaje para mesa VIRTUAL: husos horarios internacionales
+        const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
+        const optionsDate = { weekday: 'short', month: 'short', day: 'numeric' };
+
+        // Hora de cada país + "(noche del viernes)" si allí cae de madrugada
+        const timeIn = (locale, tz) => {
+          const night = nightOfName(t.utcTime, tz);
+          return `${date.toLocaleTimeString(locale, { ...optionsTime, timeZone: tz })} (${date.toLocaleDateString(locale, { ...optionsDate, timeZone: tz })}${night ? `, noche del ${night}` : ''})`;
+        };
+        const timeMex = timeIn('es-MX', 'America/Mexico_City');
+        const timeEsp = timeIn('es-ES', 'Europe/Madrid');
+        const timeChi = timeIn('es-CL', 'America/Santiago');
+
+        msg += `💻 *Plataforma:* ${t.platform || 'Lackey'}\n`;
+        if (t.format) msg += `🃏 *Formato:* ${formatLabel(t.format)}\n`;
+        msg += `👥 *Jugadores:* ${playersCount}/5\n`;
+        if (t.discord) msg += `🎧 *Discord:* ${t.discord}\n`;
+        if (t.notes) msg += `📝 *Notas:* ${t.notes}\n`;
+        msg += `\n🌍 *HORARIOS INTERNACIONALES:*\n`;
+        msg += `🇲🇽 ${timeMex}\n`;
+        msg += `🇪🇸 ${timeEsp}\n`;
+        msg += `🇨🇱 ${timeChi}\n`;
+      }
+
+      msg += `\n👉 *Únete a ${modality === 'presencial' ? 'este evento' : 'esta mesa'}:* ${getTableUrl(t.id)}\n\n`;
       msg += `¡Únete a la partida! 🩸`;
 
       const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
       window.open(whatsappUrl, '_blank');
     }
 
+    // ---------------------------------------------------------------------
+    // ENLACE DIRECTO A UNA MESA: https://.../Organizador-Vtes/#mesa-<id>
+    // Al abrirlo, la página cambia a la pestaña correcta, baja hasta la
+    // mesa y la resalta (ver openTableFromHash más abajo).
+    // ---------------------------------------------------------------------
+    function getSiteBaseUrl() {
+      // Si la página se abrió con una ciudad en la URL (.../Organizador-Vtes/Zaragoza)
+      // se quita esa parte para que el enlace funcione para cualquiera.
+      let path = window.location.pathname;
+      if (urlCityFilter) path = path.replace(/[^/]+\/?$/, '');
+      if (!path.endsWith('/')) path = path.replace(/[^/]*$/, '');
+      return window.location.origin + path;
+    }
+
+    function getTableUrl(tableId) {
+      return `${getSiteBaseUrl()}#mesa-${tableId}`;
+    }
+
+    // Botón "🔗 Compartir": en el celular abre el menú de compartir del
+    // teléfono (Telegram, Discord, etc.); en computadora copia el enlace.
+    async function shareTableLink(tableId) {
+      const t = currentGlobalData.find(item => item.id === tableId);
+      if (!t) return showToast('❌ Esta mesa ya no existe.', 'error');
+      const url = getTableUrl(tableId);
+      const text = `🦇 ${t.modality === 'presencial' ? 'Evento' : 'Mesa'} de VTES: ${t.name}`;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: t.name, text, url });
+          return;
+        } catch (e) {
+          if (e && e.name === 'AbortError') return; // el usuario cerró el menú
+        }
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast('🔗 Enlace copiado');
+      } catch (e) {
+        uiDialog({ title: '🔗 Enlace de la mesa', message: 'Copia este enlace:', input: { type: 'text', value: url }, confirmLabel: 'Listo' });
+      }
+    }
+
+    let tableFromHashHandled = false;
+
+    function openTableFromHash() {
+      if (tableFromHashHandled) return;
+      const match = window.location.hash.match(/^#mesa-(.+)$/);
+      if (!match) { tableFromHashHandled = true; return; }
+      tableFromHashHandled = true;
+
+      const tableId = decodeURIComponent(match[1]);
+      const t = currentGlobalData.find(item => item.id === tableId);
+      if (!t) {
+        showToast('Esa mesa ya terminó o fue cerrada. Aquí están las mesas abiertas.', 'error');
+        return;
+      }
+      const modality = t.modality || 'virtual';
+      if (currentTableModalityFilter !== modality) setTableModality(modality);
+      if (modality === 'presencial' && !matchesPresencialFilters(t)) clearPresencialFilters();
+      setTimeout(() => highlightCard(tableId), 150);
+    }
+
+    // ---------------------------------------------------------------------
+    // AGREGAR A MI CALENDARIO
+    // Google Calendar (link) o archivo .ics (iPhone, Outlook y otros).
+    // Duración de referencia: 3 h las mesas virtuales, 4 h los presenciales.
+    // No se incluye la contraseña de la partida.
+    // ---------------------------------------------------------------------
+    let currentCalendarEvent = null;
+
+    function buildCalendarEvent(t) {
+      const isPresencial = t.modality === 'presencial';
+      const start = new Date(t.utcTime);
+      const end = new Date(start.getTime() + (isPresencial ? 4 : 3) * 60 * 60 * 1000);
+      const details = [];
+      if (isPresencial) {
+        if (t.mapsLink && isValidHttpUrl(t.mapsLink)) details.push(`Ubicación: ${t.mapsLink}`);
+      } else {
+        details.push(`Plataforma: ${t.platform || 'Lackey'}`);
+        if (t.discord) details.push(`Discord: ${t.discord}`);
+      }
+      if (t.format) details.push(`Formato: ${formatLabel(t.format)}`);
+      if (t.notes) details.push(`Notas: ${t.notes}`);
+      details.push(`Mesa en VTES Scheduler: ${getTableUrl(t.id)}`);
+      return {
+        id: t.id,
+        title: `VTES: ${t.name}`,
+        start, end,
+        location: isPresencial ? [t.venue, t.city, t.country].filter(Boolean).join(', ') : (t.platform || 'Lackey'),
+        details: details.join('\n'),
+        weekly: t.recurrence === 'weekly'
+      };
+    }
+
+    function toCalendarStamp(date) {
+      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); // 20260927T020000Z
+    }
+
+    function openCalendarModal(tableId) {
+      const t = currentGlobalData.find(item => item.id === tableId);
+      if (!t) return showToast('❌ Esta mesa ya no existe.', 'error');
+      currentCalendarEvent = buildCalendarEvent(t);
+      const ev = currentCalendarEvent;
+      const googleUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+        + `&text=${encodeURIComponent(ev.title)}`
+        + `&dates=${toCalendarStamp(ev.start)}/${toCalendarStamp(ev.end)}`
+        + `&details=${encodeURIComponent(ev.details)}`
+        + `&location=${encodeURIComponent(ev.location)}`
+        + (ev.weekly ? `&recur=${encodeURIComponent('RRULE:FREQ=WEEKLY')}` : '');
+      document.getElementById('calendarGoogleLink').href = googleUrl;
+      document.getElementById('calendarModalName').textContent = `"${t.name}"`;
+      document.getElementById('calendarModal').classList.remove('hidden');
+    }
+
+    function closeCalendarModal() {
+      document.getElementById('calendarModal').classList.add('hidden');
+    }
+
+    function downloadCalendarFile() {
+      const ev = currentCalendarEvent;
+      if (!ev) return;
+      const esc = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//VTES Scheduler//ES',
+        'CALSCALE:GREGORIAN',
+        'BEGIN:VEVENT',
+        `UID:${ev.id}@vtes-scheduler`,
+        `DTSTAMP:${toCalendarStamp(new Date())}`,
+        `DTSTART:${toCalendarStamp(ev.start)}`,
+        `DTEND:${toCalendarStamp(ev.end)}`,
+        `SUMMARY:${esc(ev.title)}`,
+        `LOCATION:${esc(ev.location)}`,
+        `DESCRIPTION:${esc(ev.details)}`,
+        ...(ev.weekly ? ['RRULE:FREQ=WEEKLY'] : []),
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'vtes-mesa.ics';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+      closeCalendarModal();
+      showToast('📅 Archivo de calendario descargado');
+    }
+
+    const PRESENCIAL_WINDOW_MS = 24 * 60 * 60 * 1000;
+
     // BARREDORA SILENCIOSA
+    // Mesas virtuales: se limpian 3 horas después de su horario (suficiente
+    // para cubrir una sesión de juego completa).
+    // Eventos presenciales: la asistencia llega escalonada durante todo el
+    // día (la hora guardada es solo una referencia, no el fin del evento),
+    // así que se les da una ventana de 24 horas desde su horario registrado
+    // en vez de 3. Esto garantiza que el evento se mantenga visible durante
+    // toda la jornada sin importar a qué hora del día se haya programado.
     function sweepExpiredTables(dataArray) {
       const now = new Date().getTime();
       const THREE_HOURS_MS = 3 * 60 * 60 * 1000;
@@ -312,8 +1710,15 @@
       dataArray.forEach(item => {
         if (!item.utcTime) return;
         const itemTime = new Date(item.utcTime).getTime();
-        if (now > (itemTime + THREE_HOURS_MS)) {
-          recordsRef.child(item.id).remove();
+        const windowMs = item.modality === 'presencial' ? PRESENCIAL_WINDOW_MS : THREE_HOURS_MS;
+        if (now > (itemTime + windowMs)) {
+          if (item.modality === 'presencial' && item.recurrence === 'weekly') {
+            // Evento semanal: salta a la semana siguiente en lugar de borrarse
+            rollWeeklyEvent(item.id);
+            validData.push({ ...item, utcTime: nextWeeklyOccurrence(item, now), players: [] });
+          } else {
+            recordsRef.child(item.id).remove();
+          }
         } else {
           validData.push(item);
         }
@@ -321,62 +1726,60 @@
       return validData;
     }
 
-    autoPassRef.on('value', (snapshot) => {
-      autoPasswords = snapshot.val() || {};
-      if (currentGlobalData.length > 0) {
-        renderAll(currentGlobalData);
-      }
-    });
+    // Mueve un evento semanal vencido a su próxima fecha y vacía la lista.
+    // Usa una transacción: si otro navegador ya lo movió, no hace nada.
+    const rollingOver = new Set();
+    function rollWeeklyEvent(id) {
+      if (rollingOver.has(id)) return;
+      rollingOver.add(id);
+      recordsRef.child(id).transaction(cur => {
+        if (!cur || cur.recurrence !== 'weekly') return; // ya no existe o dejó de repetirse
+        const nowMs = Date.now();
+        if (Date.parse(cur.utcTime) + PRESENCIAL_WINDOW_MS > nowMs) return; // ya lo movió otro navegador
+        cur.utcTime = nextWeeklyOccurrence(cur, nowMs);
+        delete cur.players;
+        return cur;
+      }).catch(() => {}).finally(() => rollingOver.delete(id));
+    }
+
+    // ---------------------------------------------------------------------
+    // URL POR CIUDAD (ej. https://.../Organizador-Vtes/Zaragoza)
+    // GitHub Pages no soporta rutas "bonitas" nativamente; el archivo
+    // 404.html se encarga de redirigir aquí pasando la ciudad como
+    // parámetro (?city=...). Esta función la lee, activa el modo
+    // Presencial con esa ciudad filtrada, y deja la URL bonita de nuevo
+    // en la barra del navegador (sin el ?city=...).
+    // ---------------------------------------------------------------------
+    (function initCityFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const cityParam = params.get('city');
+      if (!cityParam) return;
+
+      urlCityFilter = cityParam;
+
+      const basePath = window.location.pathname.replace(/\/?$/, '/');
+      window.history.replaceState({}, '', basePath + encodeURIComponent(cityParam));
+
+      setTableModality('presencial');
+    })();
 
     recordsRef.on('value', (snapshot) => {
       const dataObj = snapshot.val() || {};
       const rawData = Object.keys(dataObj).map(key => ({ id: key, ...dataObj[key] }));
       currentGlobalData = sweepExpiredTables(rawData);
       renderAll(currentGlobalData);
+      openTableFromHash(); // si se llegó con un enlace directo a una mesa
     });
 
-    // Guardar disponibilidad individual
-    document.getElementById('availabilityForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nick = document.getElementById('playerNick').value.trim();
-      const localInput = document.getElementById('localDateTime').value;
-      const platform = document.getElementById('playerPlatform').value;
-      const deletePin = document.getElementById('playerDeletePin').value.trim();
+    // Si se pega otro enlace de mesa con la página ya abierta
+    window.addEventListener('hashchange', () => {
+      tableFromHashHandled = false;
+      openTableFromHash();
+    });
 
-      if (!localInput) return alert('Selecciona una fecha y hora.');
-
-      const selectedDate = new Date(localInput.replace(' ', 'T'));
-      if (selectedDate.getTime() < Date.now()) {
-        return alert('❌ Error: No puedes registrar un horario en el pasado. Por favor selecciona una fecha y hora futura.');
-      }
-
-      const utcISO = selectedDate.toISOString();
-      const isDuplicate = currentGlobalData.some(item => {
-        return (item.type === 'individual' || !item.type) &&
-               item.nick.toLowerCase() === nick.toLowerCase() &&
-               item.utcTime === utcISO;
-      });
-
-      if (isDuplicate) {
-        return alert(`El jugador "${nick}" ya tiene una disponibilidad registrada para esta misma fecha y hora.`);
-      }
-
-      const newRef = recordsRef.push();
-      const newId = newRef.key;
-
-      localStorage.setItem(`vtes_owner_${newId}`, nick.toLowerCase());
-
-      newRef.set({
-        type: 'individual',
-        nick: nick,
-        platform: platform,
-        utcTime: utcISO,
-        deletePin: deletePin,
-        originTz: userTimezone
-      });
-
-      document.getElementById('availabilityForm').reset();
-      pickerAvailability.clear();
+    // Al corregir el link de Maps se quita el aviso rojo
+    document.getElementById('tableMapsLink').addEventListener('input', () => {
+      document.getElementById('tableMapsLinkError').classList.add('hidden');
     });
 
     // Abrir una Mesa de Juego
@@ -385,141 +1788,331 @@
       const name = document.getElementById('tableName').value.trim();
       const localInput = document.getElementById('tableDateTime').value;
       const creator = document.getElementById('tableCreator').value.trim();
-      const platform = document.getElementById('tablePlatform').value;
-      const discord = document.getElementById('tableDiscord').value.trim();
-      const gamePassword = document.getElementById('tableGamePassword').value.trim();
       const deletePin = document.getElementById('tableDeletePin').value.trim();
+      const modality = document.getElementById('tableModality').value;
 
-      if (!localInput) return alert('Selecciona una fecha y hora.');
+      if (!localInput) return showToast('❌ Selecciona una fecha y hora.', 'error');
 
-      const selectedDate = new Date(localInput.replace(' ', 'T'));
-      if (selectedDate.getTime() < Date.now()) {
-        return alert('❌ Error: No puedes crear una mesa en el pasado. Por favor selecciona una fecha y hora futura.');
+      // Fecha/hora final, ya con la noche elegida si la hora es de madrugada
+      const resolved = resolveChosenDate('create');
+      if (resolved.needsChoice) {
+        document.getElementById('createNightQ').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return showToast('🌙 Elige qué noche antes de crear la mesa.', 'error');
       }
+      const selectedDate = resolved.date;
+      if (selectedDate.getTime() < Date.now()) {
+        return showToast('❌ No puedes crear una mesa en el pasado. Elige una fecha y hora futura.', 'error');
+      }
+
+      const recordData = {
+        type: 'custom_table',
+        name: name,
+        utcTime: selectedDate.toISOString(),
+        modality: modality,
+        deletePin: deletePin,
+        originTz: userTimezone
+      };
+
+      if (modality === 'presencial') {
+        const venue = document.getElementById('tableVenue').value.trim();
+        const country = document.getElementById('tableCountry').value;
+        const city = document.getElementById('tableCity').value.trim();
+        const mapsLink = document.getElementById('tableMapsLink').value.trim();
+        const creatorArrival = document.getElementById('tableCreatorArrival').value.trim();
+
+        if (!venue) return showToast('❌ Ingresa el Lugar.', 'error');
+        if (!city) return showToast('❌ Ingresa la Ciudad.', 'error');
+
+        // El link de Maps es opcional, pero si se escribe debe ser un link real
+        const mapsError = document.getElementById('tableMapsLinkError');
+        if (mapsLink && !isValidHttpUrl(mapsLink)) {
+          mapsError.classList.remove('hidden');
+          document.getElementById('tableMapsLink').focus();
+          return;
+        }
+        mapsError.classList.add('hidden');
+
+        recordData.venue = venue;
+        recordData.country = country;
+        recordData.city = city;
+        recordData.mapsLink = mapsLink || '';
+        // Evento semanal: el mismo evento salta a la semana siguiente al vencer
+        if (document.getElementById('tableRecurring').checked) recordData.recurrence = 'weekly';
+        // El organizador queda registrado como el primer asistente, con su
+        // propia hora de llegada (opcional) igual que cualquier otro invitado.
+        recordData.players = [{ nick: creator, arrival: creatorArrival || null }];
+      } else {
+        recordData.platform = document.getElementById('tablePlatform').value;
+        savePlatform(recordData.platform);
+        recordData.format = document.getElementById('tableFormat').value === 'v5' ? 'v5' : 'standard';
+        saveFormat(recordData.format);
+        recordData.discord = document.getElementById('tableDiscord').value.trim() || '';
+        recordData.gamePassword = document.getElementById('tableGamePassword').value.trim() || '';
+        recordData.players = [creator];
+      }
+
+      // Notas (opcional, todas las mesas): texto corto, máximo 150 caracteres
+      const notes = document.getElementById('tableNotes').value.trim().slice(0, NOTES_MAX);
+      if (notes) recordData.notes = notes;
 
       const newRef = recordsRef.push();
       const newId = newRef.key;
 
-      localStorage.setItem(`vtes_owner_${newId}`, creator.toLowerCase());
+      // La marca de "dueño de este dispositivo" no depende del contenido del
+      // Nick (evita romperse si en el futuro el campo llega vacío o cambia).
+      localStorage.setItem(`vtes_owner_${newId}`, '1');
+      // El organizador también queda registrado como jugador de este navegador
+      // (así su nick aparece marcado como "tú" y tiene el botón de Salir).
+      localStorage.setItem(`vtes_joined_${newId}_${creator.toLowerCase()}`, creator);
 
-      newRef.set({
-        type: 'custom_table',
-        name: name,
-        utcTime: selectedDate.toISOString(),
-        players: [creator],
-        platform: platform,
-        discord: discord || '',
-        gamePassword: gamePassword || '',
-        deletePin: deletePin,
-        originTz: userTimezone
+      // Estadísticas: se agrupan en la misma llamada que crea el registro,
+      // para no duplicar el número de escrituras a Firebase. Estos
+      // contadores son históricos (no se borran aunque la mesa expire o se cierre).
+      const updates = {};
+      updates[`vtes_records/${newId}`] = recordData;
+
+      if (modality === 'presencial') {
+        const cityKey = sanitizeStatsKey(recordData.city);
+        updates['stats/presencialEventsCreated'] = firebase.database.ServerValue.increment(1);
+        updates['stats/presencialJoins'] = firebase.database.ServerValue.increment(1);
+        updates[`stats/presencialByCity/${cityKey}/name`] = recordData.city;
+        updates[`stats/presencialByCity/${cityKey}/country`] = recordData.country || '';
+        updates[`stats/presencialByCity/${cityKey}/eventsCreated`] = firebase.database.ServerValue.increment(1);
+        updates[`stats/presencialByCity/${cityKey}/joins`] = firebase.database.ServerValue.increment(1);
+
+        // Registro detallado de este evento (ciudad, país, fecha y nicks
+        // de quienes participan) para el listado en estadisticas.html.
+        // Se conserva aunque el evento se borre o expire; estadisticas.html
+        // se encarga de podar los registros más antiguos si se acumulan
+        // demasiados (ver loadStats -> pruneOldEventsLog).
+        const creatorNickKey = sanitizeStatsKey(creator);
+        updates[`stats/presencialEventsLog/${newId}/city`] = recordData.city;
+        updates[`stats/presencialEventsLog/${newId}/country`] = recordData.country || '';
+        updates[`stats/presencialEventsLog/${newId}/createdAt`] = firebase.database.ServerValue.TIMESTAMP;
+        updates[`stats/presencialEventsLog/${newId}/players/${creatorNickKey}`] = creator;
+      } else {
+        updates['stats/virtualTablesCreated'] = firebase.database.ServerValue.increment(1);
+        updates['stats/virtualJoins'] = firebase.database.ServerValue.increment(1);
+      }
+
+      // Ficha para estadísticas
+      const newLogKey = addTableLogBase(updates, newId, recordData);
+      updates[`stats/tablesLog/${newLogKey}/createdAt`] = firebase.database.ServerValue.TIMESTAMP;
+      updates[`stats/tablesLog/${newLogKey}/players/${tableLogNickKey(creator)}`] = creator;
+
+      saveNick(creator);
+
+      const submitBtn = document.getElementById('createTableBtn');
+      submitBtn.disabled = true;
+
+      db.ref().update(updates).then(() => {
+        // Limpia el formulario pero SE QUEDA en la misma pestaña (Virtual o
+        // Presencial) donde se creó, para que la mesa nueva se vea en la lista.
+        document.getElementById('customTableForm').reset();
+        pickerCustomTable.clear();
+        pickerCreatorArrival.clear();
+        setTableModality(modality); // también oculta la pregunta "¿Qué noche?" (campo vacío)
+        closeCreateForm();
+
+        // Si hay filtros activos que esconderían el evento nuevo, se limpian.
+        if (modality === 'presencial' && !matchesPresencialFilters(recordData)) {
+          clearPresencialFilters();
+        }
+
+        showCreatedModal(newId, recordData);
+      }).catch((error) => {
+        console.error(error);
+        localStorage.removeItem(`vtes_owner_${newId}`);
+        localStorage.removeItem(`vtes_joined_${newId}_${creator.toLowerCase()}`);
+        showToast('❌ No se pudo crear. Revisa tu conexión a internet e inténtalo de nuevo.', 'error');
+      }).finally(() => {
+        submitBtn.disabled = false;
       });
-
-      document.getElementById('customTableForm').reset();
-      pickerCustomTable.clear();
     });
 
-    function setAutoTablePassword(autoKey) {
-      const currentPwd = autoPasswords[autoKey] || '';
-      const newPwd = prompt('Ingresa/actualiza la contraseña para esta mesa automática:', currentPwd);
-      if (newPwd !== null) {
-        autoPassRef.child(autoKey).set(newPwd.trim());
-      }
+    // ---------------------------------------------------------------------
+    // EDITAR DISCORD / CONTRASEÑA DE PARTIDA / LINK DE MAPS
+    // Acceso libre (dato informativo), ahora en la ventana propia del sitio.
+    // Se lee el valor actual de la mesa en vez de pasarlo en el botón.
+    // ---------------------------------------------------------------------
+    async function editTableField(tableId, field, { title, label, placeholder = '', type = 'text', validate = null, doneText, maxLength = null }) {
+      const t = currentGlobalData.find(item => item.id === tableId);
+      if (!t) return showToast('❌ Esta mesa ya no existe.', 'error');
+      const value = await uiDialog({
+        title,
+        input: { type, label, placeholder, value: t[field] || '', maxLength },
+        confirmLabel: 'Guardar',
+        validate
+      });
+      if (value === null) return;
+      db.ref(`vtes_records/${tableId}`).update({ [field]: value })
+        .then(() => showToast(doneText))
+        .catch(() => showToast('❌ No se pudo guardar. Revisa tu conexión.', 'error'));
     }
 
-    function editCustomTableDiscord(tableId, currentDiscord) {
-      const newDiscord = prompt('Ingresa o actualiza el Servidor / Canal de Discord:', currentDiscord || '');
-      if (newDiscord !== null) {
-        db.ref(`vtes_records/${tableId}`).update({
-          discord: newDiscord.trim()
-        });
-      }
+    function editCustomTableDiscord(tableId) {
+      editTableField(tableId, 'discord', { title: '🎧 Discord', label: 'Servidor / Canal de Discord', placeholder: 'ej. VTES Español', doneText: '✅ Discord actualizado' });
     }
 
-    function editCustomTableGamePassword(tableId, currentGamePassword) {
-      const newPassword = prompt('Ingresa o actualiza la contraseña de la partida:', currentGamePassword || '');
-      if (newPassword !== null) {
-        db.ref(`vtes_records/${tableId}`).update({
-          gamePassword: newPassword.trim()
-        });
-      }
+    function editCustomTableGamePassword(tableId) {
+      editTableField(tableId, 'gamePassword', { title: '🔑 Contraseña de la partida', label: 'Contraseña', placeholder: 'ej. vtes123', doneText: '✅ Contraseña actualizada' });
     }
 
-    function joinTable(tableId) {
-      const playerNick = prompt('Ingresa tu Nick / Nombre para unirte a esta mesa:');
-      if (!playerNick || !playerNick.trim()) return;
-
-      const cleanNick = playerNick.trim();
-      const tableRef = db.ref(`vtes_records/${tableId}`);
-
-      tableRef.get().then(snapshot => {
-        if (!snapshot.exists()) return alert('La mesa ya no existe.');
-        const table = snapshot.val();
-        const players = table.players || [];
-
-        if (players.some(p => p.toLowerCase() === cleanNick.toLowerCase())) {
-          return alert(`El jugador "${cleanNick}" ya está registrado en esta mesa.`);
-        }
-        if (players.length >= 5) {
-          return alert('La mesa ya está llena (máximo 5 jugadores).');
-        }
-
-        players.push(cleanNick);
-        
-        // Guardamos en el navegador local que ESTE usuario se unió con este Nick
-        localStorage.setItem(`vtes_joined_${tableId}_${cleanNick.toLowerCase()}`, cleanNick);
-
-        tableRef.update({ players: players });
+    function editCustomTableNotes(tableId) {
+      editTableField(tableId, 'notes', {
+        title: '📝 Notas de la mesa',
+        label: `Notas (máximo ${NOTES_MAX} caracteres; déjalo vacío para quitarlas)`,
+        placeholder: 'ej. Principiantes bienvenidos',
+        maxLength: NOTES_MAX,
+        validate: (value) => value.length <= NOTES_MAX ? null : `Máximo ${NOTES_MAX} caracteres.`,
+        doneText: '✅ Notas actualizadas'
       });
     }
 
+    function editCustomTableMapsLink(tableId) {
+      editTableField(tableId, 'mapsLink', {
+        title: '🗺️ Link de Google Maps',
+        label: 'Link (déjalo vacío para quitarlo)',
+        placeholder: 'https://maps.app.goo.gl/...',
+        type: 'url',
+        validate: (value) => (value === '' || isValidHttpUrl(value)) ? null : 'Pega un link que empiece con https:// (por ejemplo, de Google Maps).',
+        doneText: '✅ Link de ubicación actualizado'
+      });
+    }
+
+    // ---------------------------------------------------------------------
+    // SALIR DE UNA MESA / REMOVER A UN JUGADOR
+    // - Si es tu propio nick (unido desde este navegador): solo confirma.
+    // - Si eres el creador (este navegador): confirma.
+    // - Si no: pide el PIN Antiborrado en la ventana propia.
+    // ---------------------------------------------------------------------
     function leaveTable(tableId, playerToRemove) {
       const tableRef = db.ref(`vtes_records/${tableId}`);
 
-      tableRef.get().then(snapshot => {
-        if (!snapshot.exists()) return;
+      tableRef.get().then(async snapshot => {
+        if (!snapshot.exists()) return showToast('❌ Esta mesa ya no existe.', 'error');
         const table = snapshot.val();
-        let players = table.players || [];
+        const isSelf = isMyNick(tableId, playerToRemove);
+        const place = table.modality === 'presencial' ? 'el evento' : 'la mesa';
+        const fromPlace = table.modality === 'presencial' ? 'del evento' : 'de la mesa';
 
-        // 1. Identificar si el usuario actual es el creador de la mesa
-        const localOwnerKey = `vtes_owner_${tableId}`;
-        const isCreator = !!localStorage.getItem(localOwnerKey);
-
-        // 2. Identificar si el usuario actual es el propio jugador
-        const userJoinedAs = localStorage.getItem(`vtes_joined_${tableId}_${playerToRemove.toLowerCase()}`);
-        const isSelf = !!userJoinedAs;
-
-        let authorized = false;
-
-        if (isCreator || isSelf) {
-          const confirmAction = confirm(
-            isSelf 
-              ? `¿Deseas salir de la mesa "${table.name}"?` 
-              : `Como creador de la mesa, ¿deseas remover a "${playerToRemove}"?`
-          );
-          authorized = confirmAction;
+        let authorized;
+        if (isSelf) {
+          authorized = !!(await uiDialog({
+            title: '🚪 Salir',
+            message: `¿Quieres salir ${fromPlace} "${table.name}"${playerToRemove ? ` (como ${playerToRemove})` : ''}?`,
+            confirmLabel: 'Salir',
+            danger: true
+          }));
         } else {
-          const pinIngresado = prompt(
-            `🔒 Para remover a "${playerToRemove}" desde este equipo, ingresa el PIN Antiborrado de la mesa:`
-          );
-          if (pinIngresado && table.deletePin && pinIngresado.trim() === table.deletePin) {
-            authorized = true;
-          } else if (pinIngresado) {
-            alert('❌ PIN Antiborrado incorrecto. No tienes permiso para remover a este jugador.');
-          }
+          authorized = await authorizeTableAction(tableId, table, {
+            actionText: `remover a "${playerToRemove}"`,
+            confirmTitle: '❌ Remover jugador',
+            confirmMessage: `Como creador de ${place}, ¿quieres remover a "${playerToRemove}"?`,
+            confirmLabel: 'Remover',
+            danger: true
+          });
         }
-
         if (!authorized) return;
 
-        players = players.filter(p => p.toLowerCase() !== playerToRemove.toLowerCase());
-        localStorage.removeItem(`vtes_joined_${tableId}_${playerToRemove.toLowerCase()}`);
+        const before = table.players || [];
+        const players = before.filter(p => normalizePlayer(p).nick.toLowerCase() !== playerToRemove.toLowerCase());
 
-        if (players.length === 0) {
-          tableRef.remove();
-          localStorage.removeItem(localOwnerKey);
-        } else {
-          tableRef.update({ players: players });
+        // La mesa/evento ya NO se borra automáticamente al quedar en 0
+        // asistentes: solo se cierra por acción explícita del creador/PIN
+        // (deleteEntry) o por la barredora al vencer su ventana de tiempo.
+        const updates = {};
+
+        // Mesa virtual con suplentes: el primero entra en la plaza que se libera
+        // y ahí empieza a contar en estadísticas como un jugador más.
+        const subs = table.modality === 'presencial' ? [] : (table.substitutes || []);
+        let promoted = null;
+        if (players.length < before.length && players.length < MAX_PLAYERS && subs.length > 0) {
+          promoted = subs[0];
+          players.push(promoted);
+          updates[`vtes_records/${tableId}/substitutes`] = subs.length > 1 ? subs.slice(1) : null;
+          updates['stats/virtualJoins'] = firebase.database.ServerValue.increment(1);
+          const logKey = addTableLogBase(updates, tableId, table);
+          updates[`stats/tablesLog/${logKey}/players/${tableLogNickKey(promoted)}`] = promoted;
+          updates[`stats/tablesLog/${logKey}/promoted/${tableLogNickKey(promoted)}`] = promoted;
+          if (players.length >= 4) updates[`stats/tablesLog/${logKey}/filled`] = true;
         }
+        updates[`vtes_records/${tableId}/players`] = players;
+
+        db.ref().update(updates).then(() => {
+          localStorage.removeItem(`vtes_joined_${tableId}_${playerToRemove.toLowerCase()}`);
+          if (promoted) offerSubstituteNotice(tableId, table, playerToRemove, promoted, isSelf);
+          else showToast(isSelf ? `✅ Saliste ${fromPlace}` : `✅ Se removió a "${playerToRemove}"`);
+        }).catch(() => showToast('❌ No se pudo guardar. Revisa tu conexión.', 'error'));
       });
+    }
+
+    // Tras subir a un suplente: ofrece avisar en WhatsApp con el mensaje ya escrito
+    async function offerSubstituteNotice(tableId, table, leftNick, promoted, isSelf) {
+      const ok = await uiDialog({
+        title: isSelf ? '🚪 Saliste de la mesa' : `✅ Se removió a "${leftNick}"`,
+        message: `${promoted} (primer suplente) ocupa ${isSelf ? 'tu' : 'su'} plaza. ¿Quieres avisar en el grupo?`,
+        confirmLabel: '📲 Avisar en WhatsApp',
+        cancelLabel: 'Ahora no'
+      });
+      if (!ok) return;
+      const who = isSelf ? 'Me bajo' : `*${leftNick}* se baja`;
+      const msg = `🚪 ${who} de la mesa *${table.name}*. Entra *${promoted}* como suplente. 🩸\n\n👉 ${getTableUrl(tableId)}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // Dejar de ser suplente (uno mismo) o quitar a un suplente (creador / PIN)
+    function leaveSubstitute(tableId, nick) {
+      const tableRef = db.ref(`vtes_records/${tableId}`);
+      tableRef.get().then(async snapshot => {
+        if (!snapshot.exists()) return showToast('❌ Esta mesa ya no existe.', 'error');
+        const table = snapshot.val();
+        const isSelf = isMyNick(tableId, nick);
+        const authorized = isSelf
+          ? !!(await uiDialog({ title: '🚪 Salir de suplentes', message: `¿Quieres dejar de ser suplente en "${table.name}"${nick ? ` (como ${nick})` : ''}?`, confirmLabel: 'Salir', danger: true }))
+          : await authorizeTableAction(tableId, table, {
+              actionText: `quitar a "${nick}" de los suplentes`,
+              confirmTitle: '❌ Quitar suplente',
+              confirmMessage: `Como creador de la mesa, ¿quieres quitar a "${nick}" de los suplentes?`,
+              confirmLabel: 'Quitar',
+              danger: true
+            });
+        if (!authorized) return;
+        const subs = (table.substitutes || []).filter(s => s.toLowerCase() !== nick.toLowerCase());
+        tableRef.child('substitutes').set(subs.length ? subs : null).then(() => {
+          localStorage.removeItem(`vtes_joined_${tableId}_${nick.toLowerCase()}`);
+          showToast(isSelf ? '✅ Ya no eres suplente' : `✅ Se quitó a "${nick}" de los suplentes`);
+        }).catch(() => showToast('❌ No se pudo guardar. Revisa tu conexión.', 'error'));
+      });
+    }
+
+    // "Abrir otra mesa a esta hora": formulario con hora, plataforma y formato
+    // de la mesa llena. Discord y contraseña los pone el nuevo organizador.
+    function nextTableName(name) {
+      const m = (name || '').match(/^(.*) \(Mesa (\d+)\)$/);
+      return (m ? `${m[1]} (Mesa ${Number(m[2]) + 1})` : `${name} (Mesa 2)`).slice(0, 190);
+    }
+
+    function openSimilarTable(tableId) {
+      const t = currentGlobalData.find(item => item.id === tableId);
+      if (!t) return showToast('❌ Esta mesa ya no existe.', 'error');
+      setTableModality('virtual');
+      openCreateForm();
+      document.getElementById('tableName').value = nextTableName(t.name);
+      const start = new Date(t.utcTime);
+      pickerCustomTable.setDate(start);
+      nightUiKey.create = null;
+      updateNightUI('create', { preselect: start.getHours() < NIGHT_END_HOUR ? 'prev' : null });
+      const platformSelect = document.getElementById('tablePlatform');
+      if (t.platform && [...platformSelect.options].some(o => o.value === t.platform)) platformSelect.value = t.platform;
+      if (t.format === 'standard' || t.format === 'v5') document.getElementById('tableFormat').value = t.format;
+      document.getElementById('tableDiscord').value = '';
+      document.getElementById('tableGamePassword').value = '';
+      document.getElementById('tableNotes').value = '';
+      const hint = document.getElementById('createCopyHint');
+      hint.textContent = `Copiamos hora, plataforma y formato de "${t.name}". Pon tu Discord y tu contraseña.`;
+      hint.classList.remove('hidden');
+      document.getElementById('createFormPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function togglePasswordView(elementId) {
@@ -527,208 +2120,238 @@
       if (el) el.classList.toggle('hidden');
     }
 
-    // ELIMINAR O CERRAR REGISTRO / MESA (LocalStorage + Confirmación + PIN Antiborrado)
+    // ---------------------------------------------------------------------
+    // SALTAR ESTA SEMANA (eventos semanales)
+    // Mueve el evento una semana adelante sin detener la serie (por
+    // ejemplo, un jueves festivo). Misma autorización que Editar horario.
+    // La ficha de estadísticas de la semana saltada se borra: no se jugó.
+    // ---------------------------------------------------------------------
+    function skipWeek(id) {
+      const tableRef = db.ref(`vtes_records/${id}`);
+      tableRef.get().then(async snapshot => {
+        if (!snapshot.exists()) return showToast('❌ Este evento ya no existe.', 'error');
+        const table = snapshot.val();
+        if (table.recurrence !== 'weekly') return;
+        const nextIso = addWeeksInZone(table.utcTime, table.originTz, 1);
+        const f = formatPresencialDateTime(nextIso, table.originTz, { weekday: 'long', day: 'numeric', month: 'long' }, { hour: '2-digit', minute: '2-digit' });
+
+        const ok = await authorizeTableAction(id, table, {
+          actionText: 'saltar esta semana',
+          confirmTitle: '⏭️ Saltar esta semana',
+          confirmMessage: `"${table.name}" pasará al ${f.date} a las ${f.time}. La lista de asistentes de esta semana se vaciará.`,
+          confirmLabel: 'Saltar'
+        });
+        if (!ok) return;
+
+        const skippedKey = tableLogKey(id, table);
+        tableRef.transaction(cur => {
+          if (!cur || cur.utcTime !== table.utcTime) return; // alguien lo cambió mientras tanto
+          cur.utcTime = nextIso;
+          delete cur.players;
+          return cur;
+        }).then(result => {
+          if (!result || !result.committed) return showToast('❌ El evento cambió mientras tanto. Revisa la fecha y vuelve a intentar.', 'error');
+          db.ref(`stats/tablesLog/${skippedKey}`).remove().catch(() => {});
+          showToast(`✅ Movido al ${f.date}`);
+        }).catch(() => showToast('❌ No se pudo guardar. Revisa tu conexión.', 'error'));
+      });
+    }
+
+    // ELIMINAR O CERRAR MESA / EVENTO (dueño del navegador + confirmación, o PIN Antiborrado)
     function deleteEntry(id) {
       const tableRef = db.ref(`vtes_records/${id}`);
 
-      tableRef.get().then(snapshot => {
-        if (!snapshot.exists()) return alert('El elemento ya no existe.');
+      tableRef.get().then(async snapshot => {
+        if (!snapshot.exists()) return showToast('❌ Esta mesa ya no existe.', 'error');
         const table = snapshot.val();
+        const itemLabel = table.modality === 'presencial' ? `el evento "${table.name}"` : `la mesa "${table.name}"`;
 
-        const localOwnerKey = `vtes_owner_${id}`;
-        const isOriginalDevice = localStorage.getItem(localOwnerKey);
-        const itemLabel = table.type === 'custom_table' ? `la mesa "${table.name}"` : `el registro de "${table.nick}"`;
+        const ok = await authorizeTableAction(id, table, {
+          actionText: `cerrar ${itemLabel}`,
+          confirmTitle: '🗑️ Cerrar',
+          confirmMessage: table.recurrence === 'weekly'
+            ? `¿Seguro que quieres cerrar ${itemLabel}? Se eliminará para todos y dejará de repetirse cada semana. No se puede deshacer. (Si solo quieres saltar una semana, usa "⏭️ Saltar esta semana".)`
+            : `¿Seguro que quieres cerrar ${itemLabel}? Se eliminará para todos y no se puede deshacer.`,
+          confirmLabel: 'Cerrar definitivamente',
+          danger: true
+        });
+        if (!ok) return;
 
-        if (isOriginalDevice) {
-          const confirmDelete = confirm(`¿Estás seguro de que deseas eliminar permanentemente ${itemLabel}?`);
-          if (confirmDelete) {
-            tableRef.remove();
-            localStorage.removeItem(localOwnerKey);
-          }
-        } else {
-          const pinIngresado = prompt(`🔒 Este navegador no es el creador original de ${itemLabel}. Ingresa el PIN Antiborrado de 4 dígitos para proceder:`);
-          if (!pinIngresado) return;
-
-          const valorLimpio = pinIngresado.trim();
-          if (table.deletePin && valorLimpio === table.deletePin) {
-            tableRef.remove();
-          } else {
-            alert('❌ PIN Antiborrado incorrecto. No se pudo eliminar el registro.');
-          }
-        }
+        tableRef.remove().then(() => {
+          try { localStorage.removeItem(`vtes_owner_${id}`); } catch (e) {}
+          showToast(table.modality === 'presencial' ? '✅ Evento cerrado' : '✅ Mesa cerrada');
+        }).catch(() => showToast('❌ No se pudo cerrar. Revisa tu conexión.', 'error'));
       });
     }
 
     function getPlatformBadge(platform) {
       const isLackey = (platform || '').toLowerCase().includes('lackey');
-      return isLackey 
-        ? `<span class="bg-blue-950 text-blue-300 border border-blue-700/60 text-[10px] px-2 py-0.5 rounded font-semibold">💻 LackeyCCG</span>`
-        : `<span class="bg-purple-950 text-purple-300 border border-purple-700/60 text-[10px] px-2 py-0.5 rounded font-semibold">🦇 Succubus Club</span>`;
+      return isLackey
+        ? `<span class="bg-blue-950 text-blue-300 border border-blue-700/60 text-[10px] px-2 py-0.5 rounded font-semibold">LackeyCCG</span>`
+        : `<span class="bg-purple-950 text-purple-300 border border-purple-700/60 text-[10px] px-2 py-0.5 rounded font-semibold">Succubus Club</span>`;
     }
+
+    // Formato de mesa virtual: Standard (Legacy) o V5
+    function formatLabel(format) {
+      return format === 'v5' ? 'V5' : 'Standard (Legacy)';
+    }
+    function getFormatBadge(format) {
+      if (!format) return ''; // mesas creadas antes de que existiera el campo
+      return format === 'v5'
+        ? `<span class="bg-orange-950 text-orange-300 border border-orange-600/70 text-[10px] px-2 py-0.5 rounded font-bold whitespace-nowrap">V5</span>`
+        : `<span class="bg-zinc-800 text-zinc-300 border border-zinc-600 text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap">Standard (Legacy)</span>`;
+    }
+
+    function getLocationBadge() {
+      return `<span class="bg-emerald-950 text-emerald-300 border border-emerald-700/60 text-[10px] px-2 py-0.5 rounded font-semibold">📍 Presencial</span>`;
+    }
+
+    function matchesPresencialFilters(t) {
+      const countryVal = document.getElementById('filterCountry').value || '';
+      const cityVal = document.getElementById('filterCity').value || '';
+      const dateVal = document.getElementById('filterDate').value || '';
+
+      // Si la ciudad viene de la URL (ej. .../Organizador-Vtes/Zaragoza), manda sobre el
+      // dropdown manual, y compara sin importar mayúsculas/acentos-caja.
+      if (urlCityFilter) {
+        if ((t.city || '').toLowerCase() !== urlCityFilter.toLowerCase()) return false;
+      } else if (cityVal && (t.city || '').toLowerCase() !== cityVal.toLowerCase()) {
+        return false;
+      }
+
+      if (countryVal && (t.country || '') !== countryVal) return false;
+      if (dateVal) {
+        // Se compara con la fecha DEL LUGAR del evento (su huso de origen),
+        // que es la misma que se muestra en la tarjeta, no con la fecha de
+        // quien consulta. Formato YYYY-MM-DD.
+        const eventDateStr = new Date(t.utcTime).toLocaleDateString('en-CA', { timeZone: t.originTz || undefined });
+        if (eventDateStr !== dateVal) return false;
+      }
+      return true;
+    }
+
+    // Filtro de País: lista con los países que tienen eventos abiertos
+    function updateCountryFilterOptions(presencialTables) {
+      const countrySelect = document.getElementById('filterCountry');
+      const currentValue = countrySelect.value;
+      const countries = Array.from(new Set(presencialTables.map(t => t.country).filter(Boolean))).sort();
+      countrySelect.innerHTML = '<option value="">Todos</option>' + countries.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+      if (countries.includes(currentValue)) countrySelect.value = currentValue;
+    }
+
+    // Filtro de Ciudad: solo las ciudades del país elegido (o todas)
+    function updateCityFilterOptions(presencialTables) {
+      const citySelect = document.getElementById('filterCity');
+      const currentValue = citySelect.value;
+      const countryVal = document.getElementById('filterCountry').value || '';
+      const inCountry = countryVal ? presencialTables.filter(t => (t.country || '') === countryVal) : presencialTables;
+      const cities = Array.from(new Set(inCountry.map(t => t.city).filter(Boolean))).sort();
+      citySelect.innerHTML = '<option value="">Todas</option>' + cities.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+
+      if (urlCityFilter) {
+        // Refleja en el dropdown la ciudad de la URL si ya existe algún evento con ese
+        // nombre (comparación sin distinguir mayúsculas). Si no hay coincidencia todavía,
+        // el dropdown se queda en "Todas" pero el filtro de la URL sigue aplicando igual
+        // (mostrará la lista vacía, no todos los eventos).
+        const match = cities.find(c => c.toLowerCase() === urlCityFilter.toLowerCase());
+        if (match) citySelect.value = match;
+      } else if (cities.includes(currentValue)) {
+        citySelect.value = currentValue;
+      }
+    }
+
+    function clearPresencialFilters() {
+      document.getElementById('filterCountry').value = '';
+      document.getElementById('filterCity').value = '';
+      pickerFilterDate.clear();
+      clearUrlCityFilter();
+      renderAll(currentGlobalData);
+    }
+
+    document.getElementById('filterCountry').addEventListener('change', () => {
+      // Al cambiar de país se reinicia la ciudad (la anterior podría no pertenecer a ese país)
+      document.getElementById('filterCity').value = '';
+      clearUrlCityFilter();
+      renderAll(currentGlobalData);
+    });
+    document.getElementById('filterCity').addEventListener('change', () => {
+      // Si el usuario toca el dropdown manualmente, la ciudad de la URL deja de mandar.
+      clearUrlCityFilter();
+      renderAll(currentGlobalData);
+    });
 
     function renderAll(allData) {
-      const tbody = document.getElementById('scheduleTable');
-      const autoTablesContainer = document.getElementById('autoTablesContainer');
       const customTablesContainer = document.getElementById('customTablesContainer');
 
-      const individuals = allData.filter(d => d.type === 'individual' || !d.type);
-      const customTables = allData.filter(d => d.type === 'custom_table');
+      // Contadores de las pestañas (total de cada modalidad, sin filtros)
+      const allTables = allData.filter(d => d.type === 'custom_table');
+      document.getElementById('countVirtual').textContent = allTables.filter(d => (d.modality || 'virtual') === 'virtual').length;
+      document.getElementById('countPresencial').textContent = allTables.filter(d => d.modality === 'presencial').length;
 
-      if (individuals.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-gray-500">No hay disponividades individuales.</td></tr>`;
-      } else {
-        individuals.sort((a, b) => new Date(a.utcTime) - new Date(b.utcTime));
-        tbody.innerHTML = individuals.map(item => {
-          const dateObj = new Date(item.utcTime);
-          return `
-            <tr class="hover:bg-gray-750 transition">
-              <td class="py-3 px-4 font-bold text-red-400">${escapeHtml(item.nick)}</td>
-              <td class="py-3 px-4">${getPlatformBadge(item.platform || 'Lackey')}</td>
-              <td class="py-3 px-4">${dateObj.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</td>
-              <td class="py-3 px-4 font-mono font-semibold text-white">${dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</td>
-              <td class="py-3 px-4 text-xs text-gray-500">${escapeHtml(item.originTz || 'UTC')}</td>
-              <td class="py-3 px-4 text-right">
-                <button onclick="deleteEntry('${item.id}')" class="text-xs text-gray-500 hover:text-red-400 transition">Eliminar</button>
-              </td>
-            </tr>
-          `;
-        }).join('');
+      const rawCustomTables = allTables.filter(d => (d.modality || 'virtual') === currentTableModalityFilter);
+
+      let customTables = rawCustomTables;
+      if (currentTableModalityFilter === 'presencial') {
+        updateCountryFilterOptions(rawCustomTables);
+        updateCityFilterOptions(rawCustomTables);
+        customTables = rawCustomTables.filter(matchesPresencialFilters);
       }
 
-      renderAutoMatches(individuals, autoTablesContainer);
       renderCustomTables(customTables, customTablesContainer);
-    }
-
-    function renderAutoMatches(individuals, container) {
-      const groups = {};
-      individuals.forEach(entry => {
-        const timeKey = new Date(entry.utcTime).toISOString().slice(0, 16); 
-        const platformKey = (entry.platform || 'Lackey').toLowerCase();
-        const groupKey = `${timeKey}_${platformKey}`;
-
-        if (!groups[groupKey]) {
-          groups[groupKey] = {
-            timeIso: timeKey,
-            platform: entry.platform || 'Lackey',
-            players: []
-          };
-        }
-        groups[groupKey].players.push(entry);
-      });
-
-      const keys = Object.keys(groups);
-      if (keys.length === 0) {
-        container.innerHTML = `<p class="col-span-2 text-center text-gray-500 py-4">No hay horarios para emparejar.</p>`;
-        return;
-      }
-
-      let html = '';
-      keys.forEach(key => {
-        const groupData = groups[key];
-        const allPlayersInSlot = groupData.players;
-        const platformName = groupData.platform;
-
-        const dateObj = new Date(groupData.timeIso + ':00Z');
-        const formattedDate = dateObj.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
-        const formattedTime = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-
-        const tables = [];
-        for (let i = 0; i < allPlayersInSlot.length; i += 5) {
-          tables.push(allPlayersInSlot.slice(i, i + 5));
-        }
-
-        tables.forEach((tablePlayers, index) => {
-          const count = tablePlayers.length;
-          const tableLabel = tables.length > 1 ? ` (Mesa ${index + 1})` : '';
-          const autoKey = `auto_${key.replace(/[:\-T]/g, '')}_${index + 1}`;
-          const currentPassword = autoPasswords[autoKey] || '';
-
-          let statusBadge = count >= 4 
-            ? `<span class="bg-green-900/80 text-green-300 text-xs px-2.5 py-1 rounded-full font-bold border border-green-600">🔥 Mesa Lista (${count} jug)</span>`
-            : `<span class="bg-gray-700 text-gray-300 text-xs px-2.5 py-1 rounded-full font-bold">⏳ ${count}/5 Jugadores</span>`;
-
-          const pwdHtml = `
-            <div class="bg-gray-800/80 border border-gray-700/80 rounded-lg p-2 flex items-center justify-between text-xs">
-              <span class="text-gray-400 font-medium flex items-center gap-1">🔑 Password Partida:</span>
-              <div class="flex items-center gap-2">
-                ${currentPassword 
-                  ? `<span id="pwd-${autoKey}" class="hidden font-mono font-bold text-amber-400 bg-gray-900 px-2 py-0.5 rounded border border-amber-500/30 select-all">${escapeHtml(currentPassword)}</span>
-                     <button onclick="togglePasswordView('pwd-${autoKey}')" class="text-gray-400 hover:text-white bg-gray-700 hover:bg-gray-600 px-2 py-0.5 rounded transition text-[11px]">👁️ Ver</button>`
-                  : `<span class="text-gray-500 italic">Sin clave</span>`
-                }
-                <button onclick="setAutoTablePassword('${autoKey}')" class="text-amber-400 hover:text-amber-300 bg-amber-950/60 border border-amber-700/50 px-2 py-0.5 rounded transition text-[11px] font-semibold">
-                  ✏️ ${currentPassword ? 'Editar' : 'Definir'}
-                </button>
-              </div>
-            </div>
-          `;
-
-          const autoCardId = `card-auto-${autoKey}`;
-
-          html += `
-            <div id="${autoCardId}" class="bg-gray-900 border border-gray-700 rounded-xl p-4 shadow-md space-y-3">
-              <div class="flex justify-between items-start">
-                <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <p class="text-xs text-red-400 uppercase font-semibold tracking-wider">${formattedDate}${tableLabel}</p>
-                    ${getPlatformBadge(platformName)}
-                  </div>
-                  <p class="text-xl font-mono font-bold text-white">${formattedTime}</p>
-                </div>
-                <div>${statusBadge}</div>
-              </div>
-              
-              ${pwdHtml}
-
-              <div class="space-y-1.5">
-                <p class="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Jugadores en esta mesa:</p>
-                <div class="flex flex-wrap gap-1.5">
-                  ${tablePlayers.map(p => `
-                    <span class="inline-flex items-center bg-gray-800 border border-gray-700 text-gray-200 text-xs px-2.5 py-1 rounded font-medium">
-                      ${escapeHtml(p.nick)}
-                    </span>
-                  `).join('')}
-                </div>
-              </div>
-
-              <button onclick="shareTableInvitation('${autoCardId}', 'Mesa Automática ${tableLabel}', '${escapeHtml(platformName)}', '${dateObj.toISOString()}', ${count}, '')" class="w-full bg-green-700/30 hover:bg-green-600 text-green-300 hover:text-white border border-green-600/50 font-bold py-1.5 rounded-lg text-xs transition duration-150 flex items-center justify-center gap-2">
-                📲 Invitar por WhatsApp
-              </button>
-            </div>
-          `;
-        });
-      });
-
-      container.innerHTML = html;
     }
 
     function renderCustomTables(tables, container) {
       if (tables.length === 0) {
-        container.innerHTML = `<p class="col-span-2 text-center text-gray-500 py-4">No hay mesas abiertas creadas. ¡Abre una!</p>`;
+        container.innerHTML = `<p class="col-span-2 text-center text-zinc-500 py-4">${currentTableModalityFilter === 'presencial' ? 'No hay eventos presenciales creados. ¡Crea uno!' : 'No hay mesas abiertas creadas. ¡Abre una!'}</p>`;
         return;
       }
 
       tables.sort((a, b) => new Date(a.utcTime) - new Date(b.utcTime));
 
       container.innerHTML = tables.map(t => {
-        const dateObj = new Date(t.utcTime);
-        const formattedDate = dateObj.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
-        const formattedTime = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
         const count = (t.players || []).length;
-        const isFull = count >= 5;
-        const isReady = count >= 4;
+        const isPresencial = t.modality === 'presencial';
+        const isFull = !isPresencial && count >= 5;
+        const isReady = !isPresencial && count >= 4;
+        const iOwn = isOwner(t.id);
+        const id = escapeJsAttr(t.id);
 
-        let statusBadge = isReady
-          ? `<span class="bg-green-900/80 text-green-300 text-xs px-2.5 py-1 rounded-full font-bold border border-green-600">🔥 Mesa Completa (${count}/5)</span>`
-          : `<span class="bg-amber-900/60 text-amber-300 border border-amber-700/60 text-xs px-2.5 py-1 rounded-full font-bold">⏳ Faltan ${5 - count} jugador(es)</span>`;
+        let formattedDate, formattedTime;
+        if (isPresencial) {
+          // Hora local del lugar del evento (huso de origen), sin convertir
+          const fCard = formatPresencialDateTime(t.utcTime, t.originTz, { weekday: 'short', month: 'short', day: 'numeric' }, { hour: '2-digit', minute: '2-digit' });
+          formattedDate = fCard.date;
+          formattedTime = fCard.time;
+        } else {
+          const dateObj = new Date(t.utcTime);
+          formattedDate = dateObj.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+          formattedTime = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Jugadores normalizados (retrocompatibles) y, si es presencial, ordenados por hora de llegada
+        let displayPlayers = (t.players || []).map(normalizePlayer);
+        if (isPresencial) {
+          displayPlayers = displayPlayers.slice().sort((a, b) => arrivalToMinutes(a.arrival) - arrivalToMinutes(b.arrival));
+        }
+        // Nicks con los que ESTE navegador está inscrito en la mesa
+        const myNicks = displayPlayers.filter(p => isMyNick(t.id, p.nick)).map(p => p.nick);
+        // Suplentes (solo mesas virtuales), en orden de llegada
+        const subs = isPresencial ? [] : (t.substitutes || []);
+        const mySubNicks = subs.filter(n => isMyNick(t.id, n));
+
+        let statusBadge = isPresencial
+          ? `<span class="bg-emerald-900/60 text-emerald-300 border border-emerald-700/60 text-xs px-2.5 py-1 rounded-full font-bold whitespace-nowrap">👥 ${count} confirmado${count === 1 ? '' : 's'}</span>`
+          : isReady
+            ? `<span class="bg-green-900/80 text-green-300 text-xs px-2.5 py-1 rounded-full font-bold whitespace-nowrap border border-green-600">✅ Mesa Completa (${count}/5)</span>`
+            : `<span class="bg-wine-900/60 text-wine-300 border border-wine-700/60 text-xs px-2.5 py-1 rounded-full font-bold whitespace-nowrap">🪑 Faltan ${5 - count} jugador(es)</span>`;
 
         const discordHtml = `
           <div class="bg-indigo-950/40 border border-indigo-700/50 rounded-lg p-2 flex items-center justify-between text-xs text-indigo-300">
-            <span class="font-medium flex items-center gap-1">
-              <span>🎧</span> <strong>Discord:</strong> 
-              ${t.discord ? `<span class="text-indigo-200 font-normal">${escapeHtml(t.discord)}</span>` : `<span class="text-gray-500 italic">No especificado</span>`}
+            <span class="font-medium flex items-center gap-1 min-w-0">
+              <span>🎧</span> <strong>Discord:</strong>
+              ${t.discord ? `<span class="text-indigo-200 font-normal break-all">${escapeHtml(t.discord)}</span>` : `<span class="text-zinc-500 italic">No especificado</span>`}
             </span>
-            <button onclick="editCustomTableDiscord('${t.id}', '${escapeHtml(t.discord || '')}')" class="text-indigo-400 hover:text-indigo-200 bg-indigo-900/60 border border-indigo-700/50 px-2 py-0.5 rounded transition text-[11px] font-semibold ml-2">
+            <button onclick="editCustomTableDiscord('${id}')" class="text-indigo-400 hover:text-indigo-200 bg-indigo-900/60 border border-indigo-700/50 px-2 py-0.5 rounded transition text-[11px] font-semibold ml-2 shrink-0">
               ✏️ ${t.discord ? 'Editar' : 'Definir'}
             </button>
           </div>
@@ -737,61 +2360,159 @@
         const gamePwdHtml = `
           <div class="bg-blue-950/40 border border-blue-700/50 rounded-lg p-2 flex items-center justify-between text-xs text-blue-300">
             <span class="font-medium flex items-center gap-1">
-              <span>🎮</span> <strong>Pass Partida:</strong> 
-              ${t.gamePassword ? `<span id="gamepwd-${t.id}" class="hidden font-mono font-bold text-blue-200 bg-gray-900 px-2 py-0.5 rounded border border-blue-500/30 select-all">${escapeHtml(t.gamePassword)}</span><button onclick="togglePasswordView('gamepwd-${t.id}')" class="text-blue-400 hover:text-white bg-gray-700 hover:bg-gray-600 px-2 py-0.5 rounded transition text-[11px] ml-1">👁️ Ver</button>` : `<span class="text-gray-500 italic">Sin contraseña</span>`}
+              <span>🔑</span> <strong>Pass Partida:</strong>
+              ${t.gamePassword ? `<span id="gamepwd-${escapeHtml(t.id)}" class="hidden font-mono font-bold text-blue-200 bg-zinc-900 px-2 py-0.5 rounded border border-blue-500/30 select-all">${escapeHtml(t.gamePassword)}</span><button onclick="togglePasswordView('gamepwd-${id}')" class="text-blue-400 hover:text-white bg-zinc-700 hover:bg-zinc-600 px-2 py-0.5 rounded transition text-[11px] ml-1">👁️ Ver</button>` : `<span class="text-zinc-500 italic">Sin contraseña</span>`}
             </span>
-            <button onclick="editCustomTableGamePassword('${t.id}', '${escapeHtml(t.gamePassword || '')}')" class="text-blue-400 hover:text-blue-200 bg-blue-900/60 border border-blue-700/50 px-2 py-0.5 rounded transition text-[11px] font-semibold ml-2">
+            <button onclick="editCustomTableGamePassword('${id}')" class="text-blue-400 hover:text-blue-200 bg-blue-900/60 border border-blue-700/50 px-2 py-0.5 rounded transition text-[11px] font-semibold ml-2 shrink-0">
               ✏️ ${t.gamePassword ? 'Editar' : 'Definir'}
             </button>
           </div>
         `;
 
-        const cardId = `card-custom-${t.id}`;
+        // Solo se muestra el botón de mapa si el link es un link real (http/https)
+        const hasValidMap = t.mapsLink && isValidHttpUrl(t.mapsLink);
+        const venueHtml = `
+          <div class="bg-emerald-950/40 border border-emerald-700/50 rounded-lg p-2.5 text-xs text-emerald-300 space-y-1.5">
+            <div class="flex items-center gap-1.5">
+              <span>📍</span> <strong>${escapeHtml(t.venue || '')}</strong>
+            </div>
+            <div class="text-emerald-400/70 pl-4">${escapeHtml(t.city || '')}${t.country ? ', ' + escapeHtml(t.country) : ''}</div>
+            <div class="flex items-center justify-between pt-1">
+              ${hasValidMap
+                ? `<a href="${escapeHtml(t.mapsLink)}" target="_blank" rel="noopener" class="text-emerald-400 hover:text-emerald-200 bg-emerald-900/60 border border-emerald-700/50 px-2 py-0.5 rounded transition text-[11px] font-semibold">🗺️ Ver ubicación</a>`
+                : `<span class="text-zinc-500 italic">${t.mapsLink ? 'Link de mapa no válido' : 'Sin link de mapa'}</span>`}
+              <button onclick="editCustomTableMapsLink('${id}')" class="text-emerald-400 hover:text-emerald-200 bg-emerald-900/60 border border-emerald-700/50 px-2 py-0.5 rounded transition text-[11px] font-semibold ml-2">
+                ✏️ ${t.mapsLink ? 'Editar' : 'Agregar'} link
+              </button>
+            </div>
+          </div>
+        `;
+
+        const playersHtml = displayPlayers.map(p => {
+          const mine = myNicks.includes(p.nick);
+          const nickArg = escapeJsAttr(p.nick);
+          return `
+            <span class="inline-flex items-center gap-1.5 ${mine ? 'bg-purple-950/70 border-purple-600/80 text-purple-100' : 'bg-wine-950/50 border-wine-800/60 text-wine-100'} border text-sm px-2.5 py-1 rounded-lg font-medium">
+              ${escapeHtml(p.nick)}${mine ? '<span class="text-purple-300 text-xs font-semibold">· tú</span>' : ''}${p.arrival ? `<span class="${mine ? 'text-purple-200' : 'text-wine-200'} font-mono text-xs">· ${escapeHtml(p.arrival)}</span>` : ''}
+              ${isPresencial ? `<button onclick="editPlayerArrival('${id}', '${nickArg}', '${escapeJsAttr(p.arrival || '')}')" class="${mine ? 'text-purple-300/80 hover:text-purple-100' : 'text-wine-500/70 hover:text-wine-300'} font-bold text-[11px]" title="Editar hora de llegada">✏️</button>` : ''}
+              ${mine ? '' : `<button onclick="leaveTable('${id}', '${nickArg}')" class="text-wine-500 hover:text-red-400 font-bold ml-1 text-xs" title="Remover jugador">×</button>`}
+            </span>
+          `;
+        }).join('');
+
+        const subsHtml = subs.length === 0 ? '' : `
+          <div class="space-y-2 bg-zinc-800/50 border border-dashed border-zinc-600 rounded-lg p-2.5">
+            <p class="text-xs font-semibold text-zinc-400">⏳ Suplentes (${subs.length}/${SUBS_MAX}) · entran en este orden si alguien sale:</p>
+            <ol class="space-y-1.5">
+              ${subs.map((n, i) => {
+                const mine = mySubNicks.includes(n);
+                return `
+                <li class="flex items-center justify-between gap-2 text-sm">
+                  <span class="flex items-center gap-2 min-w-0">
+                    <span class="w-5 h-5 shrink-0 rounded-full bg-zinc-800 border border-zinc-600 text-[11px] text-zinc-300 font-bold flex items-center justify-center">${i + 1}</span>
+                    <span class="${mine ? 'text-purple-100' : 'text-zinc-200'} truncate">${escapeHtml(n)}</span>${mine ? '<span class="text-purple-300 text-xs font-semibold shrink-0">· tú</span>' : ''}
+                  </span>
+                  ${mine ? '' : `<button onclick="leaveSubstitute('${id}', '${escapeJsAttr(n)}')" class="text-zinc-500 hover:text-red-400 font-bold text-xs px-1" title="Quitar suplente">×</button>`}
+                </li>`;
+              }).join('')}
+            </ol>
+          </div>
+        `;
+
+        const mainActionHtml = !isFull ? `
+                  <button onclick="joinTable('${id}')" class="w-full bg-wine-600/20 hover:bg-wine-600 text-wine-300 hover:text-white border border-wine-600/50 font-bold py-1.5 rounded-lg text-xs transition duration-150">
+                    ➕ ${isPresencial ? '¡Confirmar asistencia!' : '¡Unirme a esta Mesa!'}
+                  </button>
+                ` : subs.length < SUBS_MAX ? `
+                  <button onclick="joinTable('${id}', true)" class="w-full bg-zinc-800 hover:bg-amber-900/60 text-amber-300 hover:text-white border border-amber-700/60 font-bold py-1.5 rounded-lg text-xs transition duration-150">
+                    ⏳ Apuntarme como suplente
+                  </button>
+                ` : `
+                  <button onclick="openSimilarTable('${id}')" class="w-full bg-wine-600/20 hover:bg-wine-600 text-wine-300 hover:text-white border border-wine-600/50 font-bold py-1.5 rounded-lg text-xs transition duration-150">
+                    ➕ Abrir otra mesa a esta hora
+                  </button>
+                `;
+
+        const leaveSubButtons = mySubNicks.map(nick => `
+          <button onclick="leaveSubstitute('${id}', '${escapeJsAttr(nick)}')" class="flex-1 min-w-[8rem] bg-zinc-800 hover:bg-red-900/60 text-zinc-300 hover:text-white border border-zinc-600 font-semibold py-1.5 px-2 rounded-lg text-xs transition">
+            🚪 Salir de suplentes${mySubNicks.length > 1 ? ` (${escapeHtml(nick)})` : ''}
+          </button>
+        `).join('');
+
+        const leaveButtons = myNicks.map(nick => `
+          <button onclick="leaveTable('${id}', '${escapeJsAttr(nick)}')" class="flex-1 min-w-[8rem] bg-zinc-800 hover:bg-red-900/60 text-zinc-300 hover:text-white border border-zinc-600 font-semibold py-1.5 px-2 rounded-lg text-xs transition">
+            🚪 Salir${myNicks.length > 1 ? ` (${escapeHtml(nick)})` : isPresencial ? ' del evento' : ' de la mesa'}
+          </button>
+        `).join('');
+
+        const cardId = `card-custom-${escapeHtml(t.id)}`;
 
         return `
-          <div id="${cardId}" class="bg-gray-900 border ${isReady ? 'border-green-600/60' : 'border-amber-600/40'} rounded-xl p-4 shadow-md space-y-4">
-            <div class="flex justify-between items-start border-b border-gray-800 pb-2">
-              <div>
-                <div class="flex items-center gap-2">
-                  <h3 class="font-bold text-amber-400 text-base">${escapeHtml(t.name)}</h3>
-                  ${getPlatformBadge(t.platform || 'Lackey')}
+          <div id="${cardId}" class="bg-zinc-900 border ${isPresencial ? 'border-emerald-600/50' : (isReady ? 'border-green-600/60' : 'border-wine-600/40')} rounded-xl p-4 shadow-md space-y-4 transition-shadow">
+            <!-- Encabezado con renglones fijos: 1) etiquetas + estado, 2) nombre, 3) fecha -->
+            <div class="space-y-1.5 border-b border-zinc-800 pb-2">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex flex-wrap items-center gap-1.5 min-w-0">
+                  ${isPresencial ? getLocationBadge() : getPlatformBadge(t.platform || 'Lackey')}
+                  ${isPresencial ? '' : getFormatBadge(t.format)}
+                  ${isPresencial && t.recurrence === 'weekly' ? `<span class="bg-emerald-950 text-emerald-200 border border-emerald-600/70 text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap">🔁 Cada ${escapeHtml(weekdayInZone(t.utcTime, t.originTz))}</span>` : ''}
+                  ${iOwn ? `<span class="bg-purple-950 text-purple-200 border border-purple-600/70 text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap">👑 Organizas tú</span>` : ''}
                 </div>
-                <p class="text-xs text-gray-400 mt-0.5">${formattedDate} - <span class="font-mono text-white font-semibold">${formattedTime}</span></p>
+                <div class="shrink-0">${statusBadge}</div>
               </div>
-              <div class="flex flex-col items-end gap-1">
-                ${statusBadge}
-                <button onclick="deleteEntry('${t.id}')" class="text-[10px] text-gray-500 hover:text-red-400 transition mt-1">Cerrar Mesa</button>
-              </div>
+              <h3 class="font-bold text-wine-400 text-base leading-snug break-words">${escapeHtml(t.name)}</h3>
+              <p class="text-xs text-zinc-400 flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                <span>${formattedDate} - <span class="font-mono text-white font-semibold">${formattedTime}</span> ${isPresencial ? '<span class="text-emerald-400">(hora local)</span>' : '<span class="text-zinc-500">(tu hora)</span>'}</span>
+                ${nightBadgeHtml(t)}
+                ${relativeBadgeHtml(t.utcTime)}
+              </p>
+            </div>
+
+            ${t.notes ? `
+            <div class="bg-zinc-800/70 border border-zinc-700 rounded-lg p-2 flex items-start justify-between gap-2 text-xs">
+              <p class="text-zinc-200 break-words min-w-0"><span class="mr-1">📝</span>${escapeHtml(t.notes)}</p>
+              <button onclick="editCustomTableNotes('${id}')" class="text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-600 px-2 py-0.5 rounded transition text-[11px] font-semibold shrink-0">✏️ Editar</button>
+            </div>` : ''}
+
+            <div class="space-y-2">
+              ${isPresencial ? venueHtml : discordHtml + gamePwdHtml}
             </div>
 
             <div class="space-y-2">
-              ${discordHtml}
-              ${gamePwdHtml}
-            </div>
-
-            <div class="space-y-2">
-              <p class="text-xs font-semibold text-gray-400">Jugadores confirmados (${count}/5):</p>
+              <p class="text-xs font-semibold text-zinc-400">${isPresencial ? `Asistentes confirmados (${count})` : `Jugadores confirmados (${count}/5)`}:</p>
               <div class="flex flex-wrap gap-2">
-                 ${(t.players || []).map(p => `
-                  <span class="inline-flex items-center gap-1.5 bg-amber-950/50 border border-amber-800/60 text-amber-200 text-xs px-2.5 py-1 rounded-lg font-medium">
-                    ${escapeHtml(p)}
-                    <button onclick="leaveTable('${t.id}', '${escapeHtml(p)}')" class="text-amber-500 hover:text-red-400 font-bold ml-1 text-xs" title="Remover jugador">×</button>
-                  </span>
-                `).join('')}
+                ${playersHtml}
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1">
-              ${!isFull ? `
-                <button onclick="joinTable('${t.id}')" class="w-full bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white border border-amber-600/50 font-bold py-1.5 rounded-lg text-xs transition duration-150">
-                  ➕ ¡Unirme a esta Mesa!
+            ${subsHtml}
+
+            <div class="space-y-2 pt-1">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                ${mainActionHtml}
+                <button onclick="shareTableInvitation('${id}')" class="w-full bg-green-700/30 hover:bg-green-600 text-green-300 hover:text-white border border-green-600/50 font-bold py-1.5 rounded-lg text-xs transition duration-150 flex items-center justify-center gap-1.5">
+                  📲 Invitar por WhatsApp
                 </button>
-              ` : `
-                <div class="text-center text-xs text-gray-500 py-1.5 bg-gray-800 rounded">Mesa llena</div>
-              `}
-              <button onclick="shareTableInvitation('${cardId}', '${escapeHtml(t.name)}', '${escapeHtml(t.platform || 'Lackey')}', '${t.utcTime}', ${count}, '${escapeHtml(t.discord || '')}')" class="w-full bg-green-700/30 hover:bg-green-600 text-green-300 hover:text-white border border-green-600/50 font-bold py-1.5 rounded-lg text-xs transition duration-150 flex items-center justify-center gap-1.5">
-                📲 Invitar por WhatsApp
-              </button>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="shareTableLink('${id}')" class="flex-1 min-w-[8rem] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-600 font-semibold py-1.5 px-2 rounded-lg text-xs transition">🔗 Compartir</button>
+                <button onclick="openCalendarModal('${id}')" class="flex-1 min-w-[8rem] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-600 font-semibold py-1.5 px-2 rounded-lg text-xs transition">📅 Agregar a mi calendario</button>
+                ${leaveButtons}
+                ${leaveSubButtons}
+              </div>
+            </div>
+
+            <!-- Fila fija de acciones pequeñas -->
+            <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-zinc-800 pt-2 text-[11px]">
+              <span class="flex items-center gap-3">
+                ${isPresencial ? `<button onclick="window.open('sorteo.html?tableId=${encodeURIComponent(t.id)}', '_blank')" class="text-zinc-500 hover:text-red-400 transition py-1">🎲 Orden de Asientos</button>` : ''}
+                ${isPresencial && t.recurrence === 'weekly' ? `<button onclick="skipWeek('${id}')" class="text-zinc-500 hover:text-emerald-300 transition py-1">⏭️ Saltar esta semana</button>` : ''}
+                ${t.notes ? '' : `<button onclick="editCustomTableNotes('${id}')" class="text-zinc-500 hover:text-white transition py-1">📝 Agregar nota</button>`}
+              </span>
+              <span class="flex items-center gap-3">
+                <button onclick="editTableSchedule('${id}')" class="text-zinc-500 hover:text-wine-400 transition py-1">✏️ Editar horario</button>
+                <button onclick="deleteEntry('${id}')" class="text-zinc-500 hover:text-red-400 transition py-1">${isPresencial ? 'Cerrar Evento' : 'Cerrar Mesa'}</button>
+              </span>
             </div>
           </div>
         `;
@@ -801,6 +2522,78 @@
     function escapeHtml(str) {
       return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
+
+    // ---------------------------------------------------------------------
+    // BOTÓN DE CONTACTO: REPORTAR BUG / SUGERENCIA
+    // Se envía por correo directo vía EmailJS — no se escribe nada en
+    // Firebase, no se guarda ningún dato del usuario en el sitio. El correo
+    // (si el usuario lo deja) solo viaja como "reply-to" del correo que le
+    // llega al administrador, igual que cualquier email normal.
+    // ---------------------------------------------------------------------
+    emailjs.init({ publicKey: 'MIO26Qm3IZUFiwvB3' });
+
+    function openFeedbackModal() {
+      document.getElementById('feedbackModal').classList.remove('hidden');
+    }
+
+    function closeFeedbackModal() {
+      document.getElementById('feedbackModal').classList.add('hidden');
+      document.getElementById('feedbackForm').reset();
+      const status = document.getElementById('feedbackStatus');
+      status.classList.add('hidden');
+      status.textContent = '';
+    }
+
+    document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const message = document.getElementById('feedbackMessage').value.trim();
+      const email = document.getElementById('feedbackEmail').value.trim();
+      if (!message) return;
+
+      const btn = document.getElementById('feedbackSubmitBtn');
+      const status = document.getElementById('feedbackStatus');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      emailjs.send('service_ehnpqcs', 'template_d1h2h9k', {
+        message: message,
+        page: 'index',
+        reply_to: email || '(no proporcionado)'
+      }).then(() => {
+        status.textContent = '✅ ¡Gracias! Tu mensaje fue enviado.';
+        status.className = 'text-xs text-emerald-400';
+        status.classList.remove('hidden');
+        document.getElementById('feedbackForm').reset();
+        btn.disabled = false;
+        btn.textContent = 'Enviar';
+        setTimeout(closeFeedbackModal, 2000);
+      }).catch(() => {
+        status.textContent = '❌ No se pudo enviar. Intenta de nuevo en un momento.';
+        status.className = 'text-xs text-red-400';
+        status.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Enviar';
+      });
+    });
+
+    // ---------------------------------------------------------------------
+    // VENTANA "ACERCA DE" (botón "?" del encabezado)
+    // ---------------------------------------------------------------------
+    function openAboutModal() {
+      document.getElementById('aboutModal').classList.remove('hidden');
+    }
+    function closeAboutModal() {
+      document.getElementById('aboutModal').classList.add('hidden');
+    }
   </script>
+  <footer style="text-align: center; padding: 20px; font-size: 0.85rem; opacity: 0.8;">
+  <p>
+    <strong>Aviso Legal y Exención de Responsabilidad:</strong><br>
+    Este sitio es una herramienta no oficial creada por fans para la comunidad y no está afiliada, respaldada ni patrocinada por Paradox Interactive AB ni por Black Chantry Productions.
+  </p>
+  <p>
+    Portions of the materials are the copyrights and trademarks of Paradox Interactive AB, and are used with permission. All rights reserved. For more information please visit <a href="https://www.worldofdarkness.com" target="_blank" rel="noopener">worldofdarkness.com</a>.
+  </p>
+</footer>
 </body>
 </html>

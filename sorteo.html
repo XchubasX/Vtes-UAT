@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orden de Asientos - VTES</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            wine: {
+              50: '#fdf2f4', 100: '#fbe4e8', 200: '#f0c2cb', 300: '#d98fa0',
+              400: '#c05a72', 500: '#a8425a', 600: '#8c2f45', 700: '#6d2436',
+              800: '#551c2a', 900: '#3f141f', 950: '#2a0d15'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Firebase App & Database SDKs (solo lectura del evento) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <!-- Firebase App Check (la base de datos exige token válido incluso para lectura) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script>
+  <!-- EmailJS: envía el formulario de "Reportar bug / Sugerencia" directo a un correo,
+       sin guardar ningún dato en Firebase (ver botón flotante 💬 más abajo) -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body class="bg-zinc-900 text-zinc-100 min-h-screen p-4 md:p-8 font-sans">
+<div style="background:#b45309;color:#fff;text-align:center;font:600 13px sans-serif;padding:6px;margin:0 0 8px">⚠️ SITIO DE PRUEBAS — los datos aquí no son reales</div>
+
+  <!-- BOTÓN FLOTANTE: REPORTAR BUG / SUGERENCIA -->
+  <button type="button" onclick="openFeedbackModal()" title="Reportar un bug o sugerencia" class="fixed bottom-4 right-4 z-40 bg-wine-600 hover:bg-wine-500 text-white rounded-full w-12 h-12 shadow-lg shadow-wine-900/40 flex items-center justify-center text-xl transition transform hover:scale-105">
+    💬
+  </button>
+
+  <!-- MODAL: ACERCA DE (botón "?" del encabezado) -->
+  <div id="aboutModal" onclick="if (event.target === this) closeAboutModal()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div role="dialog" aria-modal="true" aria-labelledby="aboutTitle" class="bg-zinc-800 border border-zinc-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between gap-3 border-b border-zinc-700 pb-3">
+        <h3 id="aboutTitle" class="text-lg font-bold text-wine-400">❓ Acerca de</h3>
+        <button type="button" onclick="closeAboutModal()" aria-label="Cerrar" class="text-zinc-400 hover:text-white text-xl leading-none px-2">✕</button>
+      </div>
+      <div class="space-y-4 text-sm text-zinc-300 leading-relaxed">
+        <p>Sirve para sortear el orden de los asientos de un evento presencial. Ya trae la lista de confirmados.</p>
+        <ol class="list-decimal pl-5 space-y-2">
+          <li><strong>Marca quién está presente.</strong> Puedes quitar a quien no llegó o <strong>➕ Agregar</strong> a quien se sumó de último momento.</li>
+          <li><strong>Elige el modo:</strong>
+            <ul class="list-disc pl-5 space-y-1" style="margin-top:4px">
+              <li><strong>Una Mesa</strong>: todos juegan juntos. Solo se sortea el orden.</li>
+              <li><strong>Sorteo de Mesas</strong>: reparte a todos en mesas de 4 o 5 jugadores. Si sobran personas, aparecen aparte como "Mesa Incompleta".</li>
+            </ul>
+          </li>
+          <li>Toca <strong>🎲 Sortear</strong>. Cada jugador ve su número de asiento y su <strong>presa</strong>, que es el siguiente en la ronda. El último jugador tiene como presa al primero.</li>
+        </ol>
+        <p class="text-zinc-400">Puedes volver a sortear las veces que quieras. No se guarda nada.</p>
+      </div>
+      <div class="flex justify-end pt-1">
+        <button type="button" onclick="closeAboutModal()" class="bg-wine-600 hover:bg-wine-500 text-white font-bold px-5 py-2 rounded-xl text-xs transition shadow-md">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REPORTAR BUG / SUGERENCIA (no guarda nada en Firebase, se envía por correo vía EmailJS) -->
+  <div id="feedbackModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-800 border border-zinc-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 border-b border-zinc-700 pb-3">
+        <span class="text-2xl">💬</span>
+        <h3 class="text-lg font-bold text-wine-400">Reportar un bug o sugerencia</h3>
+      </div>
+      <p class="text-xs text-zinc-400">Tu mensaje se envía directo por correo. No se guarda nada en la base de datos del sitio.</p>
+      <form id="feedbackForm" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-zinc-400 mb-1">Mensaje</label>
+          <textarea id="feedbackMessage" required rows="4" maxlength="2000" placeholder="Describe el bug o la funcionalidad que te gustaría..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-wine-500 resize-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-zinc-400 mb-1">Tu correo (opcional, solo si quieres que te respondamos)</label>
+          <input type="email" id="feedbackEmail" placeholder="tucorreo@ejemplo.com" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-wine-500">
+        </div>
+        <p id="feedbackStatus" class="text-xs hidden"></p>
+        <div class="flex gap-2 pt-1">
+          <button type="submit" id="feedbackSubmitBtn" class="flex-1 bg-wine-600 hover:bg-wine-500 text-white font-bold py-2 rounded-lg text-sm transition disabled:opacity-50 disabled:cursor-not-allowed">
+            Enviar
+          </button>
+          <button type="button" onclick="closeFeedbackModal()" class="text-sm font-medium text-zinc-400 hover:text-zinc-200 border border-zinc-700 rounded-lg px-4 transition">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="max-w-2xl mx-auto space-y-6">
+
+    <header class="relative text-center space-y-2 border-b border-wine-800 pb-4 px-10">
+      <button type="button" onclick="openAboutModal()" aria-label="Acerca de: cómo funciona" title="Acerca de" class="absolute top-0 right-0 w-8 h-8 rounded-full bg-zinc-800 border border-zinc-600 text-zinc-300 hover:text-white hover:border-wine-500 font-bold text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-wine-400">?</button>
+      <h1 class="text-2xl md:text-4xl font-extrabold text-wine-500 tracking-wider">🎲 ORDEN DE ASIENTOS</h1>
+      <p id="eventLabel" class="text-zinc-400 text-sm">Cargando evento...</p>
+      <a href="index.html" class="inline-block text-xs text-wine-400 hover:text-wine-300 underline">← Volver al Organizador</a>
+    </header>
+
+    <!-- SELECCIÓN DE JUGADORES PRESENTES -->
+    <section id="selectionSection" class="bg-zinc-800 border border-zinc-700 rounded-xl p-6 shadow-xl space-y-4">
+      <div class="flex gap-2 bg-zinc-900 p-1.5 rounded-lg border border-zinc-700 max-w-xs mx-auto">
+        <button type="button" id="modeSingleBtn" onclick="setDrawMode('single')" class="flex-1 bg-wine-600 text-white font-bold py-1.5 px-3 rounded-md text-xs transition shadow-sm">
+          <span class="modeCheck">✓ </span>Una Mesa
+        </button>
+        <button type="button" id="modeMultiBtn" onclick="setDrawMode('multi')" class="flex-1 bg-zinc-800 text-zinc-500 font-semibold py-1.5 px-3 rounded-md text-xs transition opacity-70">
+          <span class="modeCheck hidden">✓ </span>Sorteo de Mesas
+        </button>
+      </div>
+
+      <p id="modeDescription" class="text-xs text-zinc-500 text-center -mt-2"></p>
+
+      <div>
+        <h2 id="selectionTitle" class="text-lg font-bold text-wine-500">¿Quién juega en esta mesa?</h2>
+        <p class="text-xs text-zinc-400 mt-1">Marca a los que están presentes. Puedes agregar o quitar nombres antes de sortear — útil si alguien no llegó o si se suma alguien de última hora.</p>
+      </div>
+
+      <div id="playerCheckboxList" class="space-y-2"></div>
+
+      <div class="flex gap-2 pt-2">
+        <input type="text" id="extraNameInput" placeholder="Agregar nombre..." class="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-wine-500">
+        <button type="button" onclick="addExtraName()" class="bg-zinc-700 hover:bg-zinc-600 text-white font-bold px-4 py-1.5 rounded-lg text-sm transition">+ Agregar</button>
+      </div>
+
+      <div id="singleModeWarning" class="hidden bg-amber-900/20 border border-amber-700/40 rounded-lg p-3 space-y-2">
+        <p class="text-xs text-amber-300" id="singleModeWarningText"></p>
+        <button type="button" onclick="setDrawMode('multi')" class="text-xs font-semibold text-white bg-wine-600 hover:bg-wine-500 rounded-lg px-3 py-1.5 transition">
+          Cambiar a Sorteo de Mesas
+        </button>
+      </div>
+
+      <button type="button" id="sortearBtn" onclick="performDraw()" class="w-full bg-wine-700 hover:bg-wine-600 text-white font-bold py-3 rounded-lg text-base transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-wine-700" disabled>
+        🎲 Sortear presa/depredador
+      </button>
+      <p id="minHint" class="text-center text-[11px] text-zinc-500">Selecciona al menos 2 jugadores para poder sortear.</p>
+    </section>
+
+    <!-- RESULTADO -->
+    <section id="resultSection" class="bg-zinc-800 border border-wine-800/50 rounded-xl p-6 shadow-xl space-y-4 hidden">
+      <h2 class="text-lg font-bold text-wine-500 text-center tracking-wide">RESULTADO DEL SORTEO</h2>
+
+      <div id="resultContent" class="space-y-6"></div>
+
+      <button type="button" onclick="performDraw()" class="w-full bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-2 rounded-lg text-sm transition">
+        🔄 Volver a sortear
+      </button>
+    </section>
+
+  </div>
+
+  <script>
+    // Configuración de tu proyecto en Firebase (misma que index.html — solo se usa para leer
+    // el evento y precargar la lista de confirmados; esta página no escribe nada en la base de datos)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQR7AaxC5F2bTKI_po7w7awZLa_KVS4zk",
+      authDomain: "vtes-uat.firebaseapp.com",
+      databaseURL: "https://vtes-uat-default-rtdb.firebaseio.com",
+      projectId: "vtes-uat",
+      storageBucket: "vtes-uat.firebasestorage.app",
+      messagingSenderId: "801358504439",
+      appId: "1:801358504439:web:d946e61ff0067bee69cef2"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    const appCheck = firebase.appCheck();
+    appCheck.activate(
+      new firebase.appCheck.ReCaptchaEnterpriseProvider('6Lc2QLYtAAAAAHI6pH3gABXBdG4m2X1rPKmegI0P'),
+      true
+    );
+
+    const db = firebase.database();
+
+    // Misma lógica retrocompatible que index.html para leer nicks de "players"
+    function normalizePlayer(p) {
+      if (p && typeof p === 'object') {
+        return { nick: p.nick || '', arrival: p.arrival || null };
+      }
+      const str = (p || '').toString();
+      const match = str.match(/^(.*\S)\s+(\d{1,2}):(\d{2})\s*$/);
+      if (match) {
+        return { nick: match[1], arrival: `${match[2].padStart(2, '0')}:${match[3]}` };
+      }
+      return { nick: str, arrival: null };
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // ---------------------------------------------------------------------
+    // BOTÓN DE CONTACTO: REPORTAR BUG / SUGERENCIA
+    // Se envía por correo directo vía EmailJS — no se escribe nada en
+    // Firebase, no se guarda ningún dato del usuario en el sitio. El correo
+    // (si el usuario lo deja) solo viaja como "reply-to" del correo que le
+    // llega al administrador, igual que cualquier email normal.
+    // ---------------------------------------------------------------------
+    emailjs.init({ publicKey: 'MIO26Qm3IZUFiwvB3' });
+
+    function openFeedbackModal() {
+      document.getElementById('feedbackModal').classList.remove('hidden');
+    }
+
+    function closeFeedbackModal() {
+      document.getElementById('feedbackModal').classList.add('hidden');
+      document.getElementById('feedbackForm').reset();
+      const status = document.getElementById('feedbackStatus');
+      status.classList.add('hidden');
+      status.textContent = '';
+    }
+
+    document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const message = document.getElementById('feedbackMessage').value.trim();
+      const email = document.getElementById('feedbackEmail').value.trim();
+      if (!message) return;
+
+      const btn = document.getElementById('feedbackSubmitBtn');
+      const status = document.getElementById('feedbackStatus');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      emailjs.send('service_ehnpqcs', 'template_d1h2h9k', {
+        message: message,
+        page: 'sorteo',
+        reply_to: email || '(no proporcionado)'
+      }).then(() => {
+        status.textContent = '✅ ¡Gracias! Tu mensaje fue enviado.';
+        status.className = 'text-xs text-emerald-400';
+        status.classList.remove('hidden');
+        document.getElementById('feedbackForm').reset();
+        btn.disabled = false;
+        btn.textContent = 'Enviar';
+        setTimeout(closeFeedbackModal, 2000);
+      }).catch(() => {
+        status.textContent = '❌ No se pudo enviar. Intenta de nuevo en un momento.';
+        status.className = 'text-xs text-red-400';
+        status.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Enviar';
+      });
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const tableId = params.get('tableId');
+
+    // Cada elemento: { nick, checked }
+    let candidateNames = [];
+
+    function renderCheckboxList() {
+      const container = document.getElementById('playerCheckboxList');
+      if (candidateNames.length === 0) {
+        container.innerHTML = `<p class="text-xs text-zinc-500 italic">Todavía no hay nombres. Agrega abajo.</p>`;
+      } else {
+        container.innerHTML = candidateNames.map((entry, idx) => `
+          <label class="flex items-center gap-2 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm cursor-pointer">
+            <input type="checkbox" ${entry.checked ? 'checked' : ''} onchange="toggleCheck(${idx})" class="w-4 h-4 accent-wine-600 cursor-pointer">
+            <span class="flex-1 ${entry.checked ? '' : 'text-zinc-500 line-through'}">${escapeHtml(entry.nick)}</span>
+            <button type="button" onclick="removeName(${idx})" class="text-zinc-500 hover:text-red-400 text-xs px-1" title="Quitar de la lista">✕</button>
+          </label>
+        `).join('');
+      }
+      updateSortearBtnState();
+    }
+
+    function toggleCheck(idx) {
+      candidateNames[idx].checked = !candidateNames[idx].checked;
+      renderCheckboxList();
+    }
+
+    function removeName(idx) {
+      candidateNames.splice(idx, 1);
+      renderCheckboxList();
+    }
+
+    function addExtraName() {
+      const input = document.getElementById('extraNameInput');
+      const val = input.value.trim();
+      if (!val) return;
+      candidateNames.push({ nick: val, checked: true });
+      input.value = '';
+      renderCheckboxList();
+      input.focus();
+    }
+
+    document.getElementById('extraNameInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addExtraName();
+      }
+    });
+
+    // ---------------------------------------------------------------------
+    // MODO DE SORTEO: "single" (una mesa, tal como ya existía) o "multi"
+    // (reparte automáticamente a todos los seleccionados en las mesas que
+    // hagan falta, de 4 o 5 jugadores cada una).
+    // ---------------------------------------------------------------------
+    let drawMode = 'single';
+
+    function setDrawMode(mode) {
+      drawMode = mode;
+      const isSingle = mode === 'single';
+      const btnSingle = document.getElementById('modeSingleBtn');
+      const btnMulti = document.getElementById('modeMultiBtn');
+
+      btnSingle.classList.toggle('bg-wine-600', isSingle);
+      btnSingle.classList.toggle('text-white', isSingle);
+      btnSingle.classList.toggle('shadow-sm', isSingle);
+      btnSingle.classList.toggle('bg-zinc-800', !isSingle);
+      btnSingle.classList.toggle('text-zinc-500', !isSingle);
+      btnSingle.classList.toggle('opacity-70', !isSingle);
+      btnSingle.querySelector('.modeCheck').classList.toggle('hidden', !isSingle);
+
+      btnMulti.classList.toggle('bg-wine-600', !isSingle);
+      btnMulti.classList.toggle('text-white', !isSingle);
+      btnMulti.classList.toggle('shadow-sm', !isSingle);
+      btnMulti.classList.toggle('bg-zinc-800', isSingle);
+      btnMulti.classList.toggle('text-zinc-500', isSingle);
+      btnMulti.classList.toggle('opacity-70', isSingle);
+      btnMulti.querySelector('.modeCheck').classList.toggle('hidden', isSingle);
+
+      document.getElementById('selectionTitle').textContent = isSingle
+        ? '¿Quién juega en esta mesa?'
+        : '¿Quién está presente en el evento?';
+      document.getElementById('sortearBtn').textContent = isSingle
+        ? '🎲 Sortear (todos en una mesa)'
+        : '🎲 Repartir en mesas automáticamente';
+      document.getElementById('minHint').textContent = isSingle
+        ? 'Selecciona al menos 2 jugadores para poder sortear.'
+        : 'Selecciona a todos los presentes — se repartirán solos en mesas de 4 o 5.';
+      document.getElementById('modeDescription').textContent = isSingle
+        ? 'Se sorteará un único orden con todos los que marques, sin importar cuántos sean.'
+        : 'Se repartirán automáticamente en mesas de 4 o 5 jugadores cada una.';
+
+      document.getElementById('resultSection').classList.add('hidden');
+      updateSortearBtnState();
+    }
+
+    function updateSortearBtnState() {
+      const checkedCount = candidateNames.filter(n => n.checked).length;
+      const minRequired = drawMode === 'single' ? 2 : 1;
+      document.getElementById('sortearBtn').disabled = checkedCount < minRequired;
+
+      // Advertencia: en modo "Una Mesa" con más de 5 marcados, es fácil que
+      // el usuario en realidad quisiera repartir en varias mesas. No bloquea
+      // el sorteo (puede que de verdad quiera una mesa de 6+), solo avisa.
+      const warning = document.getElementById('singleModeWarning');
+      if (drawMode === 'single' && checkedCount > 5) {
+        document.getElementById('singleModeWarningText').textContent =
+          `⚠️ Tienes ${checkedCount} jugadores marcados — en este modo quedarán todos juntos en una sola mesa, sin repartir.`;
+        warning.classList.remove('hidden');
+      } else {
+        warning.classList.add('hidden');
+      }
+    }
+
+    // Inicializa los textos del modo por defecto ("Una Mesa") al cargar la página
+    setDrawMode('single');
+
+    // Carga inicial: si viene un tableId en la URL, precarga los confirmados de ese evento
+    if (tableId) {
+      db.ref(`vtes_records/${tableId}`).get().then(snapshot => {
+        if (snapshot.exists()) {
+          const table = snapshot.val();
+          const label = table.venue ? `"${table.name}" — ${table.venue}` : `"${table.name}"`;
+          document.getElementById('eventLabel').textContent = label;
+          candidateNames = (table.players || []).map(p => ({ nick: normalizePlayer(p).nick, checked: true }));
+        } else {
+          document.getElementById('eventLabel').textContent = 'El evento ya no existe — agrega los nombres manualmente.';
+        }
+        renderCheckboxList();
+      }).catch(() => {
+        document.getElementById('eventLabel').textContent = 'No se pudo cargar el evento — agrega los nombres manualmente.';
+        renderCheckboxList();
+      });
+    } else {
+      document.getElementById('eventLabel').textContent = 'Sorteo libre — agrega los nombres de los jugadores presentes.';
+      renderCheckboxList();
+    }
+
+    // Fisher-Yates
+    function shuffle(array) {
+      const arr = array.slice();
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function performDraw() {
+      const selected = candidateNames.filter(n => n.checked).map(n => n.nick);
+
+      if (drawMode === 'single') {
+        if (selected.length < 2) return;
+        renderSingleResult(shuffle(selected));
+      } else {
+        if (selected.length < 1) return;
+        renderMultiResult(shuffle(selected));
+      }
+
+      document.getElementById('resultSection').classList.remove('hidden');
+      document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderSingleResult(order) {
+      document.getElementById('resultContent').innerHTML = `
+        <div id="wheelContainer-single" class="flex justify-center"></div>
+        <ol id="orderList-single" class="text-sm text-zinc-300 space-y-1.5 pt-2 border-t border-zinc-700"></ol>
+      `;
+      renderWheel(order, 'wheelContainer-single');
+      renderOrderList(order, 'orderList-single');
+    }
+
+    // ---------------------------------------------------------------------
+    // REPARTO AUTOMÁTICO EN MESAS DE 4 O 5
+    // Encuentra el menor número de personas "sin mesa" (leftover) tal que el
+    // resto se pueda repartir exacto en mesas de 4 y/o 5, priorizando el
+    // mayor número posible de mesas de 5 sobre las de 4. Nunca genera mesas
+    // de menos de 4 ni de más de 5 — lo que no alcanza queda marcado aparte
+    // como "Mesa Incompleta" para que el organizador decida qué hacer.
+    // ---------------------------------------------------------------------
+    function computeTableSizes(n) {
+      if (n <= 0) return { sizes: [], leftover: Math.max(n, 0) };
+
+      for (let leftover = 0; leftover <= n; leftover++) {
+        const remaining = n - leftover;
+        if (remaining === 0) return { sizes: [], leftover };
+
+        for (let fives = Math.floor(remaining / 5); fives >= 0; fives--) {
+          const rest = remaining - fives * 5;
+          if (rest % 4 === 0) {
+            const fours = rest / 4;
+            const sizes = [];
+            for (let i = 0; i < fives; i++) sizes.push(5);
+            for (let i = 0; i < fours; i++) sizes.push(4);
+            return { sizes, leftover };
+          }
+        }
+      }
+      return { sizes: [], leftover: n };
+    }
+
+    function renderMultiResult(shuffled) {
+      const { sizes, leftover } = computeTableSizes(shuffled.length);
+      const container = document.getElementById('resultContent');
+
+      if (sizes.length === 0 && leftover === 0) {
+        container.innerHTML = `<p class="text-center text-zinc-500 text-sm">No hay jugadores seleccionados.</p>`;
+        return;
+      }
+
+      let html = '';
+      let cursor = 0;
+
+      sizes.forEach((size, tableIdx) => {
+        cursor += size;
+        html += `
+          <div class="border border-zinc-700 rounded-xl p-4 space-y-3">
+            <h3 class="text-center text-wine-400 font-bold text-sm">Mesa ${tableIdx + 1} <span class="text-zinc-500 font-normal">(${size} jugadores)</span></h3>
+            <div id="wheelContainer-multi-${tableIdx}" class="flex justify-center"></div>
+            <ol id="orderList-multi-${tableIdx}" class="text-sm text-zinc-300 space-y-1.5 pt-2 border-t border-zinc-700"></ol>
+          </div>
+        `;
+      });
+
+      if (leftover > 0) {
+        const leftoverPlayers = shuffled.slice(cursor);
+        html += `
+          <div class="border border-red-700/50 rounded-xl p-4 space-y-2 bg-red-950/20">
+            <h3 class="text-center text-red-400 font-bold text-sm">⚠️ Mesa Incompleta <span class="font-normal">(${leftover} ${leftover === 1 ? 'persona' : 'personas'})</span></h3>
+            <p class="text-center text-xs text-zinc-400">No alcanzan para formar una mesa de 4 o 5. Decide manualmente qué hacer con ellos (sumarlos a otra mesa, esperar a alguien más, etc.).</p>
+            <div class="flex flex-wrap justify-center gap-2 pt-1">
+              ${leftoverPlayers.map(name => `<span class="bg-red-950/50 border border-red-800/60 text-red-200 text-xs px-2.5 py-1 rounded-lg">${escapeHtml(name)}</span>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+
+      cursor = 0;
+      sizes.forEach((size, tableIdx) => {
+        const tablePlayers = shuffled.slice(cursor, cursor + size);
+        cursor += size;
+        renderWheel(tablePlayers, `wheelContainer-multi-${tableIdx}`);
+        renderOrderList(tablePlayers, `orderList-multi-${tableIdx}`);
+      });
+    }
+
+    function renderOrderList(order, containerId) {
+      const list = document.getElementById(containerId);
+      list.innerHTML = order.map((name, idx) => {
+        const preyIdx = (idx + 1) % order.length;
+        return `<li class="flex items-center gap-2">
+          <span class="text-wine-400 font-bold w-5">${idx + 1}.</span>
+          <span class="flex-1">${escapeHtml(name)}</span>
+          ${idx === 0 ? '<span class="text-emerald-400 text-[10px] bg-emerald-950/50 border border-emerald-700/50 px-2 py-0.5 rounded-full">Empieza el juego</span>' : ''}
+          <span class="text-zinc-400 text-xs">presa: ${escapeHtml(order[preyIdx])}</span>
+        </li>`;
+      }).join('');
+    }
+
+    function renderWheel(order, containerId) {
+      const n = order.length;
+      const size = 320;
+      const cx = size / 2;
+      const cy = size / 2;
+      const r = size / 2 - 55;
+
+      const points = order.map((name, i) => {
+        const angle = (-90 + (360 / n) * i) * (Math.PI / 180);
+        return {
+          name,
+          x: cx + r * Math.cos(angle),
+          y: cy + r * Math.sin(angle)
+        };
+      });
+
+      let edges = '';
+      for (let i = 0; i < n; i++) {
+        const from = points[i];
+        const to = points[(i + 1) % n];
+        const dx = to.x - from.x, dy = to.y - from.y;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        const shrink = 32;
+        const x1 = from.x + (dx / dist) * shrink;
+        const y1 = from.y + (dy / dist) * shrink;
+        const x2 = to.x - (dx / dist) * shrink;
+        const y2 = to.y - (dy / dist) * shrink;
+        edges += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#8c2f45" stroke-width="2" marker-end="url(#arrowhead-${containerId})" opacity="0.85" />`;
+      }
+
+      let nodes = '';
+      points.forEach((p, i) => {
+        const isFirst = i === 0;
+        const shortName = p.name.length > 12 ? p.name.slice(0, 11) + '…' : p.name;
+        nodes += `
+          <circle cx="${p.x}" cy="${p.y}" r="30" fill="${isFirst ? '#3f141f' : '#27272a'}" stroke="${isFirst ? '#c05a72' : '#8c2f45'}" stroke-width="2" />
+          <text x="${p.x}" y="${p.y - 3}" text-anchor="middle" fill="#d98fa0" font-size="15" font-weight="bold">${i + 1}</text>
+          <text x="${p.x}" y="${p.y + 13}" text-anchor="middle" fill="#e4e4e7" font-size="9">${escapeHtml(shortName)}</text>
+        `;
+      });
+
+      document.getElementById(containerId).innerHTML = `
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="max-w-full h-auto">
+          <defs>
+            <marker id="arrowhead-${containerId}" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#8c2f45" />
+            </marker>
+          </defs>
+          ${edges}
+          ${nodes}
+        </svg>
+      `;
+    }
+
+    // ---------------------------------------------------------------------
+    // VENTANA "ACERCA DE" (botón "?" del encabezado)
+    // ---------------------------------------------------------------------
+    function openAboutModal() {
+      document.getElementById('aboutModal').classList.remove('hidden');
+    }
+    function closeAboutModal() {
+      document.getElementById('aboutModal').classList.add('hidden');
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAboutModal();
+    });
+  </script>
+
+</body>
+</html>
