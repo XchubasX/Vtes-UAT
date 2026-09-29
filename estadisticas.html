@@ -263,15 +263,17 @@
     const auth = firebase.auth(); // recupera la sesión guardada (si la hay) desde el inicio
 
     // ---------------------------------------------------------------------
-    // ACCESO (desde el 29 sep 2026): solo cuentas de administrador
-    // (admins/{uid}: true). Ya no hay contraseña. La protección real está en
-    // las reglas de Firebase: "stats" solo lo pueden leer los administradores;
+    // ACCESO (desde el 29 sep 2026): administradores (admins/{uid}: true) y
+    // lectores de estadísticas (statsReaders/{uid}: true), ambos se agregan
+    // desde la consola. Ya no hay contraseña. La protección real está en
+    // las reglas de Firebase: "stats" solo lo pueden leer esas cuentas;
     // esta pantalla solo explica qué pasa. La sesión de Google es la misma
     // que la del organizador: si ya entraste ahí, aquí entras directo.
     // ---------------------------------------------------------------------
     const googleProvider = new firebase.auth.GoogleAuthProvider();
     googleProvider.setCustomParameters({ prompt: 'select_account' });
     let statsLoaded = false;
+    let isStatsAdmin = false; // solo el administrador poda datos viejos
 
     function escapeHtml(str) {
       return String(str ?? '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
@@ -293,9 +295,17 @@
         statsLoaded = false;
         return showGate('Esta página es privada. Entra con tu cuenta de Google para ver las estadísticas.');
       }
-      let isAdmin = false;
-      try { isAdmin = (await db.ref(`admins/${user.uid}`).get()).val() === true; } catch (e) { isAdmin = false; }
-      if (!isAdmin) {
+      let isAdmin = false, isReader = false;
+      try {
+        const [a, r] = await Promise.all([
+          db.ref(`admins/${user.uid}`).get(),
+          db.ref(`statsReaders/${user.uid}`).get()
+        ]);
+        isAdmin = a.val() === true;
+        isReader = r.val() === true;
+      } catch (e) { /* sin acceso */ }
+      isStatsAdmin = isAdmin;
+      if (!isAdmin && !isReader) {
         return showGate('Tu cuenta no tiene acceso a esta página.', { showLogin: false, showSignOut: true });
       }
       document.getElementById('gateSection').classList.add('hidden');
@@ -331,9 +341,8 @@
     const MAX_EVENTS_LOG = 500;
 
     function pruneOldData(tablesLog, eventsLog) {
-      // Las reglas solo permiten escribir en estadísticas con sesión iniciada
-      // (la misma cuenta de Google que se usa en el organizador).
-      if (!firebase.auth().currentUser) return;
+      // La poda solo la hace el administrador (los lectores solo consultan)
+      if (!firebase.auth().currentUser || !isStatsAdmin) return;
       const updates = {};
       const cutoff = Date.now() - TABLES_LOG_MAX_AGE_MS;
       Object.entries(tablesLog).forEach(([id, t]) => {
