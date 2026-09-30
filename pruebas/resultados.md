@@ -2,8 +2,8 @@
 
 **✅ TODO BIEN** — 199 de 199 casos pasaron.
 
-- Fecha: 29/09/2026 21:30 (hora de Ciudad de México)
-- Versión probada: `91ec306` + cambios aún sin guardar
+- Fecha: 29/09/2026 21:32 (hora de Ciudad de México)
+- Versión probada: `a8b75c6`
 - Duración: 40 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
