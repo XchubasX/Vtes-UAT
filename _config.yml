@@ -1,0 +1,5 @@
+# Configuración de GitHub Pages (Jekyll) del sitio de pruebas.
+# Las pruebas automáticas viven en el repositorio pero no se publican en la página.
+exclude:
+  - pruebas
+  - README.md

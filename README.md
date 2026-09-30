@@ -13,6 +13,12 @@ para pasar un cambio al sitio real se copian tal cual, sin tocar `config.js`.
 Al cambiar `config.js`, `comun.js` o cualquier archivo de `js/`, subir el número `?v=` con el que
 las páginas los cargan, para que los navegadores no usen una copia vieja.
 
+## Pruebas automáticas
+
+La carpeta `pruebas/` (solo en este repositorio, no se publica) tiene las pruebas del sitio.
+Antes de publicar un cambio: `python3 pruebas/correr.py`; el reporte queda en `pruebas/resultados.md`.
+Ver `pruebas/README.md`.
+
 ## Archivos
 
 - `config.js`: datos del sitio (distinto en cada repositorio).
