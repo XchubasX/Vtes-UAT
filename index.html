@@ -4,13 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VTES Matchmaking & Mesas Abiertas</title>
-  <style>
-    /* Pestañas Virtual / Presencial (diseño "Noche y hora") */
-    .tab-activa   { color: #EEF0FB; font-weight: 700; border-bottom: 3px solid #F4C45C; }
-    .tab-inactiva { color: #AEB3D6; font-weight: 500; border-bottom: 3px solid transparent; }
-    .tab-inactiva:hover { color: #EEF0FB; }
-    @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
-  </style>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <!-- EmailJS: envía el formulario de "Reportar bug / Sugerencia" directo a un correo,
@@ -18,7 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js" integrity="sha256-BS9pFqIbpb4UA2ZDnoG4StETY8hN+6KgbyCMe0pvbV8=" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Flatpickr (Calendario) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" integrity="sha256-GzSkJVLJbxDk36qko2cnawOGiqz/Y8GsQv/jMTUrx1Q=" crossorigin="anonymous">
@@ -37,8 +30,8 @@
   <!-- Datos del sitio (Firebase y reCAPTCHA; distinto en pruebas) y código compartido.
        Van al inicio del <body>, no en el <head>: App Check (reCAPTCHA) necesita que ya
        exista el <body> para activarse. -->
-  <script src="config.js?v=20260930a"></script>
-  <script src="comun.js?v=20260930a"></script>
+  <script src="config.js?v=20260929b"></script>
+  <script src="comun.js?v=20260929b"></script>
 
 
   <!-- MODAL: ACERCA DE (botón "?" del encabezado) -->
@@ -250,19 +243,21 @@
     </div>
   </div>
 
-  <div class="max-w-5xl mx-auto space-y-6">
+  <div class="max-w-5xl mx-auto space-y-8">
 
     <!-- Encabezado -->
-    <header class="space-y-3">
-      <div class="flex items-center justify-between gap-3">
-        <h1 class="font-display font-black text-4xl md:text-5xl leading-none text-zinc-100">Organizador VTES</h1>
-        <button type="button" onclick="openAboutModal()" aria-label="Acerca de: cómo funciona" title="Acerca de" class="shrink-0 w-11 h-11 rounded-full border border-zinc-700 text-zinc-100 hover:border-lampara font-bold text-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-lampara">?</button>
+    <header class="relative text-center space-y-2 border-b border-wine-800 pb-4 px-10">
+      <button type="button" onclick="openAboutModal()" aria-label="Acerca de: cómo funciona" title="Acerca de" class="absolute top-0 right-0 w-8 h-8 rounded-full bg-zinc-800 border border-zinc-600 text-zinc-300 hover:text-white hover:border-wine-500 font-bold text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-wine-400">?</button>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-wine-500 tracking-wider">VAMPIRE: THE ETERNAL SCHEDULE</h1>
+      <p class="text-zinc-400 text-sm md:text-base">Coordinador de Mesas</p>
+      <div id="userTimezone" class="inline-block bg-zinc-800 border border-zinc-700 text-wine-400 text-xs px-3 py-1 rounded-full font-mono mt-2">
+        Detectando tu zona horaria...
       </div>
-      <div id="authBar"></div>
+      <div id="authBar" class="pt-2"></div>
     </header>
 
     <!-- MESAS Y EVENTOS: pestañas arriba, luego el botón para crear, luego la lista -->
-    <section class="space-y-5">
+    <section class="space-y-4">
 
       <!-- AVISO DE BIENVENIDA AL INICIO DE SESIÓN (solo sin sesión, hasta que se cierre) -->
       <div id="loginNotice" class="hidden bg-wine-950/60 border border-wine-600/60 rounded-xl p-4 flex flex-col md:flex-row md:items-center gap-3">
@@ -277,20 +272,18 @@
       </div>
 
       <!-- PESTAÑAS VIRTUAL / PRESENCIAL (controlan la lista y el formulario, con contador) -->
-      <div class="flex items-end gap-6 border-b border-zinc-700">
-        <button type="button" id="modeVirtualBtn" onclick="setTableModality('virtual')" aria-pressed="true" class="tab-activa h-12 text-base transition flex items-center gap-2">
-          Virtual <span id="countVirtual">0</span>
+      <div class="flex gap-2 bg-zinc-800 p-1.5 rounded-xl border border-zinc-700">
+        <button type="button" id="modeVirtualBtn" onclick="setTableModality('virtual')" class="flex-1 bg-wine-600 text-white font-bold py-2.5 px-3 rounded-lg text-sm transition flex items-center justify-center gap-2">
+          💻 Virtual <span id="countVirtual" class="font-mono text-xs bg-black/30 px-2 py-0.5 rounded-full">0</span>
         </button>
-        <button type="button" id="modePresencialBtn" onclick="setTableModality('presencial')" aria-pressed="false" class="tab-inactiva h-12 text-base transition flex items-center gap-2">
-          Presencial <span id="countPresencial">0</span>
+        <button type="button" id="modePresencialBtn" onclick="setTableModality('presencial')" class="flex-1 bg-zinc-800 text-zinc-400 font-bold py-2.5 px-3 rounded-lg text-sm transition flex items-center justify-center gap-2">
+          📍 Presencial <span id="countPresencial" class="font-mono text-xs bg-black/30 px-2 py-0.5 rounded-full">0</span>
         </button>
-        <span class="flex-1"></span>
-        <span id="userTimezone" class="self-center text-xs text-zinc-400 text-right pb-1">Detectando tu zona horaria…</span>
       </div>
 
       <!-- BOTÓN PARA ABRIR EL FORMULARIO DE CREACIÓN -->
-      <button type="button" id="openCreateFormBtn" onclick="openCreateForm()" class="w-full md:w-auto h-12 border border-zinc-700 hover:border-lampara text-zinc-100 font-semibold px-6 rounded-full text-base transition">
-        + <span id="openCreateFormLabel">Crear mesa</span>
+      <button type="button" id="openCreateFormBtn" onclick="openCreateForm()" class="w-full md:w-auto bg-wine-600 hover:bg-wine-500 text-white font-bold py-2.5 px-5 rounded-lg text-sm transition shadow-md">
+        ➕ <span id="openCreateFormLabel">Crear mesa</span>
       </button>
 
     <!-- FORMULARIO DE CREACIÓN (oculto hasta que se pulsa "Crear") -->
@@ -434,7 +427,7 @@
         </button>
       </div>
 
-      <div id="customTablesContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 pt-1" aria-live="polite"><p class="col-span-full text-zinc-400 py-6">Cargando mesas…</p></div>
+      <div id="customTablesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2" aria-live="polite"><p class="col-span-2 text-center text-zinc-400 py-4">Cargando mesas…</p></div>
     </section>
 
   </div>
@@ -442,13 +435,13 @@
   <!-- Código de esta página, separado por tema (fase 2, 29 sep 2026).
        El orden importa: los primeros solo definen funciones; arranque.js va al
        final porque es el que ejecuta todo al abrir la página. -->
-  <script src="js/sesion.js?v=20260930a"></script>
-  <script src="js/fechas.js?v=20260930a"></script>
-  <script src="js/ventanas.js?v=20260930a"></script>
-  <script src="js/mesas.js?v=20260930a"></script>
-  <script src="js/compartir.js?v=20260930a"></script>
-  <script src="js/tarjetas.js?v=20260930a"></script>
-  <script src="js/arranque.js?v=20260930a"></script>
+  <script src="js/sesion.js?v=20260929c"></script>
+  <script src="js/fechas.js?v=20260929c"></script>
+  <script src="js/ventanas.js?v=20260929c"></script>
+  <script src="js/mesas.js?v=20260929c"></script>
+  <script src="js/compartir.js?v=20260929c"></script>
+  <script src="js/tarjetas.js?v=20260929c"></script>
+  <script src="js/arranque.js?v=20260929c"></script>
   <footer class="text-center text-xs text-zinc-500 pt-6 pb-24 px-4">
     <button type="button" onclick="openAboutModal('legal')" class="underline underline-offset-2 hover:text-zinc-300 transition">Sitio no oficial · Dark Pack · Aviso legal</button>
   </footer>

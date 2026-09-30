@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Firebase App & Database SDKs (solo lectura del evento) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -23,8 +23,8 @@
   <!-- Datos del sitio (Firebase y reCAPTCHA; distinto en pruebas) y código compartido.
        Van al inicio del <body>, no en el <head>: App Check (reCAPTCHA) necesita que ya
        exista el <body> para activarse. -->
-  <script src="config.js?v=20260930a"></script>
-  <script src="comun.js?v=20260930a"></script>
+  <script src="config.js?v=20260929b"></script>
+  <script src="comun.js?v=20260929b"></script>
 
 
   <!-- MODAL: ACERCA DE (botón "?" del encabezado) -->
@@ -66,13 +66,11 @@
 
   <div class="max-w-2xl mx-auto space-y-6">
 
-    <header class="space-y-2 border-b border-zinc-800 pb-4">
-      <div class="flex items-center justify-between gap-3">
-        <h1 class="font-display font-black text-4xl md:text-5xl leading-none text-zinc-100">Orden de asientos</h1>
-        <button type="button" onclick="openAboutModal()" aria-label="Acerca de: cómo funciona" title="Acerca de" class="shrink-0 w-11 h-11 rounded-full border border-zinc-700 text-zinc-100 hover:border-lampara font-bold text-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-lampara">?</button>
-      </div>
-      <p id="eventLabel" class="text-zinc-300 text-base">Cargando evento...</p>
-      <a href="index.html" class="inline-block text-sm text-lampara hover:text-lampara-claro underline underline-offset-2 py-2">Volver al Organizador</a>
+    <header class="relative text-center space-y-2 border-b border-wine-800 pb-4 px-10">
+      <button type="button" onclick="openAboutModal()" aria-label="Acerca de: cómo funciona" title="Acerca de" class="absolute top-0 right-0 w-8 h-8 rounded-full bg-zinc-800 border border-zinc-600 text-zinc-300 hover:text-white hover:border-wine-500 font-bold text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-wine-400">?</button>
+      <h1 class="text-2xl md:text-4xl font-extrabold text-wine-500 tracking-wider">🎲 ORDEN DE ASIENTOS</h1>
+      <p id="eventLabel" class="text-zinc-400 text-sm">Cargando evento...</p>
+      <a href="index.html" class="inline-block text-xs text-wine-400 hover:text-wine-300 underline">← Volver al Organizador</a>
     </header>
 
     <!-- SELECCIÓN DE JUGADORES PRESENTES -->
@@ -89,7 +87,7 @@
       <p id="modeDescription" class="text-xs text-zinc-500 text-center -mt-2"></p>
 
       <div>
-        <h2 id="selectionTitle" class="text-xl font-bold text-zinc-100">¿Quién juega en esta mesa?</h2>
+        <h2 id="selectionTitle" class="text-lg font-bold text-wine-500">¿Quién juega en esta mesa?</h2>
         <p class="text-xs text-zinc-400 mt-1">Marca a los que están presentes. Puedes agregar o quitar nombres antes de sortear — útil si alguien no llegó o si se suma alguien de última hora.</p>
       </div>
 
@@ -107,7 +105,7 @@
         </button>
       </div>
 
-      <button type="button" id="sortearBtn" onclick="performDraw()" class="w-full h-12 rounded-full bg-lampara hover:bg-lampara-claro text-zinc-900 font-bold text-base transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-lampara" disabled>
+      <button type="button" id="sortearBtn" onclick="performDraw()" class="w-full bg-wine-700 hover:bg-wine-600 text-white font-bold py-3 rounded-lg text-base transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-wine-700" disabled>
         🎲 Sortear presa/depredador
       </button>
       <p id="minHint" class="text-center text-xs text-zinc-500">Selecciona al menos 2 jugadores para poder sortear.</p>
@@ -115,7 +113,7 @@
 
     <!-- RESULTADO -->
     <section id="resultSection" class="bg-zinc-800 border border-wine-800/50 rounded-xl p-6 shadow-xl space-y-4 hidden">
-      <h2 class="font-display font-black text-3xl text-zinc-100">Resultado del sorteo</h2>
+      <h2 class="text-lg font-bold text-wine-500 text-center tracking-wide">RESULTADO DEL SORTEO</h2>
 
       <div id="resultContent" class="space-y-6"></div>
 

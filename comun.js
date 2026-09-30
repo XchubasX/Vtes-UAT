@@ -7,35 +7,19 @@
 // =====================================================================
 
 // ---------------------------------------------------------------------
-// COLORES Y LETRAS DEL SITIO (Tailwind) — diseño "Noche y hora" (30 sep 2026)
-// La escala "zinc" se redefine como azul noche y "wine" como rosa sangre:
-// así TODO el sitio (tarjetas, ventanas, formularios) cambia desde aquí.
-//   zinc-900 = fondo noche · zinc-800 = paneles · zinc-700 = bordes
-//   zinc-400/300 = texto secundario · zinc-100 = texto principal
-//   lampara = ámbar de las horas y del botón principal (texto oscuro encima)
-// Letras: Big Shoulders Display (horas y títulos) + Public Sans (texto).
-// estadisticas.html no usa Tailwind.
+// COLORES DEL SITIO (Tailwind). estadisticas.html no usa Tailwind.
 // ---------------------------------------------------------------------
 if (window.tailwind) {
   tailwind.config = {
     theme: {
       extend: {
-        fontFamily: {
-          sans: ['"Public Sans"', 'system-ui', 'sans-serif'],
-          display: ['"Big Shoulders Display"', '"Public Sans"', 'sans-serif']
-        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
         colors: {
-          zinc: {
-            50: '#F6F7FD', 100: '#EEF0FB', 200: '#DDE0F5', 300: '#C9CDEB',
-            400: '#AEB3D6', 500: '#8990BF', 600: '#5A6199', 700: '#454B7A',
-            800: '#2A2F57', 900: '#1D2140', 950: '#151831'
-          },
           wine: {
-            50: '#FDF1F3', 100: '#FBE0E5', 200: '#F5BCC7', 300: '#EE93A4',
-            400: '#E66A80', 500: '#E0506A', 600: '#C23A55', 700: '#9E2D45',
-            800: '#7A2438', 900: '#561A29', 950: '#380F1A'
-          },
-          lampara: { DEFAULT: '#F4C45C', claro: '#F7D27E', oscuro: '#D9A63A' }
+            50: '#fdf2f4', 100: '#fbe4e8', 200: '#f0c2cb', 300: '#d98fa0',
+            400: '#c05a72', 500: '#a8425a', 600: '#8c2f45', 700: '#6d2436',
+            800: '#551c2a', 900: '#3f141f', 950: '#2a0d15'
+          }
         }
       }
     }

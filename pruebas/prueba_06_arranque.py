@@ -28,7 +28,6 @@ def correr(nav, r):
         pg = ctx.new_page(); err = r.errores_de_pagina(pg, 'sin errores de JavaScript (enlace directo)')
         pg.goto(base + '#mesa-pm'); pg.wait_for_timeout(500)
         r.caso('enlace directo: abre la pestaña correcta y muestra la mesa', pg.is_visible('#card-custom-pm'))
-        zona = pg.evaluate("document.getElementById('userTimezone').innerText")
-        r.caso('al arrancar escribe la zona horaria con nombre legible (Tu hora: Ciudad de México)', zona == 'Tu hora: Ciudad de México', zona)
+        r.caso('al arrancar escribe la zona horaria de quien visita', pg.evaluate("document.getElementById('userTimezone').innerText").startswith('Tu zona horaria'))
         err.revisar()
         ctx.close()
