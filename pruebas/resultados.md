@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 199 de 199 casos pasaron.
+**✅ TODO BIEN** — 215 de 215 casos pasaron.
 
-- Fecha: 29/09/2026 21:32 (hora de Ciudad de México)
-- Versión probada: `a8b75c6`
-- Duración: 40 s
+- Fecha: 30/09/2026 16:02 (hora de Ciudad de México)
+- Versión probada: `d0828b4` + cambios aún sin guardar
+- Duración: 41 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -22,6 +22,7 @@
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
 | 9 | Página de estadísticas: acceso y conteo de personas | 17 | ✅ |
 | 10 | Revisión del código: sintaxis, versiones e integridad | 27 | ✅ |
+| 11 | Diseño "Noche y hora": cartelera por noches | 16 | ✅ |
 
 ## Todos los casos
 
@@ -190,7 +191,7 @@
 | 2 | enlace por ciudad: deja la dirección limpia (/Zaragoza) | ✅ |
 | 3 | sin errores de JavaScript (enlace por ciudad) | ✅ |
 | 4 | enlace directo: abre la pestaña correcta y muestra la mesa | ✅ |
-| 5 | al arrancar escribe la zona horaria de quien visita | ✅ |
+| 5 | al arrancar escribe la zona horaria con nombre legible (Tu hora: Ciudad de México) | ✅ |
 | 6 | sin errores de JavaScript (enlace directo) | ✅ |
 
 ### 7. Sitio servido como en GitHub, con sus archivos separados
@@ -273,3 +274,24 @@
 | 25 | estadisticas.html: config.js y comun.js van dentro del <body> (App Check lo necesita) | ✅ |
 | 26 | estadisticas.html: los programas de jsDelivr tienen versión fija y huella de integridad | ✅ |
 | 27 | las 3 páginas usan la misma versión ?v= de config.js y comun.js | ✅ |
+
+### 11. Diseño "Noche y hora": cartelera por noches
+
+| # | Caso | Resultado |
+|---|---|---|
+| 1 | las mesas se agrupan por noche (2 noches → 2 encabezados) | ✅ |
+| 2 | la noche de hoy o mañana se nombra así ("Hoy, …" o "Mañana, …") | ✅ |
+| 3 | las mesas van en orden de hora | ✅ |
+| 4 | la hora es el elemento grande de cada mesa | ✅ |
+| 5 | la mesa que empieza pronto resalta su hora en ámbar | ✅ |
+| 6 | barritas de asientos con descripción: 3 de 5 | ✅ |
+| 7 | tu asiento se marca distinto (violeta) y los libres en gris | ✅ |
+| 8 | plataforma y formato en texto ("LackeyCCG · V5") | ✅ |
+| 9 | "en 2 h" sin emojis | ✅ |
+| 10 | estado junto a la hora ("Faltan 2 jugador(es)") | ✅ |
+| 11 | "Organizas tú" en la mesa propia | ✅ |
+| 12 | la pestaña activa se marca (Virtual) | ✅ |
+| 13 | al cambiar de pestaña se marca Presencial | ✅ |
+| 14 | el título del sitio es "Organizador VTES" | ✅ |
+| 15 | en celular (390 px) no hay desplazamiento horizontal | ✅ |
+| 16 | sin errores de JavaScript | ✅ |
