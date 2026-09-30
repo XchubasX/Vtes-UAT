@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 221 de 221 casos pasaron.
+**✅ TODO BIEN** — 223 de 223 casos pasaron.
 
-- Fecha: 30/09/2026 17:43 (hora de Ciudad de México)
-- Versión probada: `b87bb37` + cambios aún sin guardar
-- Duración: 42 s
+- Fecha: 30/09/2026 17:53 (hora de Ciudad de México)
+- Versión probada: `7b8438e` + cambios aún sin guardar
+- Duración: 44 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -22,7 +22,7 @@
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
 | 9 | Página de estadísticas: acceso y conteo de personas | 17 | ✅ |
 | 10 | Revisión del código: sintaxis, versiones e integridad | 27 | ✅ |
-| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 22 | ✅ |
+| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 24 | ✅ |
 
 ## Todos los casos
 
@@ -283,21 +283,23 @@
 | 2 | la fecha lleva el día completo ("martes 30 sep") | ✅ |
 | 3 | el cupo va junto a la fecha: "Faltan 2 · 3/5" | ✅ |
 | 4 | se ven 2 lugares "libre" | ✅ |
-| 5 | plataforma y formato en una sola línea: "LackeyCCG · V5" | ✅ |
-| 6 | sin sesión (espectador) se ve el Discord | ✅ |
-| 7 | sin sesión se ve el renglón de contraseña, oculta con puntitos | ✅ |
-| 8 | "Ver" muestra la contraseña y el botón cambia a "Ocultar" | ✅ |
-| 9 | "Ocultar" la vuelve a esconder | ✅ |
-| 10 | sin sesión no hay botones de editar Discord ni contraseña | ✅ |
-| 11 | los botones ya no llevan emojis | ✅ |
-| 12 | botón principal "¡Unirme a esta Mesa!" y secundarios WhatsApp · Compartir · Calendario | ✅ |
-| 13 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
-| 14 | presencial: dice "hora de Zaragoza" | ✅ |
-| 15 | presencial: "Presencial · cada …" en una línea | ✅ |
-| 16 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
-| 17 | presencial: sin lugares "libre" ni Discord | ✅ |
-| 18 | presencial: cupo "1 confirmado" | ✅ |
-| 19 | presencial: "Orden de Asientos" visible para todos | ✅ |
-| 20 | organizador: "Organizas tú" en la línea de datos | ✅ |
-| 21 | organizador: puede editar Discord y contraseña | ✅ |
-| 22 | sin errores de JavaScript (tarjetas nuevas) | ✅ |
+| 5 | virtual: dice "hora de Ciudad de México" (la zona de quien mira) | ✅ |
+| 6 | zona sin nombre en la lista: usa la última parte ("Europe/Oslo" → "Oslo") | ✅ |
+| 7 | plataforma y formato en una sola línea: "LackeyCCG · V5" | ✅ |
+| 8 | sin sesión (espectador) se ve el Discord | ✅ |
+| 9 | sin sesión se ve el renglón de contraseña, oculta con puntitos | ✅ |
+| 10 | "Ver" muestra la contraseña y el botón cambia a "Ocultar" | ✅ |
+| 11 | "Ocultar" la vuelve a esconder | ✅ |
+| 12 | sin sesión no hay botones de editar Discord ni contraseña | ✅ |
+| 13 | los botones ya no llevan emojis | ✅ |
+| 14 | botón principal "¡Unirme a esta Mesa!" y secundarios WhatsApp · Compartir · Calendario | ✅ |
+| 15 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
+| 16 | presencial: dice "hora de Zaragoza" | ✅ |
+| 17 | presencial: "Presencial · cada …" en una línea | ✅ |
+| 18 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
+| 19 | presencial: sin lugares "libre" ni Discord | ✅ |
+| 20 | presencial: cupo "1 confirmado" | ✅ |
+| 21 | presencial: "Orden de Asientos" visible para todos | ✅ |
+| 22 | organizador: "Organizas tú" en la línea de datos | ✅ |
+| 23 | organizador: puede editar Discord y contraseña | ✅ |
+| 24 | sin errores de JavaScript (tarjetas nuevas) | ✅ |

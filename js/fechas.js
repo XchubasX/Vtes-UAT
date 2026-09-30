@@ -6,6 +6,28 @@
 
 const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+// Nombre legible de una zona horaria, para "hora de Ciudad de México".
+// Si no está en la lista se usa la última parte del nombre técnico
+// (ej. "Europe/Oslo" → "Oslo").
+const NOMBRES_ZONA = {
+  'America/Mexico_City': 'Ciudad de México', 'America/Monterrey': 'Monterrey', 'America/Merida': 'Mérida',
+  'America/Cancun': 'Cancún', 'America/Chihuahua': 'Chihuahua', 'America/Hermosillo': 'Hermosillo',
+  'America/Mazatlan': 'Mazatlán', 'America/Tijuana': 'Tijuana', 'America/Bahia_Banderas': 'Bahía de Banderas',
+  'Europe/Madrid': 'Madrid', 'Atlantic/Canary': 'Canarias', 'Europe/Lisbon': 'Lisboa', 'Europe/London': 'Londres',
+  'Europe/Paris': 'París', 'Europe/Berlin': 'Berlín', 'Europe/Rome': 'Roma',
+  'America/Santiago': 'Santiago de Chile', 'America/Bogota': 'Bogotá', 'America/Lima': 'Lima',
+  'America/Argentina/Buenos_Aires': 'Buenos Aires', 'America/Caracas': 'Caracas', 'America/Montevideo': 'Montevideo',
+  'America/Asuncion': 'Asunción', 'America/La_Paz': 'La Paz', 'America/Guayaquil': 'Guayaquil', 'America/Sao_Paulo': 'São Paulo',
+  'America/Guatemala': 'Guatemala', 'America/El_Salvador': 'El Salvador', 'America/Tegucigalpa': 'Tegucigalpa',
+  'America/Managua': 'Managua', 'America/Costa_Rica': 'Costa Rica', 'America/Panama': 'Panamá',
+  'America/Havana': 'La Habana', 'America/Santo_Domingo': 'Santo Domingo', 'America/Puerto_Rico': 'Puerto Rico',
+  'America/New_York': 'Nueva York', 'America/Chicago': 'Chicago', 'America/Denver': 'Denver', 'America/Los_Angeles': 'Los Ángeles'
+};
+function nombreZona(tz) {
+  if (!tz) return '';
+  return NOMBRES_ZONA[tz] || tz.split('/').pop().replace(/_/g, ' ');
+}
+
 const configFlatpickr = {
   enableTime: true,
   dateFormat: "Y-m-d H:i",

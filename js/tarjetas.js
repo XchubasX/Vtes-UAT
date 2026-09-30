@@ -329,7 +329,7 @@ function renderCustomTables(tables, container) {
     `).join('');
 
     const cardId = `card-custom-${escapeHtml(t.id)}`;
-    const zonaTexto = isPresencial ? `<span class="text-emerald-400">${t.city ? 'hora de ' + escapeHtml(t.city) : 'hora local'}</span>` : 'tu hora';
+    const zonaTexto = isPresencial ? `<span class="text-emerald-400">${t.city ? 'hora de ' + escapeHtml(t.city) : 'hora local'}</span>` : (userTimezone ? `hora de ${escapeHtml(nombreZona(userTimezone))}` : 'tu hora');
 
     return `
       <div id="${cardId}" class="bg-zinc-900 border ${isPresencial ? 'border-emerald-600/50' : (isReady ? 'border-green-600/60' : 'border-wine-600/40')} rounded-xl p-4 shadow-md space-y-3.5 transition-shadow">

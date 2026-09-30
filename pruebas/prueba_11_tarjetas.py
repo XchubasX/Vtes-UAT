@@ -27,6 +27,8 @@ def correr(nav, r):
     r.caso('la fecha lleva el día completo ("martes 30 sep")', len(fecha.split()) == 3, fecha)
     r.caso('el cupo va junto a la fecha: "Faltan 2 · 3/5"', 'Faltan 2 · 3/5' in t)
     r.caso('se ven 2 lugares "libre"', t.count('libre') == 2, t.count('libre'))
+    r.caso('virtual: dice "hora de Ciudad de México" (la zona de quien mira)', 'hora de Ciudad de México' in t and 'tu hora' not in t)
+    r.caso('zona sin nombre en la lista: usa la última parte ("Europe/Oslo" → "Oslo")', pg.evaluate("nombreZona('Europe/Oslo')") == 'Oslo')
     r.caso('plataforma y formato en una sola línea: "LackeyCCG · V5"', 'LackeyCCG · V5' in t)
     r.caso('sin sesión (espectador) se ve el Discord', 'vtes.gg/mx' in t)
     r.caso('sin sesión se ve el renglón de contraseña, oculta con puntitos', 'Contraseña' in t and '••••••' in t and 'sangre123' not in t)
