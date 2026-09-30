@@ -15,6 +15,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <!-- Firebase App Check (la base de datos exige token válido incluso para lectura) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script>
+  <!-- Datos del sitio (Firebase y reCAPTCHA; distinto en pruebas) y código compartido -->
+  <script src="config.js?v=20260929a"></script>
+  <script src="comun.js?v=20260929a"></script>
 
   <style>
     /* Misma apariencia oscura del sitio (zinc + vino). Colores de las gráficas
@@ -105,7 +108,6 @@
   </style>
 </head>
 <body>
-<div style="background:#b45309;color:#fff;text-align:center;font:600 13px sans-serif;padding:6px;margin:0 0 8px">⚠️ SITIO DE PRUEBAS — los datos aquí no son reales</div>
   <div class="wrap">
 
     <header>
@@ -263,24 +265,6 @@
   <div id="tip" hidden></div>
 
   <script>
-    // Configuración de tu proyecto en Firebase (misma que index.html)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBQR7AaxC5F2bTKI_po7w7awZLa_KVS4zk",
-      authDomain: "vtes-uat.firebaseapp.com",
-      databaseURL: "https://vtes-uat-default-rtdb.firebaseio.com",
-      projectId: "vtes-uat",
-      storageBucket: "vtes-uat.firebasestorage.app",
-      messagingSenderId: "801358504439",
-      appId: "1:801358504439:web:d946e61ff0067bee69cef2"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-
-    const appCheck = firebase.appCheck();
-    appCheck.activate(
-      new firebase.appCheck.ReCaptchaEnterpriseProvider('6LfWd7YtAAAAAMg-IhiLw8ukgxp2ejhX-i7RaBl-'),
-      true
-    );
 
     const db = firebase.database();
     const auth = firebase.auth(); // recupera la sesión guardada (si la hay) desde el inicio
@@ -298,9 +282,6 @@
     let statsLoaded = false;
     let isStatsAdmin = false; // solo el administrador poda datos viejos
 
-    function escapeHtml(str) {
-      return String(str ?? '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-    }
 
     function showGate(message, { showLogin = true, showSignOut = false, error = '' } = {}) {
       document.getElementById('gateSection').classList.remove('hidden');
