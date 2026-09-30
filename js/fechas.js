@@ -149,32 +149,20 @@ function nightOfName(utcISO, timeZone) {
 }
 
 // ---------------------------------------------------------------------
-// TIEMPO RELATIVO: "⏰ en 2 h", "🔥 ¡Empezando!", "🩸 En curso"
+// TIEMPO RELATIVO: "en 2 h", "¡Empezando!", "En curso"
 // Se recalcula cada minuto sin volver a dibujar las tarjetas.
 // ---------------------------------------------------------------------
 function relativeTimeLabel(utcISO) {
   const diffMin = Math.round((new Date(utcISO).getTime() - Date.now()) / 60000);
   if (diffMin > 0) {
-    if (diffMin < 60) return { text: `⏰ en ${diffMin} min`, soon: true };
+    if (diffMin < 60) return { text: `en ${diffMin} min`, soon: true };
     const hours = Math.round(diffMin / 60);
-    if (hours < 24) return { text: `⏰ en ${hours} h`, soon: hours <= 3 };
+    if (hours < 24) return { text: `en ${hours} h`, soon: hours <= 3 };
     const days = Math.round(diffMin / 1440);
-    return { text: `⏰ en ${days} día${days === 1 ? '' : 's'}`, soon: false };
+    return { text: `en ${days} día${days === 1 ? '' : 's'}`, soon: false };
   }
-  if (diffMin > -30) return { text: '🔥 ¡Empezando!', soon: true };
-  return { text: '🩸 En curso', soon: true };
-}
-
-// Etiqueta de la tarjeta: presenciales en la hora del lugar, virtuales en la de quien mira
-function nightBadgeHtml(t) {
-  const tz = t.modality === 'presencial' ? t.originTz : undefined;
-  const night = nightOfName(t.utcTime, tz);
-  return night ? `<span class="bg-indigo-950 text-indigo-200 border border-indigo-600/70 text-xs px-2 py-0.5 rounded font-semibold whitespace-nowrap">🌙 noche del ${escapeHtml(night)}</span>` : '';
-}
-
-function relativeBadgeHtml(utcISO) {
-  const r = relativeTimeLabel(utcISO);
-  return `<span class="rel-time ${r.soon ? 'bg-amber-950 text-amber-300 border-amber-700/70' : 'bg-zinc-800 text-zinc-300 border-zinc-600'} border text-xs px-2 py-0.5 rounded font-semibold whitespace-nowrap" data-time="${escapeHtml(utcISO)}">${r.text}</span>`;
+  if (diffMin > -30) return { text: '¡Empezando!', soon: true };
+  return { text: 'En curso', soon: true };
 }
 
 // ---------------------------------------------------------------------
