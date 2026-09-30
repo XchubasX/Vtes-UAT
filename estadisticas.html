@@ -15,9 +15,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <!-- Firebase App Check (la base de datos exige token válido incluso para lectura) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script>
-  <!-- Datos del sitio (Firebase y reCAPTCHA; distinto en pruebas) y código compartido -->
-  <script src="config.js?v=20260929a"></script>
-  <script src="comun.js?v=20260929a"></script>
 
   <style>
     /* Misma apariencia oscura del sitio (zinc + vino). Colores de las gráficas
@@ -108,6 +105,11 @@
   </style>
 </head>
 <body>
+  <!-- Datos del sitio (Firebase y reCAPTCHA; distinto en pruebas) y código compartido.
+       Van al inicio del <body>, no en el <head>: App Check (reCAPTCHA) necesita que ya
+       exista el <body> para activarse. -->
+  <script src="config.js?v=20260929b"></script>
+  <script src="comun.js?v=20260929b"></script>
   <div class="wrap">
 
     <header>

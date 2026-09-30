@@ -18,11 +18,13 @@
   <!-- EmailJS: envía el formulario de "Reportar bug / Sugerencia" directo a un correo,
        sin guardar ningún dato en Firebase (ver botón flotante 💬 más abajo) -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js" integrity="sha256-BS9pFqIbpb4UA2ZDnoG4StETY8hN+6KgbyCMe0pvbV8=" crossorigin="anonymous"></script>
-  <!-- Datos del sitio (Firebase y reCAPTCHA; distinto en pruebas) y código compartido -->
-  <script src="config.js?v=20260929a"></script>
-  <script src="comun.js?v=20260929a"></script>
 </head>
 <body data-contacto class="bg-zinc-900 text-zinc-100 min-h-screen p-4 md:p-8 font-sans">
+  <!-- Datos del sitio (Firebase y reCAPTCHA; distinto en pruebas) y código compartido.
+       Van al inicio del <body>, no en el <head>: App Check (reCAPTCHA) necesita que ya
+       exista el <body> para activarse. -->
+  <script src="config.js?v=20260929b"></script>
+  <script src="comun.js?v=20260929b"></script>
 
 
   <!-- MODAL: ACERCA DE (botón "?" del encabezado) -->

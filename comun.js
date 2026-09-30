@@ -1,7 +1,8 @@
 // =====================================================================
 // comun.js — CÓDIGO COMPARTIDO POR LAS PÁGINAS DEL SITIO
 // (index.html, sorteo.html y estadisticas.html)
-// Se carga en el <head>, después de los programas de Firebase y de config.js.
+// Se carga al inicio del <body> (App Check necesita que ya exista el <body>),
+// después de los programas de Firebase (en el <head>) y de config.js.
 // Es idéntico en el sitio real y en el de pruebas.
 // =====================================================================
 
