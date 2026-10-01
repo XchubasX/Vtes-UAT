@@ -1,9 +1,9 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 278 de 278 casos pasaron.
+**✅ TODO BIEN** — 279 de 279 casos pasaron.
 
-- Fecha: 01/10/2026 10:20 (hora de Ciudad de México)
-- Versión probada: `401e6b7` + cambios aún sin guardar
+- Fecha: 01/10/2026 13:16 (hora de Ciudad de México)
+- Versión probada: `353207e` + cambios aún sin guardar
 - Duración: 50 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
@@ -17,7 +17,7 @@
 | 3 | Fichas de estadísticas por cuenta y guardado separado | 12 | ✅ |
 | 4 | Aviso de bienvenida y experiencia de uso | 23 | ✅ |
 | 5 | Las 3 páginas: config.js, comun.js, 💬, "Acerca de" y aviso legal | 48 | ✅ |
-| 6 | Arranque: enlace por ciudad y enlace directo a una mesa | 8 | ✅ |
+| 6 | Arranque: enlace por ciudad y enlace directo a una mesa | 9 | ✅ |
 | 7 | Sitio servido como en GitHub, con sus archivos separados | 8 | ✅ |
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
 | 9 | Página de estadísticas: acceso y conteo de personas | 17 | ✅ |
@@ -200,8 +200,9 @@
 | 4 | enlace directo: abre la pestaña correcta y muestra la mesa | ✅ |
 | 5 | al arrancar escribe la zona horaria de quien visita (con nombre legible) | ✅ |
 | 6 | la zona horaria está dentro de la ventana Acerca de, no en el encabezado | ✅ |
-| 7 | el encabezado solo tiene el título y la sesión (sin subtítulo ni "?") | ✅ |
-| 8 | sin errores de JavaScript (enlace directo) | ✅ |
+| 7 | encabezado: ícono, "ELYSIUM / The Eternal Schedule" y la sesión (sin "?") | ✅ |
+| 8 | título de la pestaña con el nombre nuevo | ✅ |
+| 9 | sin errores de JavaScript (enlace directo) | ✅ |
 
 ### 7. Sitio servido como en GitHub, con sus archivos separados
 
@@ -325,7 +326,7 @@
 
 | # | Caso | Resultado |
 |---|---|---|
-| 1 | manifest: nombre completo "VTES Matchmaking" y corto "VTESMatch" | ✅ |
+| 1 | manifest: nombre completo "Elysium: The Eternal Schedule" y corto "Elysium" | ✅ |
 | 2 | manifest: abre en el navegador normal (el inicio de sesión de Google sigue funcionando) | ✅ |
 | 3 | manifest: empieza y se queda en la carpeta del sitio | ✅ |
 | 4 | manifest: íconos 192, 512 y versión recortable, con su tamaño real | ✅ |

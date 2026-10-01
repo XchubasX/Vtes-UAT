@@ -31,6 +31,7 @@ def correr(nav, r):
         tz = pg.evaluate("document.getElementById('userTimezone').textContent")
         r.caso('al arrancar escribe la zona horaria de quien visita (con nombre legible)', tz == 'Tu zona horaria: Ciudad de México (America/Mexico_City)', tz)
         r.caso('la zona horaria está dentro de la ventana Acerca de, no en el encabezado', pg.evaluate("!!document.querySelector('#aboutModal #userTimezone') && !document.querySelector('header #userTimezone')"))
-        r.caso('el encabezado solo tiene el título y la sesión (sin subtítulo ni "?")', pg.evaluate("document.querySelector('header').children.length") == 2 and 'Coordinador' not in pg.inner_text('header'))
+        r.caso('encabezado: ícono, "ELYSIUM / The Eternal Schedule" y la sesión (sin "?")', pg.evaluate("document.querySelector('header').children.length") == 3 and 'ELYSIUM' in pg.inner_text('header') and 'The Eternal Schedule' in pg.inner_text('header') and 'Coordinador' not in pg.inner_text('header'))
+        r.caso('título de la pestaña con el nombre nuevo', pg.title().startswith('Elysium: The Eternal Schedule'), pg.title())
         err.revisar()
         ctx.close()
