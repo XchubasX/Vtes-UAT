@@ -47,8 +47,11 @@ def correr(nav, r):
         r.caso(f'{archivo}: 💬 envía el mensaje por EmailJS indicando la página ({quiere})', len(sent) == 1 and sent[0]['message'] == 'hola prueba' and sent[0]['page'] == quiere, sent)
         r.caso(f'{archivo}: 💬 confirma el envío', 'Gracias' in pg.inner_text('#feedbackStatus'))
         pg.keyboard.press('Escape'); pg.wait_for_timeout(100)
-        pg.click('text=Sitio no oficial · Dark Pack · Aviso legal'); pg.wait_for_timeout(150)
-        r.caso(f'{archivo}: la línea del pie abre "Acerca de"', pg.is_visible('#aboutModal'))
+        r.caso(f'{archivo}: ya no hay botón "?" en el encabezado', pg.locator('header button[onclick^="openAboutModal"]').count() == 0)
+        pg.click('footer >> text=Acerca de · Aviso legal'); pg.wait_for_timeout(150)
+        r.caso(f'{archivo}: el pie "Acerca de · Aviso legal" abre la ventana', pg.is_visible('#aboutModal'))
+        r.caso(f'{archivo}: la ventana abre desde arriba ("Cómo funciona"), no en lo legal',
+               pg.evaluate("(() => { const m = document.querySelector('#aboutModal [class*=overflow-y-auto]') || document.getElementById('aboutModal'); return m.scrollTop === 0; })()"))
         legal = pg.inner_text('#aboutLegal') if pg.query_selector('#aboutLegal') else ''
         r.caso(f'{archivo}: aviso legal Dark Pack completo (logo, no oficial, texto de Paradox)',
                pg.query_selector('#aboutLegal img') is not None and 'no oficial' in legal and 'Paradox Interactive AB, and are used with permission' in legal)

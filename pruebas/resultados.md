@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 231 de 231 casos pasaron.
+**✅ TODO BIEN** — 237 de 237 casos pasaron.
 
-- Fecha: 30/09/2026 18:12 (hora de Ciudad de México)
-- Versión probada: `806a8be` + cambios aún sin guardar
-- Duración: 43 s
+- Fecha: 30/09/2026 18:25 (hora de Ciudad de México)
+- Versión probada: `08f302d` + cambios aún sin guardar
+- Duración: 45 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -16,8 +16,8 @@
 | 2 | Limpieza de vencidas, eventos semanales, salir, editar horario y cerrar | 9 | ✅ |
 | 3 | Fichas de estadísticas por cuenta y guardado separado | 12 | ✅ |
 | 4 | Aviso de bienvenida y experiencia de uso | 23 | ✅ |
-| 5 | Las 3 páginas: config.js, comun.js, 💬, "Acerca de" y aviso legal | 44 | ✅ |
-| 6 | Arranque: enlace por ciudad y enlace directo a una mesa | 6 | ✅ |
+| 5 | Las 3 páginas: config.js, comun.js, 💬, "Acerca de" y aviso legal | 48 | ✅ |
+| 6 | Arranque: enlace por ciudad y enlace directo a una mesa | 8 | ✅ |
 | 7 | Sitio servido como en GitHub, con sus archivos separados | 8 | ✅ |
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
 | 9 | Página de estadísticas: acceso y conteo de personas | 17 | ✅ |
@@ -159,29 +159,33 @@
 | 19 | index.html: 💬 abre su ventana | ✅ |
 | 20 | index.html: 💬 envía el mensaje por EmailJS indicando la página (index) | ✅ |
 | 21 | index.html: 💬 confirma el envío | ✅ |
-| 22 | index.html: la línea del pie abre "Acerca de" | ✅ |
-| 23 | index.html: aviso legal Dark Pack completo (logo, no oficial, texto de Paradox) | ✅ |
-| 24 | index.html: Escape cierra "Acerca de" | ✅ |
-| 25 | sorteo.html: sin errores de JavaScript | ✅ |
-| 26 | sorteo.html: franja de pruebas visible según config.js | ✅ |
-| 27 | sorteo.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
-| 28 | sorteo.html: App Check se activa con la clave de config.js | ✅ |
-| 29 | sorteo.html: escapeHtml protege el texto | ✅ |
-| 30 | sorteo.html: normalizePlayer entiende "Jesus 8:05" | ✅ |
-| 31 | sorteo.html: botón 💬 visible | ✅ |
-| 32 | sorteo.html: 💬 abre su ventana | ✅ |
-| 33 | sorteo.html: 💬 envía el mensaje por EmailJS indicando la página (sorteo) | ✅ |
-| 34 | sorteo.html: 💬 confirma el envío | ✅ |
-| 35 | sorteo.html: la línea del pie abre "Acerca de" | ✅ |
-| 36 | sorteo.html: aviso legal Dark Pack completo (logo, no oficial, texto de Paradox) | ✅ |
-| 37 | sorteo.html: Escape cierra "Acerca de" | ✅ |
-| 38 | estadisticas.html: sin errores de JavaScript | ✅ |
-| 39 | estadisticas.html: franja de pruebas visible según config.js | ✅ |
-| 40 | estadisticas.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
-| 41 | estadisticas.html: App Check se activa con la clave de config.js | ✅ |
-| 42 | estadisticas.html: escapeHtml protege el texto | ✅ |
-| 43 | estadisticas.html: sin botón 💬 (a propósito) | ✅ |
-| 44 | al cambiar esPruebas, la franja aparece o desaparece | ✅ |
+| 22 | index.html: ya no hay botón "?" en el encabezado | ✅ |
+| 23 | index.html: el pie "Acerca de · Aviso legal" abre la ventana | ✅ |
+| 24 | index.html: la ventana abre desde arriba ("Cómo funciona"), no en lo legal | ✅ |
+| 25 | index.html: aviso legal Dark Pack completo (logo, no oficial, texto de Paradox) | ✅ |
+| 26 | index.html: Escape cierra "Acerca de" | ✅ |
+| 27 | sorteo.html: sin errores de JavaScript | ✅ |
+| 28 | sorteo.html: franja de pruebas visible según config.js | ✅ |
+| 29 | sorteo.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
+| 30 | sorteo.html: App Check se activa con la clave de config.js | ✅ |
+| 31 | sorteo.html: escapeHtml protege el texto | ✅ |
+| 32 | sorteo.html: normalizePlayer entiende "Jesus 8:05" | ✅ |
+| 33 | sorteo.html: botón 💬 visible | ✅ |
+| 34 | sorteo.html: 💬 abre su ventana | ✅ |
+| 35 | sorteo.html: 💬 envía el mensaje por EmailJS indicando la página (sorteo) | ✅ |
+| 36 | sorteo.html: 💬 confirma el envío | ✅ |
+| 37 | sorteo.html: ya no hay botón "?" en el encabezado | ✅ |
+| 38 | sorteo.html: el pie "Acerca de · Aviso legal" abre la ventana | ✅ |
+| 39 | sorteo.html: la ventana abre desde arriba ("Cómo funciona"), no en lo legal | ✅ |
+| 40 | sorteo.html: aviso legal Dark Pack completo (logo, no oficial, texto de Paradox) | ✅ |
+| 41 | sorteo.html: Escape cierra "Acerca de" | ✅ |
+| 42 | estadisticas.html: sin errores de JavaScript | ✅ |
+| 43 | estadisticas.html: franja de pruebas visible según config.js | ✅ |
+| 44 | estadisticas.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
+| 45 | estadisticas.html: App Check se activa con la clave de config.js | ✅ |
+| 46 | estadisticas.html: escapeHtml protege el texto | ✅ |
+| 47 | estadisticas.html: sin botón 💬 (a propósito) | ✅ |
+| 48 | al cambiar esPruebas, la franja aparece o desaparece | ✅ |
 
 ### 6. Arranque: enlace por ciudad y enlace directo a una mesa
 
@@ -191,8 +195,10 @@
 | 2 | enlace por ciudad: deja la dirección limpia (/Zaragoza) | ✅ |
 | 3 | sin errores de JavaScript (enlace por ciudad) | ✅ |
 | 4 | enlace directo: abre la pestaña correcta y muestra la mesa | ✅ |
-| 5 | al arrancar escribe la zona horaria de quien visita | ✅ |
-| 6 | sin errores de JavaScript (enlace directo) | ✅ |
+| 5 | al arrancar escribe la zona horaria de quien visita (con nombre legible) | ✅ |
+| 6 | la zona horaria está dentro de la ventana Acerca de, no en el encabezado | ✅ |
+| 7 | el encabezado solo tiene el título y la sesión (sin subtítulo ni "?") | ✅ |
+| 8 | sin errores de JavaScript (enlace directo) | ✅ |
 
 ### 7. Sitio servido como en GitHub, con sus archivos separados
 

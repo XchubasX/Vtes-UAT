@@ -24,7 +24,7 @@ def correr(nav, r):
     pg.click('#loginNotice >> text=Entrar con Google'); pg.wait_for_timeout(100)
     r.caso('el botón del aviso abre el inicio de sesión', pg.is_visible('#loginModal'))
     pg.click('#loginModalBtn'); pg.wait_for_timeout(300)
-    r.caso('con sesión desaparecen el aviso y el botón', not pg.is_visible('#loginNotice') and 'Sesión iniciada' in pg.inner_text('#authBar'))
+    r.caso('con sesión desaparecen el aviso y el botón', not pg.is_visible('#loginNotice') and 'Cerrar sesión' in pg.inner_text('#authBar'))
     err.revisar()
     ctx.close()
 
