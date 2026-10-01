@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 237 de 237 casos pasaron.
+**✅ TODO BIEN** — 248 de 248 casos pasaron.
 
-- Fecha: 30/09/2026 18:45 (hora de Ciudad de México)
-- Versión probada: `d077fa2` + cambios aún sin guardar
-- Duración: 43 s
+- Fecha: 01/10/2026 05:39 (hora de Ciudad de México)
+- Versión probada: `4ffd97a` + cambios aún sin guardar
+- Duración: 45 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -23,6 +23,7 @@
 | 9 | Página de estadísticas: acceso y conteo de personas | 17 | ✅ |
 | 10 | Revisión del código: sintaxis, versiones e integridad | 27 | ✅ |
 | 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 32 | ✅ |
+| 12 | Ícono del sitio e instalación en el celular | 11 | ✅ |
 
 ## Todos los casos
 
@@ -317,3 +318,19 @@
 | 30 | organizador: "Organizas tú" en la línea de datos | ✅ |
 | 31 | organizador: puede editar Discord y contraseña | ✅ |
 | 32 | sin errores de JavaScript (tarjetas nuevas) | ✅ |
+
+### 12. Ícono del sitio e instalación en el celular
+
+| # | Caso | Resultado |
+|---|---|---|
+| 1 | manifest: nombre completo "VTES Matchmaking" y corto "VTESMatch" | ✅ |
+| 2 | manifest: abre en el navegador normal (el inicio de sesión de Google sigue funcionando) | ✅ |
+| 3 | manifest: empieza y se queda en la carpeta del sitio | ✅ |
+| 4 | manifest: íconos 192, 512 y versión recortable, con su tamaño real | ✅ |
+| 5 | iconos/apple-touch-icon.png existe y mide 180×180 | ✅ |
+| 6 | iconos/favicon-32.png existe y mide 32×32 | ✅ |
+| 7 | iconos/favicon.svg es un dibujo válido | ✅ |
+| 8 | index.html: enlaza ícono, ícono de iPhone y manifest en el <head> | ✅ |
+| 9 | sorteo.html: enlaza ícono, ícono de iPhone y manifest en el <head> | ✅ |
+| 10 | estadisticas.html: enlaza ícono, ícono de iPhone y manifest en el <head> | ✅ |
+| 11 | sitio servido: todos los archivos del ícono responden (200) | ✅ |
