@@ -101,10 +101,11 @@ function closeCreatedModal() {
   lastCreatedId = null;
 }
 
-function highlightCard(tableId) {
-  // Si es una mesa privada plegada, primero se despliega (enlace directo, mesa recién creada)
+function highlightCard(tableId, { desplegar = false } = {}) {
+  // Enlace directo a una mesa privada: se despliega. Al crearla se queda plegada
+  // (como la ven todos) y solo se resalta.
   const t = currentGlobalData.find(item => item.id === tableId);
-  if (t && t.privada === true && !mesasDesplegadas.has(tableId)) {
+  if (desplegar && t && t.privada === true && !mesasDesplegadas.has(tableId)) {
     mesasDesplegadas.add(tableId);
     renderAll(currentGlobalData);
   }

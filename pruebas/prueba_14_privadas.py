@@ -68,7 +68,8 @@ def correr(nav, r):
     r.caso('crear con la casilla guarda privada: true', len(nuevas) == 1 and nuevas[0][1].get('privada') is True, nuevas)
     if nuevas:
         pg.click('#createdModal button'); pg.wait_for_timeout(300)
-        r.caso('al cerrar "Mesa creada", la privada nueva aparece desplegada', 'Ocultar' in pg.inner_text(f'#card-custom-{nuevas[0][0]}'))
+        r.caso('al cerrar "Mesa creada", la privada nueva aparece plegada, como la ven todos',
+               pg.get_attribute(f'#card-custom-{nuevas[0][0]}', 'aria-expanded') == 'false' and 'Ocultar' not in pg.inner_text(f'#card-custom-{nuevas[0][0]}'))
     pg.click('#openCreateFormBtn'); pg.wait_for_timeout(100)
     r.caso('al volver a abrir el formulario la casilla está desmarcada', not pg.is_checked('#tablePrivada'))
     pg.evaluate("setTableModality('presencial')"); pg.wait_for_timeout(100)

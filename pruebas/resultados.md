@@ -2,9 +2,9 @@
 
 **✅ TODO BIEN** — 278 de 278 casos pasaron.
 
-- Fecha: 01/10/2026 10:16 (hora de Ciudad de México)
-- Versión probada: `2a3d13e`
-- Duración: 51 s
+- Fecha: 01/10/2026 10:20 (hora de Ciudad de México)
+- Versión probada: `401e6b7` + cambios aún sin guardar
+- Duración: 50 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -371,7 +371,7 @@
 | 15 | "Hacer privada" guarda privada: true y la pliega | ✅ |
 | 16 | el formulario de mesa virtual tiene la casilla "Mesa privada" | ✅ |
 | 17 | crear con la casilla guarda privada: true | ✅ |
-| 18 | al cerrar "Mesa creada", la privada nueva aparece desplegada | ✅ |
+| 18 | al cerrar "Mesa creada", la privada nueva aparece plegada, como la ven todos | ✅ |
 | 19 | al volver a abrir el formulario la casilla está desmarcada | ✅ |
 | 20 | presencial: la casilla no aparece | ✅ |
 | 21 | sin errores de JavaScript (mesas privadas) | ✅ |
