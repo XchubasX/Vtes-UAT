@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 248 de 248 casos pasaron.
+**✅ TODO BIEN** — 256 de 256 casos pasaron.
 
-- Fecha: 01/10/2026 05:39 (hora de Ciudad de México)
-- Versión probada: `4ffd97a` + cambios aún sin guardar
-- Duración: 45 s
+- Fecha: 01/10/2026 06:03 (hora de Ciudad de México)
+- Versión probada: `60bd9d7` + cambios aún sin guardar
+- Duración: 51 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -24,6 +24,7 @@
 | 10 | Revisión del código: sintaxis, versiones e integridad | 27 | ✅ |
 | 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 32 | ✅ |
 | 12 | Ícono del sitio e instalación en el celular | 11 | ✅ |
+| 13 | Aviso temporal del ícono nuevo | 8 | ✅ |
 
 ## Todos los casos
 
@@ -334,3 +335,16 @@
 | 9 | sorteo.html: enlaza ícono, ícono de iPhone y manifest en el <head> | ✅ |
 | 10 | estadisticas.html: enlaza ícono, ícono de iPhone y manifest en el <head> | ✅ |
 | 11 | sitio servido: todos los archivos del ícono responden (200) | ✅ |
+
+### 13. Aviso temporal del ícono nuevo
+
+| # | Caso | Resultado |
+|---|---|---|
+| 1 | celular: el aviso se ve | ✅ |
+| 2 | el texto menciona la "G" (Android) y la "V" (iPhone) | ✅ |
+| 3 | "Entendido" lo cierra | ✅ |
+| 4 | no vuelve a salir tras recargar | ✅ |
+| 5 | a partir del 9 oct (hora de México) ya no se muestra | ✅ |
+| 6 | el 8 oct a las 23:59 (México) todavía se muestra | ✅ |
+| 7 | sin errores de JavaScript (aviso del ícono) | ✅ |
+| 8 | computadora: el aviso no se muestra | ✅ |
