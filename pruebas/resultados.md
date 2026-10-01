@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 223 de 223 casos pasaron.
+**✅ TODO BIEN** — 231 de 231 casos pasaron.
 
-- Fecha: 30/09/2026 17:53 (hora de Ciudad de México)
-- Versión probada: `7b8438e` + cambios aún sin guardar
-- Duración: 44 s
+- Fecha: 30/09/2026 18:12 (hora de Ciudad de México)
+- Versión probada: `806a8be` + cambios aún sin guardar
+- Duración: 43 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -22,7 +22,7 @@
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
 | 9 | Página de estadísticas: acceso y conteo de personas | 17 | ✅ |
 | 10 | Revisión del código: sintaxis, versiones e integridad | 27 | ✅ |
-| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 24 | ✅ |
+| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 32 | ✅ |
 
 ## Todos los casos
 
@@ -292,14 +292,22 @@
 | 11 | "Ocultar" la vuelve a esconder | ✅ |
 | 12 | sin sesión no hay botones de editar Discord ni contraseña | ✅ |
 | 13 | los botones ya no llevan emojis | ✅ |
-| 14 | botón principal "¡Unirme a esta Mesa!" y secundarios WhatsApp · Compartir · Calendario | ✅ |
-| 15 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
-| 16 | presencial: dice "hora de Zaragoza" | ✅ |
-| 17 | presencial: "Presencial · cada …" en una línea | ✅ |
-| 18 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
-| 19 | presencial: sin lugares "libre" ni Discord | ✅ |
-| 20 | presencial: cupo "1 confirmado" | ✅ |
-| 21 | presencial: "Orden de Asientos" visible para todos | ✅ |
-| 22 | organizador: "Organizas tú" en la línea de datos | ✅ |
-| 23 | organizador: puede editar Discord y contraseña | ✅ |
-| 24 | sin errores de JavaScript (tarjetas nuevas) | ✅ |
+| 14 | botón principal "¡Unirme a esta Mesa!" y secundarios Invitar · Calendario; ya no hay "Compartir" | ✅ |
+| 15 | el menú de Invitar empieza cerrado | ✅ |
+| 16 | al tocar Invitar se abre con "Mensaje por WhatsApp" y "Copiar enlace" | ✅ |
+| 17 | el botón avisa a lectores de pantalla que el menú está abierto | ✅ |
+| 18 | tocar fuera cierra el menú | ✅ |
+| 19 | Escape cierra el menú | ✅ |
+| 20 | "Mensaje por WhatsApp" abre WhatsApp con la invitación y cierra el menú | ✅ |
+| 21 | "Copiar enlace" copia el enlace directo (aunque el celular tenga menú de compartir) | ✅ |
+| 22 | al copiar avisa "Enlace copiado" | ✅ |
+| 23 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
+| 24 | presencial: dice "hora de Zaragoza" | ✅ |
+| 25 | presencial: "Presencial · cada …" en una línea | ✅ |
+| 26 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
+| 27 | presencial: sin lugares "libre" ni Discord | ✅ |
+| 28 | presencial: cupo "1 confirmado" | ✅ |
+| 29 | presencial: "Orden de Asientos" visible para todos | ✅ |
+| 30 | organizador: "Organizas tú" en la línea de datos | ✅ |
+| 31 | organizador: puede editar Discord y contraseña | ✅ |
+| 32 | sin errores de JavaScript (tarjetas nuevas) | ✅ |

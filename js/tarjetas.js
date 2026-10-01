@@ -73,6 +73,28 @@ function togglePasswordView(elementId) {
   if (boton) boton.textContent = oculta ? 'Ver' : 'Ocultar';
 }
 
+// Menú del botón "Invitar": WhatsApp o copiar enlace.
+// Se cierra al elegir una opción, al tocar fuera o con Escape.
+function closeInviteMenus() {
+  document.querySelectorAll('.invite-menu').forEach(m => m.classList.add('hidden'));
+  document.querySelectorAll('[id^="invitar-boton-"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+}
+function toggleInviteMenu(tableId) {
+  const menu = document.getElementById('invitar-' + tableId);
+  if (!menu) return;
+  const abrir = menu.classList.contains('hidden');
+  closeInviteMenus();
+  if (abrir) {
+    menu.classList.remove('hidden');
+    const boton = document.getElementById('invitar-boton-' + tableId);
+    if (boton) boton.setAttribute('aria-expanded', 'true');
+  }
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.invite-menu') && !e.target.closest('[id^="invitar-boton-"]')) closeInviteMenus();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeInviteMenus(); });
+
 function platformLabel(platform) {
   return (platform || '').toLowerCase().includes('lackey') ? 'LackeyCCG' : 'Succubus Club';
 }
@@ -372,9 +394,19 @@ function renderCustomTables(tables, container) {
         <div class="space-y-2 pt-0.5">
           ${mainActionHtml}
           <div class="flex flex-wrap gap-2">
-            <button onclick="shareTableInvitation('${id}')" class="${botonSecundario}" title="Invitar por WhatsApp">WhatsApp</button>
-            <button onclick="shareTableLink('${id}')" class="${botonSecundario}" title="Copiar el enlace">Compartir</button>
+            <button id="invitar-boton-${escapeHtml(t.id)}" onclick="toggleInviteMenu('${id}')" class="${botonSecundario}" aria-haspopup="true" aria-expanded="false" aria-controls="invitar-${escapeHtml(t.id)}">Invitar</button>
             <button onclick="openCalendarModal('${id}')" class="${botonSecundario}" title="Agregar a mi calendario">Calendario</button>
+          </div>
+          <div id="invitar-${escapeHtml(t.id)}" class="invite-menu hidden bg-zinc-800 border border-zinc-700 rounded-lg p-1.5 shadow-xl shadow-black/50">
+            <button onclick="closeInviteMenus(); shareTableInvitation('${id}')" class="w-full text-left px-3 py-2.5 rounded-md hover:bg-zinc-700 transition">
+              <span class="block text-[15px] font-semibold text-zinc-100">Mensaje por WhatsApp</span>
+              <span class="block text-[13px] text-zinc-400">Invitación completa con horarios de México, España y Chile</span>
+            </button>
+            <div class="h-px bg-zinc-700 mx-2 my-0.5"></div>
+            <button onclick="closeInviteMenus(); shareTableLink('${id}')" class="w-full text-left px-3 py-2.5 rounded-md hover:bg-zinc-700 transition">
+              <span class="block text-[15px] font-semibold text-zinc-100">Copiar enlace</span>
+              <span class="block text-[13px] text-zinc-400">Para pegarlo en Discord, Telegram o donde quieras</span>
+            </button>
           </div>
           ${leaveButtons || leaveSubButtons ? `<div class="flex flex-wrap gap-2">${leaveButtons}${leaveSubButtons}</div>` : ''}
         </div>

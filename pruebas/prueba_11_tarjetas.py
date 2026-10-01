@@ -40,8 +40,25 @@ def correr(nav, r):
     r.caso('sin sesión no hay botones de editar Discord ni contraseña', 'Editar' not in pg.inner_text('#card-custom-v1'))
     botones = ' '.join(pg.eval_on_selector_all('#customTablesContainer button', 'bs => bs.map(b => b.innerText)'))
     r.caso('los botones ya no llevan emojis', not any(e in botones for e in '➕📲🔗📅🚪📝✏️🎲⏭️⏳'), botones[:120])
-    r.caso('botón principal "¡Unirme a esta Mesa!" y secundarios WhatsApp · Compartir · Calendario',
-           all(x in botones for x in ['¡Unirme a esta Mesa!', 'WhatsApp', 'Compartir', 'Calendario']))
+    r.caso('botón principal "¡Unirme a esta Mesa!" y secundarios Invitar · Calendario; ya no hay "Compartir"',
+           all(x in botones for x in ['¡Unirme a esta Mesa!', 'Invitar', 'Calendario']) and 'Compartir' not in botones)
+    r.caso('el menú de Invitar empieza cerrado', not pg.is_visible('#invitar-v1'))
+    pg.click('#invitar-boton-v1'); pg.wait_for_timeout(100)
+    menu = pg.inner_text('#invitar-v1') if pg.is_visible('#invitar-v1') else ''
+    r.caso('al tocar Invitar se abre con "Mensaje por WhatsApp" y "Copiar enlace"', 'Mensaje por WhatsApp' in menu and 'Copiar enlace' in menu)
+    r.caso('el botón avisa a lectores de pantalla que el menú está abierto', pg.get_attribute('#invitar-boton-v1', 'aria-expanded') == 'true')
+    pg.click('h1'); pg.wait_for_timeout(100)
+    r.caso('tocar fuera cierra el menú', not pg.is_visible('#invitar-v1'))
+    pg.click('#invitar-boton-v1'); pg.keyboard.press('Escape'); pg.wait_for_timeout(100)
+    r.caso('Escape cierra el menú', not pg.is_visible('#invitar-v1'))
+    pg.evaluate("window.__abierto = null; window.open = (u) => { window.__abierto = u; }")
+    pg.click('#invitar-boton-v1'); pg.click('#invitar-v1 >> text=Mensaje por WhatsApp'); pg.wait_for_timeout(100)
+    abierto = pg.evaluate("window.__abierto") or ''
+    r.caso('"Mensaje por WhatsApp" abre WhatsApp con la invitación y cierra el menú', 'whatsapp.com/send' in abierto and 'Martes%20de%20V5' in abierto and not pg.is_visible('#invitar-v1'), abierto[:80])
+    pg.evaluate("window.__copiado = null; Object.defineProperty(navigator, 'clipboard', {value: {writeText: (x) => { window.__copiado = x; return Promise.resolve(); }}, configurable: true}); navigator.share = () => Promise.reject(new Error('no debía usarse')); true")
+    pg.click('#invitar-boton-v1'); pg.click('#invitar-v1 >> text=Copiar enlace'); pg.wait_for_timeout(200)
+    r.caso('"Copiar enlace" copia el enlace directo (aunque el celular tenga menú de compartir)', (pg.evaluate("window.__copiado") or '').endswith('#mesa-v1'))
+    r.caso('al copiar avisa "Enlace copiado"', 'Enlace copiado' in pg.inner_text('#toastContainer'))
     r.caso('el tiempo relativo sigue actualizándose (clase rel-time)', pg.query_selector('#card-custom-v1 .rel-time') is not None)
 
     pg.evaluate("setTableModality('presencial')"); pg.wait_for_timeout(300)

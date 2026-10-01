@@ -1,13 +1,16 @@
 """Página de estadísticas: acceso con Google (administrador y lectores) y panel de personas."""
 from datetime import datetime, timezone
-from herramientas import armar_pagina, url_archivo, nuevo_contexto
+from zoneinfo import ZoneInfo
+from herramientas import armar_pagina, url_archivo, nuevo_contexto, ZONA
 
 TITULO = 'Página de estadísticas: acceso y conteo de personas'
 
 
 def _mes(delta, dia):
-    """Fecha ISO del día `dia` del mes actual + `delta` meses (fechas relativas: la prueba no caduca)."""
-    hoy = datetime.now(timezone.utc)
+    """Fecha ISO del día `dia` del mes actual + `delta` meses (fechas relativas: la prueba no caduca).
+    "Mes actual" en la zona del navegador de prueba (no en UTC): la página cuenta los meses
+    con la hora de quien la ve, y al final de cada mes UTC ya va en el mes siguiente."""
+    hoy = datetime.now(ZoneInfo(ZONA))
     y, m = hoy.year, hoy.month + delta
     while m <= 0:
         m += 12; y -= 1
