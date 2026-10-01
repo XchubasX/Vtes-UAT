@@ -102,6 +102,12 @@ function closeCreatedModal() {
 }
 
 function highlightCard(tableId) {
+  // Si es una mesa privada plegada, primero se despliega (enlace directo, mesa recién creada)
+  const t = currentGlobalData.find(item => item.id === tableId);
+  if (t && t.privada === true && !mesasDesplegadas.has(tableId)) {
+    mesasDesplegadas.add(tableId);
+    renderAll(currentGlobalData);
+  }
   const card = document.getElementById(`card-custom-${tableId}`);
   if (!card) return;
   card.scrollIntoView({ behavior: 'smooth', block: 'center' });
