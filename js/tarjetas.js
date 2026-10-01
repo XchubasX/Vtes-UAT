@@ -362,7 +362,7 @@ function renderCustomTables(tables, container) {
             <span class="shrink-0">${statusBadge}</span>
           </div>
           <div class="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-            <span class="text-[40px] leading-none font-extrabold tracking-tight text-white tabular-nums">${escapeHtml(formattedTime)}</span>
+            <span class="text-[24px] leading-none font-extrabold tracking-tight text-white tabular-nums">${escapeHtml(formattedTime)}</span>
             <span class="text-sm text-zinc-400">${zonaTexto}${nocheDe ? ` · <span class="text-indigo-300">noche del ${escapeHtml(nocheDe)}</span>` : ''} · <span class="rel-time ${relativo.soon ? 'text-amber-300 font-semibold' : ''}" data-time="${escapeHtml(t.utcTime)}">${relativo.text}</span></span>
           </div>
         </div>
