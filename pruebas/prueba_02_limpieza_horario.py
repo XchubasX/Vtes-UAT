@@ -40,11 +40,30 @@ def correr(nav, r):
     r.caso('Beto sale de la mesa por su cuenta', 'uidB' not in pg.evaluate('window.__store()')['vtes_records']['mine']['signups'])
 
     pg.evaluate("window.__setUser({uid:'uidA', displayName:'Ana'})"); pg.wait_for_timeout(300)
-    pg.click('#card-custom-mine >> text=Editar horario'); pg.wait_for_timeout(100)
+    pg.click('#card-custom-mine >> text=Editar mesa'); pg.wait_for_timeout(100)
     pg.evaluate("document.getElementById('editScheduleDateTime').value='2031-05-01 21:00'")
     pg.click('#editScheduleSaveBtn'); pg.wait_for_timeout(300)
     m = pg.evaluate('window.__store()')['vtes_records']['mine']
     r.caso('editar horario guarda utcTime y utcMs juntos', m['utcMs'] == int(datetime.fromisoformat(m['utcTime'].replace('Z', '+00:00')).timestamp() * 1000) and m['utcTime'].startswith('2031-05'), m.get('utcTime'))
+    nombre_antes = m['name']
+    r.caso('editar solo el horario no cambia el nombre', m['name'] == nombre_antes)
+    pg.click('#card-custom-mine >> text=Editar mesa'); pg.wait_for_timeout(100)
+    r.caso('la ventana se llama "Editar mesa" y trae el nombre actual', pg.inner_text('#editScheduleTitle') == 'Editar mesa' and pg.input_value('#editScheduleName') == nombre_antes)
+    utc_antes = m['utcTime']
+    pg.fill('#editScheduleName', '  Mesa renombrada  '); pg.click('#editScheduleSaveBtn'); pg.wait_for_timeout(300)
+    m = pg.evaluate('window.__store()')['vtes_records']['mine']
+    r.caso('cambiar solo el nombre lo guarda (sin espacios) y deja el horario igual', m['name'] == 'Mesa renombrada' and m['utcTime'] == utc_antes, (m['name'], m['utcTime']))
+    r.caso('la tarjeta muestra el nombre nuevo', 'Mesa renombrada' in pg.inner_text('#card-custom-mine'))
+    pg.click('#card-custom-mine >> text=Editar mesa'); pg.wait_for_timeout(100)
+    pg.fill('#editScheduleName', 'Nombre y hora'); pg.evaluate("document.getElementById('editScheduleDateTime').value='2031-06-02 20:00'")
+    pg.click('#editScheduleSaveBtn'); pg.wait_for_timeout(300)
+    m = pg.evaluate('window.__store()')['vtes_records']['mine']
+    r.caso('cambiar nombre y horario a la vez guarda los dos', m['name'] == 'Nombre y hora' and m['utcTime'].startswith('2031-06'), (m['name'], m['utcTime']))
+    pg.click('#card-custom-mine >> text=Editar mesa'); pg.wait_for_timeout(100)
+    pg.fill('#editScheduleName', '   '); pg.click('#editScheduleSaveBtn'); pg.wait_for_timeout(300)
+    r.caso('un nombre vacío no se guarda', pg.evaluate('window.__store()')['vtes_records']['mine']['name'] == 'Nombre y hora')
+    r.caso('el campo de nombre limita a 60 caracteres', pg.get_attribute('#editScheduleName', 'maxlength') == '60')
+    pg.evaluate('closeEditScheduleModal()'); pg.wait_for_timeout(100)
     pg.click('#card-custom-mine >> text=Cerrar Mesa'); pg.wait_for_timeout(100); pg.click('#uiDialogConfirm'); pg.wait_for_timeout(300)
     r.caso('la organizadora cierra su mesa', 'mine' not in pg.evaluate('window.__store()')['vtes_records'])
     err.revisar()

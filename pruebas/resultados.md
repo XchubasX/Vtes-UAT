@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 279 de 279 casos pasaron.
+**✅ TODO BIEN** — 286 de 286 casos pasaron.
 
-- Fecha: 01/10/2026 13:16 (hora de Ciudad de México)
-- Versión probada: `353207e` + cambios aún sin guardar
-- Duración: 50 s
+- Fecha: 02/10/2026 07:39 (hora de Ciudad de México)
+- Versión probada: `e25b2f7` + cambios aún sin guardar
+- Duración: 51 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -13,7 +13,7 @@
 | # | Grupo | Casos | Resultado |
 |---|---|---|---|
 | 1 | Página principal: sesión, mesas, suplentes y veto | 44 | ✅ |
-| 2 | Limpieza de vencidas, eventos semanales, salir, editar horario y cerrar | 9 | ✅ |
+| 2 | Limpieza de vencidas, eventos semanales, salir, editar horario y cerrar | 16 | ✅ |
 | 3 | Fichas de estadísticas por cuenta y guardado separado | 12 | ✅ |
 | 4 | Aviso de bienvenida y experiencia de uso | 23 | ✅ |
 | 5 | Las 3 páginas: config.js, comun.js, 💬, "Acerca de" y aviso legal | 48 | ✅ |
@@ -89,8 +89,15 @@
 | 5 | evento semanal: nueva fecha dentro de lo que permiten las reglas | ✅ |
 | 6 | Beto sale de la mesa por su cuenta | ✅ |
 | 7 | editar horario guarda utcTime y utcMs juntos | ✅ |
-| 8 | la organizadora cierra su mesa | ✅ |
-| 9 | sin errores de JavaScript | ✅ |
+| 8 | editar solo el horario no cambia el nombre | ✅ |
+| 9 | la ventana se llama "Editar mesa" y trae el nombre actual | ✅ |
+| 10 | cambiar solo el nombre lo guarda (sin espacios) y deja el horario igual | ✅ |
+| 11 | la tarjeta muestra el nombre nuevo | ✅ |
+| 12 | cambiar nombre y horario a la vez guarda los dos | ✅ |
+| 13 | un nombre vacío no se guarda | ✅ |
+| 14 | el campo de nombre limita a 60 caracteres | ✅ |
+| 15 | la organizadora cierra su mesa | ✅ |
+| 16 | sin errores de JavaScript | ✅ |
 
 ### 3. Fichas de estadísticas por cuenta y guardado separado
 

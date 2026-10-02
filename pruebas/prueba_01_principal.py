@@ -18,7 +18,7 @@ def correr(nav, r):
 
     txt = page.inner_text('#customTablesContainer')
     r.caso('mesa antigua visible con sus jugadores (sin sesión)', 'Mesa Vieja' in txt and 'Old1' in txt and 'Old2' in txt)
-    r.caso('sin sesión no se ven botones de gestión', 'Cerrar Mesa' not in txt and 'Editar horario' not in txt)
+    r.caso('sin sesión no se ven botones de gestión', 'Cerrar Mesa' not in txt and 'Editar mesa' not in txt)
     r.caso('la barra de sesión ofrece entrar', 'Entrar con Google' in page.inner_text('#authBar'))
 
     page.click('text=¡Unirme a esta Mesa!'); page.wait_for_timeout(100)
@@ -52,7 +52,7 @@ def correr(nav, r):
     r.caso('aparece la ventana "¡Mesa creada con éxito!"', page.is_visible('#createdModal'))
     page.click('#createdModal button'); page.wait_for_timeout(100)
     card = page.inner_text(f'#card-custom-{nid}')
-    r.caso('la organizadora ve sus botones de gestión', 'Organizas tú' in card and 'Cerrar Mesa' in card and 'Editar horario' in card)
+    r.caso('la organizadora ve sus botones de gestión', 'Organizas tú' in card and 'Cerrar Mesa' in card and 'Editar mesa' in card)
     r.caso('la organizadora puede anotar a otra persona', 'Anotar a otra persona' in card)
 
     page.click(f'#card-custom-{nid} >> text=Anotar a otra persona'); page.wait_for_timeout(100)
@@ -65,7 +65,7 @@ def correr(nav, r):
     # Beto entra y se une
     page.evaluate("window.__setUser({uid:'uidB', displayName:'Beto'})"); page.wait_for_timeout(300)
     card = page.inner_text(f'#card-custom-{nid}')
-    r.caso('Beto no ve gestión en una mesa ajena', 'Cerrar Mesa' not in card and 'Editar horario' not in card)
+    r.caso('Beto no ve gestión en una mesa ajena', 'Cerrar Mesa' not in card and 'Editar mesa' not in card)
     page.click(f'#card-custom-{nid} >> text=¡Unirme a esta Mesa!'); page.wait_for_timeout(100)
     page.fill('#joinNick', 'ana'); page.click('#joinSubmitBtn'); page.wait_for_timeout(200)
     r.caso('un nick repetido (sin importar mayúsculas) se rechaza', 'ya está anotado' in page.inner_text('#joinNickError'))

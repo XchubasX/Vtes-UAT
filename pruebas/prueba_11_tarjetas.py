@@ -74,6 +74,6 @@ def correr(nav, r):
     pg.evaluate("setTableModality('virtual')"); pg.wait_for_timeout(300)
     t = pg.inner_text('#card-custom-v1')
     r.caso('organizador: "Organizas tú" en la línea de datos', 'LackeyCCG · V5 · Organizas tú' in t)
-    r.caso('organizador: puede editar Discord y contraseña', t.count('Editar') >= 2 and 'Editar horario' in t and 'Cerrar Mesa' in t)
+    r.caso('organizador: puede editar Discord y contraseña', t.count('Editar') >= 2 and 'Editar mesa' in t and 'Cerrar Mesa' in t)
     err.revisar()
     ctx.close()
