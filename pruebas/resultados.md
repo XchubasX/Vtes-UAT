@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 290 de 290 casos pasaron.
+**✅ TODO BIEN** — 356 de 356 casos pasaron.
 
-- Fecha: 03/10/2026 08:55 (hora de Ciudad de México)
-- Versión probada: `21627c4` + cambios aún sin guardar
-- Duración: 52 s
+- Fecha: 03/10/2026 09:30 (hora de Ciudad de México)
+- Versión probada: `1d7c8fc`
+- Duración: 64 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -26,6 +26,7 @@
 | 12 | Ícono del sitio e instalación en el celular | 11 | ✅ |
 | 13 | Aviso temporal del ícono nuevo | 8 | ✅ |
 | 14 | Mesas privadas: plegadas al final de la lista | 22 | ✅ |
+| 15 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
 
 ## Todos los casos
 
@@ -388,3 +389,74 @@
 | 20 | presencial: la casilla no aparece | ✅ |
 | 21 | sin errores de JavaScript (mesas privadas) | ✅ |
 | 22 | enlace directo (#mesa-…) a una privada la abre desplegada | ✅ |
+
+### 15. Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps
+
+| # | Caso | Resultado |
+|---|---|---|
+| 1 | Android · Chrome: se reconoce como celular | ✅ |
+| 2 | Android · Chrome: WhatsApp por la app | ✅ |
+| 3 | Android · Chrome: no confunde navegador dentro de otra app | ✅ |
+| 4 | Android · Chrome: nada se sale de la pantalla (412 px) | ✅ |
+| 5 | Android · Chrome: al entrar muestra la ventana de Google | ✅ |
+| 6 | Android · Chrome: sin errores de JavaScript | ✅ |
+| 7 | Android · pantalla chica (360 px): se reconoce como celular | ✅ |
+| 8 | Android · pantalla chica (360 px): WhatsApp por la app | ✅ |
+| 9 | Android · pantalla chica (360 px): no confunde navegador dentro de otra app | ✅ |
+| 10 | Android · pantalla chica (360 px): nada se sale de la pantalla (360 px) | ✅ |
+| 11 | Android · pantalla chica (360 px): al entrar muestra la ventana de Google | ✅ |
+| 12 | Android · pantalla chica (360 px): sin errores de JavaScript | ✅ |
+| 13 | iPhone · Safari: se reconoce como celular | ✅ |
+| 14 | iPhone · Safari: WhatsApp por la app | ✅ |
+| 15 | iPhone · Safari: no confunde navegador dentro de otra app | ✅ |
+| 16 | iPhone · Safari: nada se sale de la pantalla (390 px) | ✅ |
+| 17 | iPhone · Safari: al entrar muestra la ventana de Google | ✅ |
+| 18 | iPhone · Safari: sin errores de JavaScript | ✅ |
+| 19 | iPhone SE (320 px): se reconoce como celular | ✅ |
+| 20 | iPhone SE (320 px): WhatsApp por la app | ✅ |
+| 21 | iPhone SE (320 px): no confunde navegador dentro de otra app | ✅ |
+| 22 | iPhone SE (320 px): nada se sale de la pantalla (320 px) | ✅ |
+| 23 | iPhone SE (320 px): al entrar muestra la ventana de Google | ✅ |
+| 24 | iPhone SE (320 px): sin errores de JavaScript | ✅ |
+| 25 | iPad · Safari (se presenta como Mac): se reconoce como celular | ✅ |
+| 26 | iPad · Safari (se presenta como Mac): WhatsApp por la app | ✅ |
+| 27 | iPad · Safari (se presenta como Mac): no confunde navegador dentro de otra app | ✅ |
+| 28 | iPad · Safari (se presenta como Mac): nada se sale de la pantalla (820 px) | ✅ |
+| 29 | iPad · Safari (se presenta como Mac): al entrar muestra la ventana de Google | ✅ |
+| 30 | iPad · Safari (se presenta como Mac): sin errores de JavaScript | ✅ |
+| 31 | Computadora Windows · Edge/Chrome: se reconoce como computadora | ✅ |
+| 32 | Computadora Windows · Edge/Chrome: WhatsApp por WhatsApp Web directo | ✅ |
+| 33 | Computadora Windows · Edge/Chrome: no confunde navegador dentro de otra app | ✅ |
+| 34 | Computadora Windows · Edge/Chrome: nada se sale de la pantalla (1366 px) | ✅ |
+| 35 | Computadora Windows · Edge/Chrome: al entrar muestra la ventana de Google | ✅ |
+| 36 | Computadora Windows · Edge/Chrome: sin errores de JavaScript | ✅ |
+| 37 | Mac · Safari: se reconoce como computadora | ✅ |
+| 38 | Mac · Safari: WhatsApp por WhatsApp Web directo | ✅ |
+| 39 | Mac · Safari: no confunde navegador dentro de otra app | ✅ |
+| 40 | Mac · Safari: nada se sale de la pantalla (1440 px) | ✅ |
+| 41 | Mac · Safari: al entrar muestra la ventana de Google | ✅ |
+| 42 | Mac · Safari: sin errores de JavaScript | ✅ |
+| 43 | Android · dentro de WhatsApp: se reconoce como celular | ✅ |
+| 44 | Android · dentro de WhatsApp: WhatsApp por la app | ✅ |
+| 45 | Android · dentro de WhatsApp: detecta navegador dentro de otra app | ✅ |
+| 46 | Android · dentro de WhatsApp: nada se sale de la pantalla (412 px) | ✅ |
+| 47 | Android · dentro de WhatsApp: al entrar pide abrir en Chrome | ✅ |
+| 48 | Android · dentro de WhatsApp: sin errores de JavaScript | ✅ |
+| 49 | iPhone · dentro de Instagram: se reconoce como celular | ✅ |
+| 50 | iPhone · dentro de Instagram: WhatsApp por la app | ✅ |
+| 51 | iPhone · dentro de Instagram: detecta navegador dentro de otra app | ✅ |
+| 52 | iPhone · dentro de Instagram: nada se sale de la pantalla (390 px) | ✅ |
+| 53 | iPhone · dentro de Instagram: al entrar pide abrir en Safari | ✅ |
+| 54 | iPhone · dentro de Instagram: sin errores de JavaScript | ✅ |
+| 55 | Android · dentro de Facebook: se reconoce como celular | ✅ |
+| 56 | Android · dentro de Facebook: WhatsApp por la app | ✅ |
+| 57 | Android · dentro de Facebook: detecta navegador dentro de otra app | ✅ |
+| 58 | Android · dentro de Facebook: nada se sale de la pantalla (412 px) | ✅ |
+| 59 | Android · dentro de Facebook: al entrar pide abrir en Chrome | ✅ |
+| 60 | Android · dentro de Facebook: sin errores de JavaScript | ✅ |
+| 61 | copiar enlace: copia el enlace directo a la mesa | ✅ |
+| 62 | copiar enlace: si el navegador no deja copiar, lo muestra para copiarlo a mano | ✅ |
+| 63 | calendario de Google: enlace con título, fechas y enlace a la mesa | ✅ |
+| 64 | archivo de calendario (.ics): formato válido para iPhone y Outlook | ✅ |
+| 65 | archivo de calendario: conserva acentos y emojis de las notas | ✅ |
+| 66 | el calendario no incluye la contraseña de la partida | ✅ |
