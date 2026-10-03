@@ -3,3 +3,4 @@
 exclude:
   - pruebas
   - README.md
+  - cloudflare-publicar.sh
