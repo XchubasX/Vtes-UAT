@@ -1,9 +1,9 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 289 de 289 casos pasaron.
+**✅ TODO BIEN** — 290 de 290 casos pasaron.
 
-- Fecha: 03/10/2026 08:50 (hora de Ciudad de México)
-- Versión probada: `38da59f` + cambios aún sin guardar
+- Fecha: 03/10/2026 08:55 (hora de Ciudad de México)
+- Versión probada: `21627c4` + cambios aún sin guardar
 - Duración: 52 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
@@ -22,7 +22,7 @@
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
 | 9 | Página de estadísticas: acceso y conteo de personas | 17 | ✅ |
 | 10 | Revisión del código: sintaxis, versiones e integridad | 27 | ✅ |
-| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 35 | ✅ |
+| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 36 | ✅ |
 | 12 | Ícono del sitio e instalación en el celular | 11 | ✅ |
 | 13 | Aviso temporal del ícono nuevo | 8 | ✅ |
 | 14 | Mesas privadas: plegadas al final de la lista | 22 | ✅ |
@@ -318,19 +318,20 @@
 | 20 | "Mensaje por WhatsApp" abre WhatsApp con la invitación y cierra el menú | ✅ |
 | 21 | en computadora abre WhatsApp Web directo (sin la página que daña los emojis) | ✅ |
 | 22 | los emojis y saltos de línea van codificados correctamente | ✅ |
-| 23 | en celular usa api.whatsapp.com (abre la app) | ✅ |
-| 24 | "Copiar enlace" copia el enlace directo (aunque el celular tenga menú de compartir) | ✅ |
-| 25 | al copiar avisa "Enlace copiado" | ✅ |
-| 26 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
-| 27 | presencial: dice "hora de Zaragoza" | ✅ |
-| 28 | presencial: "Presencial · cada …" en una línea | ✅ |
-| 29 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
-| 30 | presencial: sin lugares "libre" ni Discord | ✅ |
-| 31 | presencial: cupo "1 confirmado" | ✅ |
-| 32 | presencial: "Orden de Asientos" visible para todos | ✅ |
-| 33 | organizador: "Organizas tú" en la línea de datos | ✅ |
-| 34 | organizador: puede editar Discord y contraseña | ✅ |
-| 35 | sin errores de JavaScript (tarjetas nuevas) | ✅ |
+| 23 | las fechas de México, España y Chile usan el mismo formato ("jue, 8 oct") | ✅ |
+| 24 | en celular usa api.whatsapp.com (abre la app) | ✅ |
+| 25 | "Copiar enlace" copia el enlace directo (aunque el celular tenga menú de compartir) | ✅ |
+| 26 | al copiar avisa "Enlace copiado" | ✅ |
+| 27 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
+| 28 | presencial: dice "hora de Zaragoza" | ✅ |
+| 29 | presencial: "Presencial · cada …" en una línea | ✅ |
+| 30 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
+| 31 | presencial: sin lugares "libre" ni Discord | ✅ |
+| 32 | presencial: cupo "1 confirmado" | ✅ |
+| 33 | presencial: "Orden de Asientos" visible para todos | ✅ |
+| 34 | organizador: "Organizas tú" en la línea de datos | ✅ |
+| 35 | organizador: puede editar Discord y contraseña | ✅ |
+| 36 | sin errores de JavaScript (tarjetas nuevas) | ✅ |
 
 ### 12. Ícono del sitio e instalación en el celular
 

@@ -78,9 +78,10 @@ function shareTableInvitation(tableId) {
       const night = nightOfName(t.utcTime, tz);
       return `${date.toLocaleTimeString(locale, { ...optionsTime, timeZone: tz })} (${date.toLocaleDateString(locale, { ...optionsDate, timeZone: tz })}${night ? `, noche del ${night}` : ''})`;
     };
-    const timeMex = timeIn('es-MX', 'America/Mexico_City');
+    // Mismo formato de fecha en los tres países ("jue, 8 oct"); antes México salía "jue 8 de oct"
+    const timeMex = timeIn('es-ES', 'America/Mexico_City');
     const timeEsp = timeIn('es-ES', 'Europe/Madrid');
-    const timeChi = timeIn('es-CL', 'America/Santiago');
+    const timeChi = timeIn('es-ES', 'America/Santiago');
 
     msg += `💻 *Plataforma:* ${t.platform || 'Lackey'}\n`;
     if (t.format) msg += `🃏 *Formato:* ${formatLabel(t.format)}\n`;
