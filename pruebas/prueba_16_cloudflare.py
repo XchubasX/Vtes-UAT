@@ -40,5 +40,9 @@ def correr(nav, r):
     r.caso('se publican las páginas y archivos del sitio',
            {'index.html', 'sorteo.html', 'estadisticas.html', '404.html', 'config.js', 'comun.js', 'js', 'iconos', 'manifest.webmanifest'} <= nombres, sorted(nombres))
     r.caso('NO se publica la carpeta de pruebas ni archivos internos',
-           not ({'pruebas', 'README.md', '_config.yml', 'cloudflare-publicar.sh', '.git', '.claude', '.gitignore', 'publicado'} & nombres), sorted(nombres))
+           not ({'pruebas', 'README.md', '_config.yml', 'cloudflare-publicar.sh', 'wrangler.jsonc', '.git', '.claude', '.gitignore', 'publicado'} & nombres), sorted(nombres))
+    import json as _j
+    cfg = _j.loads('\n'.join(l for l in (REPO / 'wrangler.jsonc').read_text().splitlines() if not l.strip().startswith('//')))
+    r.caso('wrangler.jsonc: publica la carpeta "publicado" y usa 404.html para lo que no existe',
+           cfg['assets']['directory'] == './publicado' and cfg['assets']['not_found_handling'] == '404-page' and cfg['name'], cfg)
     r.caso('se publican todos los archivos de js/', sorted(p.name for p in (pub / 'js').iterdir()) == sorted(p.name for p in (REPO / 'js').iterdir()))

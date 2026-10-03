@@ -1,2 +1,4 @@
 __pycache__/
 publicado/
+node_modules/
+.wrangler/
