@@ -182,7 +182,10 @@ async function mandarAvisoPrueba(boton) {
     const idToken = await currentUser.getIdToken();
     const r = await fetch('/api/aviso-prueba', { method: 'POST', headers: { Authorization: 'Bearer ' + idToken } });
     if (r.status === 429) showToast('Espera un minuto antes de pedir otro aviso de prueba.', 'error');
-    else if (!r.ok) showToast('❌ No se pudo mandar el aviso de prueba.', 'error');
+    else if (!r.ok) {
+      const detalle = await r.text().catch(() => '');
+      showToast(`❌ No se pudo mandar el aviso de prueba (${r.status}${detalle ? ': ' + detalle.slice(0, 160) : ''})`, 'error');
+    }
     else showToast('✅ Aviso de prueba enviado: debe llegarte en unos segundos');
   } catch (e) {
     showToast('❌ No se pudo mandar el aviso de prueba.', 'error');

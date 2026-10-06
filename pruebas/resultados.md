@@ -2,8 +2,8 @@
 
 **✅ TODO BIEN** — 511 de 511 casos pasaron.
 
-- Fecha: 06/10/2026 17:31 (hora de Ciudad de México)
-- Versión probada: `8d3e18a` + cambios aún sin guardar
+- Fecha: 06/10/2026 17:42 (hora de Ciudad de México)
+- Versión probada: `310992a` + cambios aún sin guardar
 - Duración: 76 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.

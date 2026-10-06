@@ -14,6 +14,8 @@
   },
   // El secreto FIREBASE_CUENTA_SERVICIO (llave de la cuenta de servicio) se guarda en Cloudflare, nunca aquí
   "triggers": { "crons": ["*/5 * * * *"] },
+  // Guarda los mensajes del Worker (Cloudflare → elysium-uat → Observability) para revisar los avisos
+  "observability": { "enabled": true },
   "assets": {
     "directory": "./publicado",
     "binding": "ASSETS",
