@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 399 de 399 casos pasaron.
+**✅ TODO BIEN** — 406 de 406 casos pasaron.
 
-- Fecha: 06/10/2026 10:19 (hora de Ciudad de México)
-- Versión probada: `66b711d` + cambios aún sin guardar
-- Duración: 65 s
+- Fecha: 06/10/2026 12:42 (hora de Ciudad de México)
+- Versión probada: `0e9f443` + cambios aún sin guardar
+- Duración: 66 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -29,6 +29,7 @@
 | 15 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
 | 16 | Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica | 15 | ✅ |
 | 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 28 | ✅ |
+| 18 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
 
 ## Todos los casos
 
@@ -515,3 +516,15 @@
 | 26 | la franja va arriba de las pestañas | ✅ |
 | 27 | con la franja nada se sale de la pantalla (390 px) | ✅ |
 | 28 | sin errores de JavaScript (mudanza) | ✅ |
+
+### 18. Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno)
+
+| # | Caso | Resultado |
+|---|---|---|
+| 1 | se ve la tarjeta «Ligas y torneos casuales» | ✅ |
+| 2 | dice «100% CASUAL · NO SANCIONADOS POR VEKN» | ✅ |
+| 3 | va arriba de las pestañas Virtual / Presencial | ✅ |
+| 4 | en el sitio de pruebas lleva a uat-ligas.eternalschedule.com (nunca a producción) | ✅ |
+| 5 | en el sitio real llevaría a ligas.eternalschedule.com | ✅ |
+| 6 | con la tarjeta nada se sale de la pantalla (390 px) | ✅ |
+| 7 | sin errores de JavaScript (tarjeta de ligas) | ✅ |
