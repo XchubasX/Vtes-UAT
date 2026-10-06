@@ -21,7 +21,7 @@ if (!window.__sinAvisos) {
 }
 window.fetch = (u, o) => { window.__fetch.push([u, o && o.method, o && o.headers && o.headers.Authorization]); return Promise.resolve({ ok: true, status: 200 }); };
 </script>"""
-CONFIG_CON_LLAVE = [("vapidKey: ''", "vapidKey: 'LLAVE-PRUEBA'")]
+CONFIG_CON_LLAVE = [(re.search(r"vapidKey: '[^']*'", (REPO / "config.js").read_text()).group(0), "vapidKey: 'LLAVE-PRUEBA'")]
 USUARIO = "window.__setUser({uid:'uidA', displayName:'Ana', getIdToken: () => Promise.resolve('id-token-ana')})"
 
 
@@ -194,8 +194,9 @@ def correr(nav, r):
     r.caso('computadora con navegador sin avisos: la ventana no se ofrece', not pg.is_visible('#avisosOferta'))
     ctx.close()
 
-    # Sin llave configurada (como está hoy el sitio real): nada cambia
-    html = armar_pagina('index.html', {'vtes_records': {}, 'stats': {}}, 'avisos8.html', extra_head=SIMULADOR_AVISOS)
+    # Sin llave configurada (como el sitio real mientras no se configure): nada cambia
+    sin_llave = [(CONFIG_CON_LLAVE[0][0], "vapidKey: ''")]
+    html = armar_pagina('index.html', {'vtes_records': {}, 'stats': {}}, 'avisos8.html', extra_head=SIMULADOR_AVISOS, config_extra=sin_llave)
     ctx = nuevo_contexto(nav); pg = ctx.new_page()
     pg.goto(url_archivo(html)); pg.evaluate(USUARIO); pg.wait_for_timeout(300)
     pg.evaluate('ofrecerAvisos()'); pg.wait_for_timeout(100)
