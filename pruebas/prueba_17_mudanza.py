@@ -34,6 +34,9 @@ def correr(nav, r):
     r.caso('sábado 10 oct 23:59 (México) todavía no salta', not pg.evaluate("mudanzaDebeRedirigir(Date.parse('2026-10-11T05:59:00Z'))"))
     r.caso('domingo 11 oct 00:00 (México) ya salta', pg.evaluate("mudanzaDebeRedirigir(Date.parse('2026-10-11T06:00:00Z'))"))
 
+    r.caso('fuera de GitHub NO se pone el contador de visitas', pg.evaluate("!document.querySelector('script[data-cf-beacon]')"))
+    n = pg.evaluate("(() => { const s = mudanzaPonerContador(); return [s.src, JSON.parse(s.getAttribute('data-cf-beacon')).token]; })()")
+    r.caso('el contador de la dirección vieja usa Cloudflare Web Analytics con su token', n[0] == 'https://static.cloudflareinsights.com/beacon.min.js' and n[1] == 'ad00e9d4434c4fb195d0bfbcd033696a', n)
     r.caso('fuera de GitHub la franja no aparece', not pg.is_visible('#avisoMudanza'))
     pg.evaluate("mostrarAvisoMudanza('https://eternalschedule.com/#mesa-v1')"); pg.wait_for_timeout(100)
     t = pg.inner_text('#avisoMudanza') if pg.is_visible('#avisoMudanza') else ''

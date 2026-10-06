@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 397 de 397 casos pasaron.
+**✅ TODO BIEN** — 399 de 399 casos pasaron.
 
-- Fecha: 05/10/2026 18:27 (hora de Ciudad de México)
-- Versión probada: `8f15635` + cambios aún sin guardar
-- Duración: 69 s
+- Fecha: 06/10/2026 10:19 (hora de Ciudad de México)
+- Versión probada: `66b711d` + cambios aún sin guardar
+- Duración: 65 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -28,7 +28,7 @@
 | 14 | Mesas privadas: plegadas al final de la lista | 22 | ✅ |
 | 15 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
 | 16 | Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica | 15 | ✅ |
-| 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 26 | ✅ |
+| 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 28 | ✅ |
 
 ## Todos los casos
 
@@ -503,13 +503,15 @@
 | 14 | fecha del salto: domingo 11 oct 2026, 00:00 hora de México | ✅ |
 | 15 | sábado 10 oct 23:59 (México) todavía no salta | ✅ |
 | 16 | domingo 11 oct 00:00 (México) ya salta | ✅ |
-| 17 | fuera de GitHub la franja no aparece | ✅ |
-| 18 | en GitHub aparece la franja "Elysium se mudó a eternalschedule.com" | ✅ |
-| 19 | la franja dice la fecha "domingo 11 de octubre" | ✅ |
-| 20 | la franja explica entrar con Google una vez y volver a agregar el ícono | ✅ |
-| 21 | la franja no tiene botón de cerrar | ✅ |
-| 22 | el botón lleva a la misma página en la dirección nueva | ✅ |
-| 23 | en el sitio de pruebas de GitHub la franja apunta a uat.eternalschedule.com | ✅ |
-| 24 | la franja va arriba de las pestañas | ✅ |
-| 25 | con la franja nada se sale de la pantalla (390 px) | ✅ |
-| 26 | sin errores de JavaScript (mudanza) | ✅ |
+| 17 | fuera de GitHub NO se pone el contador de visitas | ✅ |
+| 18 | el contador de la dirección vieja usa Cloudflare Web Analytics con su token | ✅ |
+| 19 | fuera de GitHub la franja no aparece | ✅ |
+| 20 | en GitHub aparece la franja "Elysium se mudó a eternalschedule.com" | ✅ |
+| 21 | la franja dice la fecha "domingo 11 de octubre" | ✅ |
+| 22 | la franja explica entrar con Google una vez y volver a agregar el ícono | ✅ |
+| 23 | la franja no tiene botón de cerrar | ✅ |
+| 24 | el botón lleva a la misma página en la dirección nueva | ✅ |
+| 25 | en el sitio de pruebas de GitHub la franja apunta a uat.eternalschedule.com | ✅ |
+| 26 | la franja va arriba de las pestañas | ✅ |
+| 27 | con la franja nada se sale de la pantalla (390 px) | ✅ |
+| 28 | sin errores de JavaScript (mudanza) | ✅ |
