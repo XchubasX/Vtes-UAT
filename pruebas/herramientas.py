@@ -54,12 +54,12 @@ DIA = 24 * 3600 * 1000
 # Armar una página de prueba
 # ---------------------------------------------------------------------------
 def meter_archivos_propios(html, raiz=REPO):
-    """Mete config.js, comun.js y js/*.js dentro de la página (en el mismo lugar
+    """Mete config.js, comun.js, mudanza.js y js/*.js dentro de la página (en el mismo lugar
     y orden en que la página los carga)."""
     def sub(m):
         texto = (raiz / m.group(1)).read_text(encoding='utf-8')
         return '<script>' + texto.replace('</script>', '<\\/script>') + '</script>'
-    return re.sub(r'<script src="((?:config|comun)\.js|js/[a-z]+\.js)\?v=[^"]*"></script>', sub, html)
+    return re.sub(r'<script src="((?:config|comun|mudanza)\.js|js/[a-z]+\.js)\?v=[^"]*"></script>', sub, html)
 
 
 def armar_pagina(archivo, seed=None, nombre=None, extra_head='', config_extra=None, raiz=REPO):
