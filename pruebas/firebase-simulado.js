@@ -65,6 +65,8 @@
   const authObj = {
     currentUser: null,
     onAuthStateChanged: (cb) => { authListeners.push(cb); setTimeout(() => cb(authObj.currentUser), 0); },
+    signInWithRedirect: () => { window.__redirigioAGoogle = true; return Promise.resolve(); },
+    getRedirectResult: () => Promise.resolve(window.__RESULTADO_REDIRECT__ || { user: null }),
     signInWithPopup: () => { authObj.currentUser = window.__NEXT_USER__ || { uid: 'uidA', displayName: 'Ana' }; authListeners.forEach(cb => cb(authObj.currentUser)); return Promise.resolve({ user: authObj.currentUser }); },
     signOut: () => { authObj.currentUser = null; authListeners.forEach(cb => cb(null)); return Promise.resolve(); }
   };

@@ -11,7 +11,9 @@ window.VTES_CONFIG = {
   // Proyecto de Firebase
   firebase: {
     apiKey: "AIzaSyBQR7AaxC5F2bTKI_po7w7awZLa_KVS4zk",
-    authDomain: "vtes-uat.firebaseapp.com",
+    // En nuestras direcciones, "Entrar con Google" pasa por el mismo dominio (worker.js lo reenvía a Firebase).
+    // Así funciona también con Elysium abierto como app (iPhone). En otras direcciones se usa la de Firebase.
+    authDomain: /(^|\.)eternalschedule\.com$|\.workers\.dev$/.test(location.hostname) ? location.hostname : "vtes-uat.firebaseapp.com",
     databaseURL: "https://vtes-uat-default-rtdb.firebaseio.com",
     projectId: "vtes-uat",
     storageBucket: "vtes-uat.firebasestorage.app",

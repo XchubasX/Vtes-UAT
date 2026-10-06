@@ -9,7 +9,7 @@ TITULO = 'Ícono del sitio e instalación en el celular'
 def correr(nav, r):
     m = json.loads((REPO / 'manifest.webmanifest').read_text(encoding='utf-8'))
     r.caso('manifest: nombre completo "Elysium: The Eternal Schedule" y corto "Elysium"', m.get('name') == 'Elysium: The Eternal Schedule' and m.get('short_name') == 'Elysium', m)
-    r.caso('manifest: abre en el navegador normal (el inicio de sesión de Google sigue funcionando)', m.get('display') == 'browser')
+    r.caso('manifest: desde el ícono abre como app (requisito de Apple para los avisos); el inicio de sesión usa el reenvío de worker.js', m.get('display') == 'standalone')
     r.caso('manifest: empieza y se queda en la carpeta del sitio', m.get('start_url') == './' and m.get('scope') == './')
     tam = {}
     for ic in m.get('icons', []):

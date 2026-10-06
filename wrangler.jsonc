@@ -4,8 +4,13 @@
 {
   "name": "elysium-uat",
   "compatibility_date": "2026-10-01",
+  // worker.js reenvía /__/auth/ (Entrar con Google) a Firebase; todo lo demás es el sitio tal cual
+  "main": "worker.js",
+  "vars": { "FIREBASE_AUTH_HOST": "vtes-uat.firebaseapp.com" },
   "assets": {
     "directory": "./publicado",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/__/auth/*"]
   }
 }

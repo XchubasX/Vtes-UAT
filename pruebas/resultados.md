@@ -1,9 +1,9 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 406 de 406 casos pasaron.
+**✅ TODO BIEN** — 423 de 423 casos pasaron.
 
-- Fecha: 06/10/2026 12:42 (hora de Ciudad de México)
-- Versión probada: `0e9f443` + cambios aún sin guardar
+- Fecha: 06/10/2026 17:00 (hora de Ciudad de México)
+- Versión probada: `35b9052` + cambios aún sin guardar
 - Duración: 66 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
@@ -30,6 +30,7 @@
 | 16 | Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica | 15 | ✅ |
 | 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 28 | ✅ |
 | 18 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
+| 19 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
 
 ## Todos los casos
 
@@ -342,7 +343,7 @@
 | # | Caso | Resultado |
 |---|---|---|
 | 1 | manifest: nombre completo "Elysium: The Eternal Schedule" y corto "Elysium" | ✅ |
-| 2 | manifest: abre en el navegador normal (el inicio de sesión de Google sigue funcionando) | ✅ |
+| 2 | manifest: desde el ícono abre como app (requisito de Apple para los avisos); el inicio de sesión usa el reenvío de worker.js | ✅ |
 | 3 | manifest: empieza y se queda en la carpeta del sitio | ✅ |
 | 4 | manifest: íconos 192, 512 y versión recortable, con su tamaño real | ✅ |
 | 5 | iconos/apple-touch-icon.png existe y mide 180×180 | ✅ |
@@ -528,3 +529,25 @@
 | 5 | en el sitio real llevaría a ligas.eternalschedule.com | ✅ |
 | 6 | con la tarjeta nada se sale de la pantalla (390 px) | ✅ |
 | 7 | sin errores de JavaScript (tarjeta de ligas) | ✅ |
+
+### 19. Modo app desde el ícono e inicio de sesión con Google por nuestro dominio
+
+| # | Caso | Resultado |
+|---|---|---|
+| 1 | worker.js: /__/auth/handler se reenvía a Firebase con su consulta | ✅ |
+| 2 | worker.js: /__/auth/iframe.js también | ✅ |
+| 3 | worker.js: las páginas del sitio (/, /Zaragoza) NO se tocan | ✅ |
+| 4 | wrangler: usa worker.js y el sitio con binding ASSETS | ✅ |
+| 5 | wrangler: el worker solo corre primero en /__/auth/* | ✅ |
+| 6 | wrangler: reenvía al Firebase de ESTE sitio (vtes-uat) | ✅ |
+| 7 | worker.js no se publica como archivo del sitio | ✅ |
+| 8 | config: en uat.eternalschedule.com el inicio de sesión pasa por uat.eternalschedule.com | ✅ |
+| 9 | config: en eternalschedule.com el inicio de sesión pasa por eternalschedule.com | ✅ |
+| 10 | config: en elysium-uat.chubas.workers.dev el inicio de sesión pasa por elysium-uat.chubas.workers.dev | ✅ |
+| 11 | config: en xchubasx.github.io el inicio de sesión pasa por vtes-uat.firebaseapp.com | ✅ |
+| 12 | config: en localhost el inicio de sesión pasa por vtes-uat.firebaseapp.com | ✅ |
+| 13 | en el navegador normal NO se considera modo app | ✅ |
+| 14 | abierto desde el ícono SÍ se considera modo app | ✅ |
+| 15 | en modo app, «Entrar con Google» va a la página de Google (sin ventanita) | ✅ |
+| 16 | al regresar de Google avisa «Sesión iniciada» | ✅ |
+| 17 | sin errores de JavaScript (modo app) | ✅ |

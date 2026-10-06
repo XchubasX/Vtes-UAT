@@ -61,7 +61,7 @@ def correr(nav, r):
     import re as _re
     texto = unquote(abierto.split('text=', 1)[1])
     fechas = _re.findall(r'\d{2}:\d{2} \(([^)]*)\)', texto)
-    r.caso('las fechas de México, España y Chile usan el mismo formato ("jue, 8 oct")', len(fechas) == 3 and all(_re.fullmatch(r'[a-zé]{3}, \d{1,2} [a-z]{3,4}', f.split(',  noche')[0].split(', noche')[0]) for f in fechas), fechas)
+    r.caso('las fechas de México, España y Chile usan el mismo formato ("jue, 8 oct")', len(fechas) == 3 and all(_re.fullmatch(r'[a-záé]{3}, \d{1,2} [a-z]{3,4}', f.split(',  noche')[0].split(', noche')[0]) for f in fechas), fechas)
     r.caso('en celular usa api.whatsapp.com (abre la app)', pg.evaluate("(() => { const ua = Object.getOwnPropertyDescriptor(Navigator.prototype, 'userAgent'); Object.defineProperty(navigator, 'userAgent', {value: 'Mozilla/5.0 (Linux; Android 14) Mobile', configurable: true}); const u = whatsappShareUrl('hola'); return u; })()").startswith('https://api.whatsapp.com/send?text='))
     pg.evaluate("window.__copiado = null; Object.defineProperty(navigator, 'clipboard', {value: {writeText: (x) => { window.__copiado = x; return Promise.resolve(); }}, configurable: true}); navigator.share = () => Promise.reject(new Error('no debía usarse')); true")
     pg.click('#invitar-boton-v1'); pg.click('#invitar-v1 >> text=Copiar enlace'); pg.wait_for_timeout(200)

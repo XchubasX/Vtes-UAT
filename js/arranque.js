@@ -7,6 +7,7 @@
 
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
+resultadoEntrarConGoogle(); // si regresa de la página de Google (modo app)
 auth.onAuthStateChanged(async (user) => {
   currentUser = user;
   await loadUserFlags(user);
