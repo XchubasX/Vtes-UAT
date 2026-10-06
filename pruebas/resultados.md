@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 423 de 423 casos pasaron.
+**✅ TODO BIEN** — 511 de 511 casos pasaron.
 
-- Fecha: 06/10/2026 17:00 (hora de Ciudad de México)
-- Versión probada: `35b9052` + cambios aún sin guardar
-- Duración: 66 s
+- Fecha: 06/10/2026 17:26 (hora de Ciudad de México)
+- Versión probada: `880b513` + cambios aún sin guardar
+- Duración: 76 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -16,12 +16,12 @@
 | 2 | Limpieza de vencidas, eventos semanales, salir, editar horario y cerrar | 16 | ✅ |
 | 3 | Fichas de estadísticas por cuenta y guardado separado | 12 | ✅ |
 | 4 | Aviso de bienvenida y experiencia de uso | 23 | ✅ |
-| 5 | Las 3 páginas: config.js, comun.js, 💬, "Acerca de" y aviso legal | 48 | ✅ |
+| 5 | Las 3 páginas: config.js, comun.js, 💬, "Acerca de" y aviso legal | 49 | ✅ |
 | 6 | Arranque: enlace por ciudad y enlace directo a una mesa | 9 | ✅ |
 | 7 | Sitio servido como en GitHub, con sus archivos separados | 8 | ✅ |
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
 | 9 | Página de estadísticas: acceso y conteo de personas | 17 | ✅ |
-| 10 | Revisión del código: sintaxis, versiones e integridad | 27 | ✅ |
+| 10 | Revisión del código: sintaxis, versiones e integridad | 28 | ✅ |
 | 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 36 | ✅ |
 | 12 | Ícono del sitio e instalación en el celular | 11 | ✅ |
 | 13 | Aviso temporal del ícono nuevo | 8 | ✅ |
@@ -31,6 +31,7 @@
 | 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 28 | ✅ |
 | 18 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
 | 19 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
+| 20 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 86 | ✅ |
 
 ## Todos los casos
 
@@ -158,49 +159,50 @@
 | 3 | estadisticas.html: no contiene datos propios del sitio (todo en config.js) | ✅ |
 | 4 | comun.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
 | 5 | js/arranque.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
-| 6 | js/compartir.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
-| 7 | js/fechas.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
-| 8 | js/mesas.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
-| 9 | js/sesion.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
-| 10 | js/tarjetas.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
-| 11 | js/ventanas.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
-| 12 | index.html: sin errores de JavaScript | ✅ |
-| 13 | index.html: franja de pruebas visible según config.js | ✅ |
-| 14 | index.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
-| 15 | index.html: App Check se activa con la clave de config.js | ✅ |
-| 16 | index.html: escapeHtml protege el texto | ✅ |
-| 17 | index.html: normalizePlayer entiende "Jesus 8:05" | ✅ |
-| 18 | index.html: botón 💬 visible | ✅ |
-| 19 | index.html: 💬 abre su ventana | ✅ |
-| 20 | index.html: 💬 envía el mensaje por EmailJS indicando la página (index) | ✅ |
-| 21 | index.html: 💬 confirma el envío | ✅ |
-| 22 | index.html: ya no hay botón "?" en el encabezado | ✅ |
-| 23 | index.html: el pie "Acerca de · Aviso legal" abre la ventana | ✅ |
-| 24 | index.html: la ventana abre desde arriba ("Cómo funciona"), no en lo legal | ✅ |
-| 25 | index.html: aviso legal Dark Pack completo (logo, no oficial, texto de Paradox) | ✅ |
-| 26 | index.html: Escape cierra "Acerca de" | ✅ |
-| 27 | sorteo.html: sin errores de JavaScript | ✅ |
-| 28 | sorteo.html: franja de pruebas visible según config.js | ✅ |
-| 29 | sorteo.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
-| 30 | sorteo.html: App Check se activa con la clave de config.js | ✅ |
-| 31 | sorteo.html: escapeHtml protege el texto | ✅ |
-| 32 | sorteo.html: normalizePlayer entiende "Jesus 8:05" | ✅ |
-| 33 | sorteo.html: botón 💬 visible | ✅ |
-| 34 | sorteo.html: 💬 abre su ventana | ✅ |
-| 35 | sorteo.html: 💬 envía el mensaje por EmailJS indicando la página (sorteo) | ✅ |
-| 36 | sorteo.html: 💬 confirma el envío | ✅ |
-| 37 | sorteo.html: ya no hay botón "?" en el encabezado | ✅ |
-| 38 | sorteo.html: el pie "Acerca de · Aviso legal" abre la ventana | ✅ |
-| 39 | sorteo.html: la ventana abre desde arriba ("Cómo funciona"), no en lo legal | ✅ |
-| 40 | sorteo.html: aviso legal Dark Pack completo (logo, no oficial, texto de Paradox) | ✅ |
-| 41 | sorteo.html: Escape cierra "Acerca de" | ✅ |
-| 42 | estadisticas.html: sin errores de JavaScript | ✅ |
-| 43 | estadisticas.html: franja de pruebas visible según config.js | ✅ |
-| 44 | estadisticas.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
-| 45 | estadisticas.html: App Check se activa con la clave de config.js | ✅ |
-| 46 | estadisticas.html: escapeHtml protege el texto | ✅ |
-| 47 | estadisticas.html: sin botón 💬 (a propósito) | ✅ |
-| 48 | al cambiar esPruebas, la franja aparece o desaparece | ✅ |
+| 6 | js/avisos.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
+| 7 | js/compartir.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
+| 8 | js/fechas.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
+| 9 | js/mesas.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
+| 10 | js/sesion.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
+| 11 | js/tarjetas.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
+| 12 | js/ventanas.js: no contiene datos propios del sitio (todo en config.js) | ✅ |
+| 13 | index.html: sin errores de JavaScript | ✅ |
+| 14 | index.html: franja de pruebas visible según config.js | ✅ |
+| 15 | index.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
+| 16 | index.html: App Check se activa con la clave de config.js | ✅ |
+| 17 | index.html: escapeHtml protege el texto | ✅ |
+| 18 | index.html: normalizePlayer entiende "Jesus 8:05" | ✅ |
+| 19 | index.html: botón 💬 visible | ✅ |
+| 20 | index.html: 💬 abre su ventana | ✅ |
+| 21 | index.html: 💬 envía el mensaje por EmailJS indicando la página (index) | ✅ |
+| 22 | index.html: 💬 confirma el envío | ✅ |
+| 23 | index.html: ya no hay botón "?" en el encabezado | ✅ |
+| 24 | index.html: el pie "Acerca de · Aviso legal" abre la ventana | ✅ |
+| 25 | index.html: la ventana abre desde arriba ("Cómo funciona"), no en lo legal | ✅ |
+| 26 | index.html: aviso legal Dark Pack completo (logo, no oficial, texto de Paradox) | ✅ |
+| 27 | index.html: Escape cierra "Acerca de" | ✅ |
+| 28 | sorteo.html: sin errores de JavaScript | ✅ |
+| 29 | sorteo.html: franja de pruebas visible según config.js | ✅ |
+| 30 | sorteo.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
+| 31 | sorteo.html: App Check se activa con la clave de config.js | ✅ |
+| 32 | sorteo.html: escapeHtml protege el texto | ✅ |
+| 33 | sorteo.html: normalizePlayer entiende "Jesus 8:05" | ✅ |
+| 34 | sorteo.html: botón 💬 visible | ✅ |
+| 35 | sorteo.html: 💬 abre su ventana | ✅ |
+| 36 | sorteo.html: 💬 envía el mensaje por EmailJS indicando la página (sorteo) | ✅ |
+| 37 | sorteo.html: 💬 confirma el envío | ✅ |
+| 38 | sorteo.html: ya no hay botón "?" en el encabezado | ✅ |
+| 39 | sorteo.html: el pie "Acerca de · Aviso legal" abre la ventana | ✅ |
+| 40 | sorteo.html: la ventana abre desde arriba ("Cómo funciona"), no en lo legal | ✅ |
+| 41 | sorteo.html: aviso legal Dark Pack completo (logo, no oficial, texto de Paradox) | ✅ |
+| 42 | sorteo.html: Escape cierra "Acerca de" | ✅ |
+| 43 | estadisticas.html: sin errores de JavaScript | ✅ |
+| 44 | estadisticas.html: franja de pruebas visible según config.js | ✅ |
+| 45 | estadisticas.html: Firebase arranca con el proyecto de config.js (vtes-uat) | ✅ |
+| 46 | estadisticas.html: App Check se activa con la clave de config.js | ✅ |
+| 47 | estadisticas.html: escapeHtml protege el texto | ✅ |
+| 48 | estadisticas.html: sin botón 💬 (a propósito) | ✅ |
+| 49 | al cambiar esPruebas, la franja aparece o desaparece | ✅ |
 
 ### 6. Arranque: enlace por ciudad y enlace directo a una mesa
 
@@ -272,30 +274,31 @@
 | 1 | config.js: sintaxis correcta | ✅ |
 | 2 | comun.js: sintaxis correcta | ✅ |
 | 3 | js/arranque.js: sintaxis correcta | ✅ |
-| 4 | js/compartir.js: sintaxis correcta | ✅ |
-| 5 | js/fechas.js: sintaxis correcta | ✅ |
-| 6 | js/mesas.js: sintaxis correcta | ✅ |
-| 7 | js/sesion.js: sintaxis correcta | ✅ |
-| 8 | js/tarjetas.js: sintaxis correcta | ✅ |
-| 9 | js/ventanas.js: sintaxis correcta | ✅ |
-| 10 | index.html: sintaxis correcta del código dentro de la página | ✅ |
-| 11 | index.html: todos los archivos propios que carga existen | ✅ |
-| 12 | index.html: carga config.js antes que comun.js | ✅ |
-| 13 | index.html: config.js y comun.js van dentro del <body> (App Check lo necesita) | ✅ |
-| 14 | index.html: los programas de jsDelivr tienen versión fija y huella de integridad | ✅ |
-| 15 | index.html: arranque.js se carga al final | ✅ |
-| 16 | index.html: todos los archivos de js/ con la misma versión ?v= | ✅ |
-| 17 | sorteo.html: sintaxis correcta del código dentro de la página | ✅ |
-| 18 | sorteo.html: todos los archivos propios que carga existen | ✅ |
-| 19 | sorteo.html: carga config.js antes que comun.js | ✅ |
-| 20 | sorteo.html: config.js y comun.js van dentro del <body> (App Check lo necesita) | ✅ |
-| 21 | sorteo.html: los programas de jsDelivr tienen versión fija y huella de integridad | ✅ |
-| 22 | estadisticas.html: sintaxis correcta del código dentro de la página | ✅ |
-| 23 | estadisticas.html: todos los archivos propios que carga existen | ✅ |
-| 24 | estadisticas.html: carga config.js antes que comun.js | ✅ |
-| 25 | estadisticas.html: config.js y comun.js van dentro del <body> (App Check lo necesita) | ✅ |
-| 26 | estadisticas.html: los programas de jsDelivr tienen versión fija y huella de integridad | ✅ |
-| 27 | las 3 páginas usan la misma versión ?v= de config.js y comun.js | ✅ |
+| 4 | js/avisos.js: sintaxis correcta | ✅ |
+| 5 | js/compartir.js: sintaxis correcta | ✅ |
+| 6 | js/fechas.js: sintaxis correcta | ✅ |
+| 7 | js/mesas.js: sintaxis correcta | ✅ |
+| 8 | js/sesion.js: sintaxis correcta | ✅ |
+| 9 | js/tarjetas.js: sintaxis correcta | ✅ |
+| 10 | js/ventanas.js: sintaxis correcta | ✅ |
+| 11 | index.html: sintaxis correcta del código dentro de la página | ✅ |
+| 12 | index.html: todos los archivos propios que carga existen | ✅ |
+| 13 | index.html: carga config.js antes que comun.js | ✅ |
+| 14 | index.html: config.js y comun.js van dentro del <body> (App Check lo necesita) | ✅ |
+| 15 | index.html: los programas de jsDelivr tienen versión fija y huella de integridad | ✅ |
+| 16 | index.html: arranque.js se carga al final | ✅ |
+| 17 | index.html: todos los archivos de js/ con la misma versión ?v= | ✅ |
+| 18 | sorteo.html: sintaxis correcta del código dentro de la página | ✅ |
+| 19 | sorteo.html: todos los archivos propios que carga existen | ✅ |
+| 20 | sorteo.html: carga config.js antes que comun.js | ✅ |
+| 21 | sorteo.html: config.js y comun.js van dentro del <body> (App Check lo necesita) | ✅ |
+| 22 | sorteo.html: los programas de jsDelivr tienen versión fija y huella de integridad | ✅ |
+| 23 | estadisticas.html: sintaxis correcta del código dentro de la página | ✅ |
+| 24 | estadisticas.html: todos los archivos propios que carga existen | ✅ |
+| 25 | estadisticas.html: carga config.js antes que comun.js | ✅ |
+| 26 | estadisticas.html: config.js y comun.js van dentro del <body> (App Check lo necesita) | ✅ |
+| 27 | estadisticas.html: los programas de jsDelivr tienen versión fija y huella de integridad | ✅ |
+| 28 | las 3 páginas usan la misma versión ?v= de config.js y comun.js | ✅ |
 
 ### 11. Tarjetas: fecha y hora al frente, datos de la partida siempre visibles
 
@@ -538,7 +541,7 @@
 | 2 | worker.js: /__/auth/iframe.js también | ✅ |
 | 3 | worker.js: las páginas del sitio (/, /Zaragoza) NO se tocan | ✅ |
 | 4 | wrangler: usa worker.js y el sitio con binding ASSETS | ✅ |
-| 5 | wrangler: el worker solo corre primero en /__/auth/* | ✅ |
+| 5 | wrangler: el worker corre primero solo en /__/auth/* y /api/* | ✅ |
 | 6 | wrangler: reenvía al Firebase de ESTE sitio (vtes-uat) | ✅ |
 | 7 | worker.js no se publica como archivo del sitio | ✅ |
 | 8 | config: en uat.eternalschedule.com el inicio de sesión pasa por uat.eternalschedule.com | ✅ |
@@ -551,3 +554,94 @@
 | 15 | en modo app, «Entrar con Google» va a la página de Google (sin ventanita) | ✅ |
 | 16 | al regresar de Google avisa «Sesión iniciada» | ✅ |
 | 17 | sin errores de JavaScript (modo app) | ✅ |
+
+### 20. Avisos de mesa en el celular (completa, suplente que entra y aviso previo)
+
+| # | Caso | Resultado |
+|---|---|---|
+| 1 | servidor: mesa virtual con 5: «¡Mesa completa!» al creador y a los 5 | ✅ |
+| 2 | servidor: «¡Mesa completa!» llega una sola vez | ✅ |
+| 3 | servidor: si alguien se sale y otro entra, NO se repite «completa» | ✅ |
+| 4 | servidor: mesa con 4 (no llena): no hay «completa» | ✅ |
+| 5 | servidor: evento presencial con muchos confirmados: no hay «completa» | ✅ |
+| 6 | servidor: mesa que ya empezó: no se avisa nada | ✅ |
+| 7 | servidor: los que anota otra persona (llave ≠ uid) no cuentan como cuenta propia | ✅ |
+| 8 | servidor: jugadores del formato anterior (sin cuenta) cuentan para llenar la mesa | ✅ |
+| 9 | servidor: a 29 min con 4 jugadores: aviso de 30 min (no el de 15 todavía) | ✅ |
+| 10 | servidor: a 14 min: aviso de 15 min y no se repite el de 30 | ✅ |
+| 11 | servidor: cada aviso previo llega una sola vez | ✅ |
+| 12 | servidor: con 3 jugadores NO hay aviso previo para nadie (ni el creador) | ✅ |
+| 13 | servidor: a 2 horas no hay aviso previo todavía | ✅ |
+| 14 | servidor: quien entra después del aviso de 30 min lo recibe solo él | ✅ |
+| 15 | servidor: si cambian la hora de la mesa, el aviso previo vuelve a salir | ✅ |
+| 16 | servidor: evento presencial con 4 confirmados: hay aviso previo | ✅ |
+| 17 | servidor: los suplentes no reciben «completa» | ✅ |
+| 18 | servidor: se recuerda quiénes son suplentes | ✅ |
+| 19 | servidor: cuando un suplente sube a jugador: «¡Entraste a la mesa!» solo a él | ✅ |
+| 20 | servidor: «Ocupas el lugar de Jugador2» | ✅ |
+| 21 | servidor: al subir el suplente no se repite «completa» | ✅ |
+| 22 | servidor: «¡Entraste a la mesa!» no se repite | ✅ |
+| 23 | servidor: aviso previo: los suplentes no lo reciben | ✅ |
+| 24 | servidor: las mesas que ya no existen se borran de avisosEnviados | ✅ |
+| 25 | servidor: comparación estable sin importar el orden | ✅ |
+| 26 | servidor: texto «completa»: nombre, «hoy 19:00 (Méx)» y «Ya están los 5» | ✅ |
+| 27 | servidor: en España la hora sale en hora de España | ✅ |
+| 28 | servidor: texto «entraste»: «Ocupas el lugar de Toni (eras suplente)» | ✅ |
+| 29 | servidor: texto previo: «En 30 minutos empieza tu mesa» con plataforma y «4 de 5 jugadores» | ✅ |
+| 30 | servidor: si el aviso sale tarde dice los minutos reales («En 12 minutos») | ✅ |
+| 31 | servidor: presencial: hora del lugar, tienda y «6 confirmados» | ✅ |
+| 32 | servidor: «mañana» cuando es al día siguiente | ✅ |
+| 33 | servidor: aviso previo de 30 min: solo a los aparatos que eligieron 30 | ✅ |
+| 34 | servidor: «completa»: a todos los aparatos de la persona | ✅ |
+| 35 | servidor: persona sin avisos activados: no se le manda nada | ✅ |
+| 36 | servidor: al tocar el aviso se abre la mesa (#mesa-…) | ✅ |
+| 37 | servidor: los aparatos que ya no existen se borran de avisos/ | ✅ |
+| 38 | wrangler: cron cada 5 minutos | ✅ |
+| 39 | wrangler: el worker atiende /api/* (aviso de prueba) | ✅ |
+| 40 | wrangler: base de datos y llave del MISMO proyecto que config.js (vtes-uat) | ✅ |
+| 41 | wrangler: la cuenta de servicio NO está en el archivo (es secreto de Cloudflare) | ✅ |
+| 42 | wrangler: los avisos abren el sitio correcto (pruebas → uat) | ✅ |
+| 43 | avisos-servidor.js no se publica como archivo del sitio | ✅ |
+| 44 | service worker: usa config.js y la misma versión de Firebase que la página (9.23.0) | ✅ |
+| 45 | la página carga firebase-messaging-compat de la misma versión | ✅ |
+| 46 | worker: /api/aviso-prueba solo acepta POST | ✅ |
+| 47 | worker: sin el secreto configurado responde «falta la cuenta de servicio» (503) | ✅ |
+| 48 | worker: las páginas del sitio siguen igual | ✅ |
+| 49 | worker: tiene la tarea programada (scheduled) | ✅ |
+| 50 | sin sesión no aparece el botón «Avisos» | ✅ |
+| 51 | con sesión aparece «🔕 Avisos» junto a «Cerrar sesión» | ✅ |
+| 52 | al unirse aparece «🔔 ¿Te avisamos?» | ✅ |
+| 53 | la ventana explica los 3 avisos y la regla de «al menos 4» | ✅ |
+| 54 | 30 minutos viene elegido | ✅ |
+| 55 | «No guardamos tu correo ni tu número» | ✅ |
+| 56 | «Activar avisos» pide permiso al navegador | ✅ |
+| 57 | se guarda el aparato con su token, 15 min y zona horaria | ✅ |
+| 58 | no se guarda correo ni teléfono | ✅ |
+| 59 | usa la llave pública de config.js y el service worker firebase-messaging-sw.js | ✅ |
+| 60 | avisa «Avisos activados (15 min antes)» y la barra cambia a «🔔 Avisos» | ✅ |
+| 61 | la ventana se cierra | ✅ |
+| 62 | menú: «Avisos en este celular» · ACTIVADOS | ✅ |
+| 63 | menú: cambiar a 30 minutos se guarda de inmediato | ✅ |
+| 64 | aviso de prueba: lo pide al servidor (/api/aviso-prueba) con la sesión | ✅ |
+| 65 | aviso de prueba: avisa que ya se envió | ✅ |
+| 66 | con Elysium abierto, el aviso sale como mensaje en la página | ✅ |
+| 67 | «Desactivar» borra el aparato y su token | ✅ |
+| 68 | después de desactivar la barra dice «🔕 Avisos» | ✅ |
+| 69 | la ventana «¿Te avisamos?» sale una sola vez por aparato | ✅ |
+| 70 | desde el menú también se activan | ✅ |
+| 71 | al cerrar sesión se borran los avisos de esa cuenta en este aparato | ✅ |
+| 72 | sin errores de JavaScript (avisos en computadora) | ✅ |
+| 73 | al volver: «🔔 Avisos» (sigue activado en este aparato) | ✅ |
+| 74 | al volver: si el token cambió se actualiza | ✅ |
+| 75 | al volver: el menú recuerda 15 minutos | ✅ |
+| 76 | si no da permiso: explica cómo activarlo (candado → Notificaciones) | ✅ |
+| 77 | si no da permiso: no se guarda nada | ✅ |
+| 78 | iPhone en Safari: «Activar avisos» muestra la guía «En iPhone, primero instala Elysium» | ✅ |
+| 79 | la guía tiene los 4 pasos (Compartir, Agregar a pantalla de inicio, abrir desde el ícono, Activar avisos) | ✅ |
+| 80 | la guía dice quitar el ícono viejo y que necesita iOS 16.4 | ✅ |
+| 81 | iPhone en Safari: NO pide permiso (no funcionaría) | ✅ |
+| 82 | sin errores de JavaScript (iPhone) | ✅ |
+| 83 | iPhone desde el ícono: pide permiso y se activan como en Android | ✅ |
+| 84 | iPhone viejo (antes de iOS 16.4): sugiere usar «Calendario» | ✅ |
+| 85 | computadora con navegador sin avisos: la ventana no se ofrece | ✅ |
+| 86 | sin la llave pública en config.js la ventana no aparece | ✅ |

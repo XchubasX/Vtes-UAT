@@ -68,11 +68,13 @@ function renderAuthBar() {
       <span class="block text-zinc-200 font-semibold truncate">${name}</span>`
     + (isAdmin ? '<span class="block text-amber-300 font-semibold">Administrador</span>' : '')
     + (isBanned ? '<span class="block text-red-400 font-semibold">Cuenta bloqueada</span>' : '')
+    + `<button type="button" onclick="abrirMenuAvisos()" class="text-zinc-400 hover:text-white underline py-0.5 mr-2">${avisosActivos ? '🔔' : '🔕'} Avisos</button>`
     + `<button type="button" onclick="signOutUser()" class="text-zinc-400 hover:text-white underline py-0.5">Cerrar sesión</button></div>`;
 }
 
 function signOutUser() {
-  auth.signOut().then(() => showToast('Sesión cerrada')).catch(() => {});
+  // Primero se quitan los avisos de esta cuenta en este aparato (js/avisos.js)
+  quitarAvisosAlSalir().then(() => auth.signOut()).then(() => showToast('Sesión cerrada')).catch(() => {});
 }
 
 // Navegadores "dentro de otra app" (WhatsApp, Instagram, Facebook...):

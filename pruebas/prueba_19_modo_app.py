@@ -24,7 +24,7 @@ def correr(nav, r):
     cfg = (REPO / 'config.js').read_text(encoding='utf-8')
     proyecto = re.search(r'projectId:\s*"([^"]+)"', cfg).group(1)
     r.caso('wrangler: usa worker.js y el sitio con binding ASSETS', wj.get('main') == 'worker.js' and wj['assets'].get('binding') == 'ASSETS')
-    r.caso('wrangler: el worker solo corre primero en /__/auth/*', wj['assets'].get('run_worker_first') == ['/__/auth/*'])
+    r.caso('wrangler: el worker corre primero solo en /__/auth/* y /api/*', wj['assets'].get('run_worker_first') == ['/__/auth/*', '/api/*'])
     r.caso('wrangler: reenvía al Firebase de ESTE sitio (' + proyecto + ')', wj.get('vars', {}).get('FIREBASE_AUTH_HOST') == proyecto + '.firebaseapp.com', wj.get('vars'))
     pub = (REPO / 'cloudflare-publicar.sh').read_text(encoding='utf-8')
     r.caso('worker.js no se publica como archivo del sitio', 'worker.js' in pub)
