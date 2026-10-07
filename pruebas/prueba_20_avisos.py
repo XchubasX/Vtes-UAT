@@ -147,6 +147,22 @@ def correr(nav, r):
     err.revisar()
     ctx.close()
 
+    # ------------------------------------------------------------------ presenciales: sin avisos
+    fut2 = ahora_ms() + 3 * DIA
+    seedp = {'vtes_records': {'p1': {'type': 'custom_table', 'name': 'Jueves en Tienda X', 'utcTime': iso(fut2), 'utcMs': fut2, 'modality': 'presencial',
+                                     'ownerUid': 'otro', 'originTz': 'America/Mexico_City', 'venue': 'Tienda X', 'city': 'CDMX', 'country': 'México'}}, 'stats': {}}
+    ctx, pg, html = pagina(nav, 'avisos_pres.html', seedp)
+    pg.goto(url_archivo(html)); pg.evaluate(USUARIO); pg.wait_for_timeout(300)
+    pg.evaluate("setTableModality('presencial')"); pg.wait_for_timeout(200)
+    pg.click('#customTablesContainer button:has-text("Confirmar")'); pg.wait_for_timeout(100)
+    pg.fill('#joinNick', 'Ana'); pg.click('#joinSubmitBtn'); pg.wait_for_timeout(400)
+    r.caso('evento presencial: al confirmar asistencia NO aparece «¿Te avisamos?»', 'Asistencia confirmada' in pg.inner_text('body') and not pg.is_visible('#avisosOferta'), pg.inner_text('#toastContainer'))
+    pg.evaluate("showCreatedModal('p1', window.__store().vtes_records.p1); closeCreatedModal()"); pg.wait_for_timeout(200)
+    r.caso('evento presencial: al crearlo NO aparece «¿Te avisamos?»', not pg.is_visible('#avisosOferta'))
+    pg.evaluate("showCreatedModal('m9', {name:'V5', modality:'virtual', utcTime: new Date(Date.now()+864e5).toISOString(), originTz:'America/Mexico_City', platform:'Lackey'}); closeCreatedModal()"); pg.wait_for_timeout(200)
+    r.caso('mesa virtual: al crearla SÍ aparece «¿Te avisamos?» y dice «mesas virtuales»', pg.is_visible('#avisosOferta') and 'mesas virtuales' in pg.inner_text('#avisosOferta'))
+    ctx.close()
+
     # ------------------------------------------------------------------ al volver a abrir: sigue activado y renueva el token
     disp = 'dPRUEBA'
     seed2 = {'vtes_records': {}, 'stats': {}, 'avisos': {'uidA': {disp: {'token': 'token-viejo', 'minutos': 15, 'zona': 'America/Mexico_City', 'at': 1}}}}

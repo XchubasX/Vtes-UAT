@@ -50,7 +50,7 @@ caso('quien entra después del aviso de 30 min lo recibe solo él', r30b.eventos
 const reprog = planear({ m1: mesa(4, {}, 29) }, { m1: { previo: { utc: 'otra-hora', m30: { dueño: true, u0: true, u1: true, u2: true, u3: true } } } }, AHORA);
 caso('si cambian la hora de la mesa, el aviso previo vuelve a salir', tipos(reprog) === 'previo30', reprog.eventos);
 const pres = planear({ p1: mesa(4, { modality: 'presencial', originTz: 'Europe/Madrid', venue: 'Tienda X', city: 'Zaragoza' }, 10) }, {}, AHORA);
-caso('evento presencial con 4 confirmados: hay aviso previo', pres.eventos.some(e => e.tipo === 'previo'), pres.eventos);
+caso('eventos presenciales: ningún aviso (ni previo ni nada)', pres.eventos.length === 0 && !('p1' in pres.estado), pres);
 
 // --- Suplentes
 const llena7 = mesa(7); // u0..u4 juegan, u5 y u6 suplentes
@@ -85,8 +85,6 @@ const mP = mensaje({ tipo: 'previo', mesa: mesa(4, {}, 29), minutos: 30, jugador
 caso('texto previo: «En 30 minutos empieza tu mesa» con plataforma y «4 de 5 jugadores»', mP.titulo === 'En 30 minutos empieza tu mesa' && mP.texto.includes('Lackey') && mP.texto.includes('4 de 5 jugadores'), mP);
 const mP2 = mensaje({ tipo: 'previo', mesa: mesa(4, {}, 12), minutos: 30, jugadores: 4 }, ap, AHORA);
 caso('si el aviso sale tarde dice los minutos reales («En 12 minutos»)', mP2.titulo === 'En 12 minutos empieza tu mesa', mP2);
-const mPres = mensaje({ tipo: 'previo', mesa: mesa(6, { modality: 'presencial', originTz: 'Europe/Madrid', venue: 'Tienda X', city: 'Zaragoza' }, 15), minutos: 15, jugadores: 6 }, ap, AHORA);
-caso('presencial: hora del lugar, tienda y «6 confirmados»', mPres.texto.includes('Tienda X, Zaragoza') && mPres.texto.includes('6 confirmados') && mPres.texto.includes('(Esp)'), mPres);
 caso('«mañana» cuando es al día siguiente', cuando(iso(AHORA + 20 * 3600000), 'America/Mexico_City', AHORA).startsWith('mañana'), cuando(iso(AHORA + 20 * 3600000), 'America/Mexico_City', AHORA));
 
 // --- Aparatos y envío
