@@ -4,6 +4,11 @@
 // Toma los datos de Firebase de config.js (el mismo del sitio).
 // =====================================================================
 
+// Una versión nueva de este archivo entra en funciones de inmediato
+// (sin esperar a que se cierren todas las pestañas de Elysium).
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (event) => event.waitUntil(clients.claim()));
+
 // Al tocar el aviso: si Elysium ya está abierto (pestaña o app del iPhone)
 // se trae al frente y se le pide abrir la mesa; si no, se abre en la mesa.
 // Va ANTES de Firebase para que este sea el que atiende el toque.
