@@ -112,7 +112,8 @@ def correr(nav, r):
     d = list(ap.values())[0] if ap else {}
     r.caso('«Activar avisos» pide permiso al navegador', pg.evaluate('window.__permisoPedido') == 1)
     r.caso('se guarda el aparato con su token, 15 min y zona horaria', d.get('token') == 'token-1' and d.get('minutos') == 15 and d.get('zona') == 'America/Mexico_City', ap)
-    r.caso('no se guarda correo ni teléfono', set(d.keys()) == {'token', 'minutos', 'zona', 'at'}, d)
+    r.caso('no se guarda correo ni teléfono (solo token, minutos, zona, tipo de aparato y fecha)', set(d.keys()) == {'token', 'minutos', 'zona', 'tipo', 'at'}, d)
+    r.caso('computadora: tipo de aparato «pc»', d.get('tipo') == 'pc', d)
     r.caso('usa la llave pública de config.js y el service worker firebase-messaging-sw.js', pg.evaluate('window.__vapid') == 'LLAVE-PRUEBA' and pg.evaluate('window.__sw') == 'firebase-messaging-sw.js')
     r.caso('avisa «Avisos activados (15 min antes)» y la barra cambia a «🔔 Avisos»', 'Avisos activados (15 min antes)' in pg.inner_text('body') and '🔔 Avisos' in pg.inner_text('#authBar'))
     r.caso('la ventana se cierra', not pg.is_visible('#avisosOferta'))
@@ -172,6 +173,7 @@ def correr(nav, r):
     pg.evaluate(USUARIO); pg.wait_for_timeout(500)
     r.caso('al volver: «🔔 Avisos» (sigue activado en este aparato)', '🔔 Avisos' in pg.inner_text('#authBar'), pg.inner_text('#authBar'))
     r.caso('al volver: si el token cambió se actualiza', aparatos(pg).get(disp, {}).get('token') == 'token-1', aparatos(pg))
+    r.caso('al volver: los aparatos activados antes guardan su tipo («Sin dato» se completa solo)', aparatos(pg).get(disp, {}).get('tipo') == 'pc', aparatos(pg))
     pg.click('#authBar >> text=Avisos'); pg.wait_for_timeout(100)
     r.caso('al volver: el menú recuerda 15 minutos', 'bg-wine-600' in pg.get_attribute('#avisosMenu [data-minutos="15"]', 'class'))
     ctx.close()
@@ -203,6 +205,7 @@ def correr(nav, r):
     pg.goto(url_archivo(html)); pg.evaluate(USUARIO); pg.wait_for_timeout(300)
     pg.evaluate('abrirMenuAvisos()'); pg.click('#avisosMenu >> text=Activar avisos'); pg.wait_for_timeout(400)
     r.caso('iPhone desde el ícono: pide permiso y se activan como en Android', pg.evaluate('window.__permisoPedido') == 1 and len(aparatos(pg)) == 1)
+    r.caso('iPhone: tipo de aparato «iphone»', [a.get('tipo') for a in aparatos(pg).values()] == ['iphone'], aparatos(pg))
     ctx.close()
 
     ctx, pg, html = pagina(nav, 'avisos6.html', antes='window.__sinAvisos = true', ua=UA_IPHONE, app=True)

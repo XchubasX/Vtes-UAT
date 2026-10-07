@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 516 de 516 casos pasaron.
+**✅ TODO BIEN** — 530 de 530 casos pasaron.
 
-- Fecha: 06/10/2026 19:16 (hora de Ciudad de México)
-- Versión probada: `34fd3a2` + cambios aún sin guardar
-- Duración: 86 s
+- Fecha: 06/10/2026 20:40 (hora de Ciudad de México)
+- Versión probada: `f53477c` + cambios aún sin guardar
+- Duración: 85 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -20,7 +20,7 @@
 | 6 | Arranque: enlace por ciudad y enlace directo a una mesa | 9 | ✅ |
 | 7 | Sitio servido como en GitHub, con sus archivos separados | 8 | ✅ |
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
-| 9 | Página de estadísticas: acceso y conteo de personas | 17 | ✅ |
+| 9 | Página de estadísticas: acceso y conteo de personas | 26 | ✅ |
 | 10 | Revisión del código: sintaxis, versiones e integridad | 28 | ✅ |
 | 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 36 | ✅ |
 | 12 | Ícono del sitio e instalación en el celular | 11 | ✅ |
@@ -31,7 +31,7 @@
 | 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 28 | ✅ |
 | 18 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
 | 19 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
-| 20 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 91 | ✅ |
+| 20 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 96 | ✅ |
 
 ## Todos los casos
 
@@ -258,14 +258,23 @@
 | 7 | cerrar sesión regresa al botón de entrar | ✅ |
 | 8 | el administrador ve las estadísticas | ✅ |
 | 9 | se dibujan las cifras | ✅ |
-| 10 | sin errores de JavaScript (acceso) | ✅ |
-| 11 | personas este mes: 3 (A, E, F) | ✅ |
-| 12 | personas nuevas este mes: 2 (E, F) | ✅ |
-| 13 | regresaron: 1 de las 3 del mes pasado (33%) | ✅ |
-| 14 | personas que organizan en 3 meses: 3 (A, B, E) | ✅ |
-| 15 | sin errores de JavaScript (personas) | ✅ |
-| 16 | sin datos de cuentas: mensaje de espera | ✅ |
-| 17 | sin errores de JavaScript (sin datos de cuentas) | ✅ |
+| 10 | avisos: sin datos dice «Todavía nadie ha activado los avisos» | ✅ |
+| 11 | sin errores de JavaScript (acceso) | ✅ |
+| 12 | avisos: «Personas con avisos» 3 de 5 que jugaron virtuales en 30 días (60%) | ✅ |
+| 13 | avisos: «Aparatos con avisos» 4 | ✅ |
+| 14 | avisos: tipo de aparato con Android 2 (50%), iPhone 1 y «Sin dato» 1 | ✅ |
+| 15 | avisos: 30 minutos 3 (75%) y 15 minutos 1 (25%) | ✅ |
+| 16 | avisos: explica «Sin dato» y que no se guarda quién es quién | ✅ |
+| 17 | avisos: el recuadro va después de «¿Se usan los suplentes?» | ✅ |
+| 18 | avisos: nada se sale de la pantalla en celular (390 px) | ✅ |
+| 19 | sin errores de JavaScript (avisos en estadísticas) | ✅ |
+| 20 | personas este mes: 3 (A, E, F) | ✅ |
+| 21 | personas nuevas este mes: 2 (E, F) | ✅ |
+| 22 | regresaron: 1 de las 3 del mes pasado (33%) | ✅ |
+| 23 | personas que organizan en 3 meses: 3 (A, B, E) | ✅ |
+| 24 | sin errores de JavaScript (personas) | ✅ |
+| 25 | sin datos de cuentas: mensaje de espera | ✅ |
+| 26 | sin errores de JavaScript (sin datos de cuentas) | ✅ |
 
 ### 10. Revisión del código: sintaxis, versiones e integridad
 
@@ -595,58 +604,63 @@
 | 34 | servidor: persona sin avisos activados: no se le manda nada | ✅ |
 | 35 | servidor: al tocar el aviso se abre la mesa (#mesa-…) | ✅ |
 | 36 | servidor: los aparatos que ya no existen se borran de avisos/ | ✅ |
-| 37 | wrangler: cron cada 5 minutos | ✅ |
-| 38 | wrangler: el worker atiende /api/* (aviso de prueba) | ✅ |
-| 39 | wrangler: base de datos y llave del MISMO proyecto que config.js (vtes-uat) | ✅ |
-| 40 | wrangler: la cuenta de servicio NO está en el archivo (es secreto de Cloudflare) | ✅ |
-| 41 | wrangler: los avisos abren el sitio correcto (pruebas → uat) | ✅ |
-| 42 | avisos-servidor.js no se publica como archivo del sitio | ✅ |
-| 43 | service worker: usa config.js y la misma versión de Firebase que la página (9.23.0) | ✅ |
-| 44 | service worker: atiende el toque ANTES que Firebase (abre la mesa aunque Elysium ya esté abierto) | ✅ |
-| 45 | servidor: el aviso lleva el enlace y la mesa en sus datos | ✅ |
-| 46 | la página carga firebase-messaging-compat de la misma versión | ✅ |
-| 47 | worker: /api/aviso-prueba solo acepta POST | ✅ |
-| 48 | worker: sin el secreto configurado responde «falta la cuenta de servicio» (503) | ✅ |
-| 49 | worker: las páginas del sitio siguen igual | ✅ |
-| 50 | worker: tiene la tarea programada (scheduled) | ✅ |
-| 51 | sin sesión no aparece el botón «Avisos» | ✅ |
-| 52 | con sesión aparece «🔕 Avisos» junto a «Cerrar sesión» | ✅ |
-| 53 | al unirse aparece «🔔 ¿Te avisamos?» | ✅ |
-| 54 | la ventana explica los 3 avisos y la regla de «al menos 4» | ✅ |
-| 55 | 30 minutos viene elegido | ✅ |
-| 56 | «No guardamos tu correo ni tu número» | ✅ |
-| 57 | «Activar avisos» pide permiso al navegador | ✅ |
-| 58 | se guarda el aparato con su token, 15 min y zona horaria | ✅ |
-| 59 | no se guarda correo ni teléfono | ✅ |
-| 60 | usa la llave pública de config.js y el service worker firebase-messaging-sw.js | ✅ |
-| 61 | avisa «Avisos activados (15 min antes)» y la barra cambia a «🔔 Avisos» | ✅ |
-| 62 | la ventana se cierra | ✅ |
-| 63 | menú: «Avisos en este celular» · ACTIVADOS | ✅ |
-| 64 | menú: cambiar a 30 minutos se guarda de inmediato | ✅ |
-| 65 | aviso de prueba: lo pide al servidor (/api/aviso-prueba) con la sesión | ✅ |
-| 66 | aviso de prueba: avisa que ya se envió | ✅ |
-| 67 | con Elysium abierto, el aviso sale como mensaje en la página | ✅ |
-| 68 | al tocar el aviso con Elysium abierto, se va a la mesa (#mesa-m1) | ✅ |
-| 69 | «Desactivar» borra el aparato y su token | ✅ |
-| 70 | después de desactivar la barra dice «🔕 Avisos» | ✅ |
-| 71 | la ventana «¿Te avisamos?» sale una sola vez por aparato | ✅ |
-| 72 | desde el menú también se activan | ✅ |
-| 73 | al cerrar sesión se borran los avisos de esa cuenta en este aparato | ✅ |
-| 74 | sin errores de JavaScript (avisos en computadora) | ✅ |
-| 75 | evento presencial: al confirmar asistencia NO aparece «¿Te avisamos?» | ✅ |
-| 76 | evento presencial: al crearlo NO aparece «¿Te avisamos?» | ✅ |
-| 77 | mesa virtual: al crearla SÍ aparece «¿Te avisamos?» y dice «mesas virtuales» | ✅ |
-| 78 | al volver: «🔔 Avisos» (sigue activado en este aparato) | ✅ |
-| 79 | al volver: si el token cambió se actualiza | ✅ |
-| 80 | al volver: el menú recuerda 15 minutos | ✅ |
-| 81 | si no da permiso: explica cómo activarlo (candado → Notificaciones) | ✅ |
-| 82 | si no da permiso: no se guarda nada | ✅ |
-| 83 | iPhone en Safari: «Activar avisos» muestra la guía «En iPhone, primero instala Elysium» | ✅ |
-| 84 | la guía tiene los 4 pasos (Compartir, Agregar a pantalla de inicio, abrir desde el ícono, Activar avisos) | ✅ |
-| 85 | la guía dice quitar el ícono viejo y que necesita iOS 16.4 | ✅ |
-| 86 | iPhone en Safari: NO pide permiso (no funcionaría) | ✅ |
-| 87 | sin errores de JavaScript (iPhone) | ✅ |
-| 88 | iPhone desde el ícono: pide permiso y se activan como en Android | ✅ |
-| 89 | iPhone viejo (antes de iOS 16.4): sugiere usar «Calendario» | ✅ |
-| 90 | computadora con navegador sin avisos: la ventana no se ofrece | ✅ |
-| 91 | sin la llave pública en config.js la ventana no aparece | ✅ |
+| 37 | servidor: Estadísticas: personas, aparatos, tipo y 15/30 | ✅ |
+| 38 | servidor: Estadísticas: los totales no llevan uid, token ni nombres | ✅ |
+| 39 | wrangler: cron cada 5 minutos | ✅ |
+| 40 | wrangler: el worker atiende /api/* (aviso de prueba) | ✅ |
+| 41 | wrangler: base de datos y llave del MISMO proyecto que config.js (vtes-uat) | ✅ |
+| 42 | wrangler: la cuenta de servicio NO está en el archivo (es secreto de Cloudflare) | ✅ |
+| 43 | wrangler: los avisos abren el sitio correcto (pruebas → uat) | ✅ |
+| 44 | avisos-servidor.js no se publica como archivo del sitio | ✅ |
+| 45 | service worker: usa config.js y la misma versión de Firebase que la página (9.23.0) | ✅ |
+| 46 | service worker: atiende el toque ANTES que Firebase (abre la mesa aunque Elysium ya esté abierto) | ✅ |
+| 47 | servidor: el aviso lleva el enlace y la mesa en sus datos | ✅ |
+| 48 | la página carga firebase-messaging-compat de la misma versión | ✅ |
+| 49 | worker: /api/aviso-prueba solo acepta POST | ✅ |
+| 50 | worker: sin el secreto configurado responde «falta la cuenta de servicio» (503) | ✅ |
+| 51 | worker: las páginas del sitio siguen igual | ✅ |
+| 52 | worker: tiene la tarea programada (scheduled) | ✅ |
+| 53 | sin sesión no aparece el botón «Avisos» | ✅ |
+| 54 | con sesión aparece «🔕 Avisos» junto a «Cerrar sesión» | ✅ |
+| 55 | al unirse aparece «🔔 ¿Te avisamos?» | ✅ |
+| 56 | la ventana explica los 3 avisos y la regla de «al menos 4» | ✅ |
+| 57 | 30 minutos viene elegido | ✅ |
+| 58 | «No guardamos tu correo ni tu número» | ✅ |
+| 59 | «Activar avisos» pide permiso al navegador | ✅ |
+| 60 | se guarda el aparato con su token, 15 min y zona horaria | ✅ |
+| 61 | no se guarda correo ni teléfono (solo token, minutos, zona, tipo de aparato y fecha) | ✅ |
+| 62 | computadora: tipo de aparato «pc» | ✅ |
+| 63 | usa la llave pública de config.js y el service worker firebase-messaging-sw.js | ✅ |
+| 64 | avisa «Avisos activados (15 min antes)» y la barra cambia a «🔔 Avisos» | ✅ |
+| 65 | la ventana se cierra | ✅ |
+| 66 | menú: «Avisos en este celular» · ACTIVADOS | ✅ |
+| 67 | menú: cambiar a 30 minutos se guarda de inmediato | ✅ |
+| 68 | aviso de prueba: lo pide al servidor (/api/aviso-prueba) con la sesión | ✅ |
+| 69 | aviso de prueba: avisa que ya se envió | ✅ |
+| 70 | con Elysium abierto, el aviso sale como mensaje en la página | ✅ |
+| 71 | al tocar el aviso con Elysium abierto, se va a la mesa (#mesa-m1) | ✅ |
+| 72 | «Desactivar» borra el aparato y su token | ✅ |
+| 73 | después de desactivar la barra dice «🔕 Avisos» | ✅ |
+| 74 | la ventana «¿Te avisamos?» sale una sola vez por aparato | ✅ |
+| 75 | desde el menú también se activan | ✅ |
+| 76 | al cerrar sesión se borran los avisos de esa cuenta en este aparato | ✅ |
+| 77 | sin errores de JavaScript (avisos en computadora) | ✅ |
+| 78 | evento presencial: al confirmar asistencia NO aparece «¿Te avisamos?» | ✅ |
+| 79 | evento presencial: al crearlo NO aparece «¿Te avisamos?» | ✅ |
+| 80 | mesa virtual: al crearla SÍ aparece «¿Te avisamos?» y dice «mesas virtuales» | ✅ |
+| 81 | al volver: «🔔 Avisos» (sigue activado en este aparato) | ✅ |
+| 82 | al volver: si el token cambió se actualiza | ✅ |
+| 83 | al volver: los aparatos activados antes guardan su tipo («Sin dato» se completa solo) | ✅ |
+| 84 | al volver: el menú recuerda 15 minutos | ✅ |
+| 85 | si no da permiso: explica cómo activarlo (candado → Notificaciones) | ✅ |
+| 86 | si no da permiso: no se guarda nada | ✅ |
+| 87 | iPhone en Safari: «Activar avisos» muestra la guía «En iPhone, primero instala Elysium» | ✅ |
+| 88 | la guía tiene los 4 pasos (Compartir, Agregar a pantalla de inicio, abrir desde el ícono, Activar avisos) | ✅ |
+| 89 | la guía dice quitar el ícono viejo y que necesita iOS 16.4 | ✅ |
+| 90 | iPhone en Safari: NO pide permiso (no funcionaría) | ✅ |
+| 91 | sin errores de JavaScript (iPhone) | ✅ |
+| 92 | iPhone desde el ícono: pide permiso y se activan como en Android | ✅ |
+| 93 | iPhone: tipo de aparato «iphone» | ✅ |
+| 94 | iPhone viejo (antes de iOS 16.4): sugiere usar «Calendario» | ✅ |
+| 95 | computadora con navegador sin avisos: la ventana no se ofrece | ✅ |
+| 96 | sin la llave pública en config.js la ventana no aparece | ✅ |

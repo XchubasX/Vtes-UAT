@@ -41,6 +41,31 @@ def correr(nav, r):
     pg.click('#gateLoginBtn'); pg.wait_for_timeout(400)  # el inicio simulado entra como uidA (administrador)
     r.caso('el administrador ve las estadísticas', pg.is_visible('#statsContent') and not pg.is_visible('#gateSection'))
     r.caso('se dibujan las cifras', len(pg.inner_text('#kpis')) > 0)
+    r.caso('avisos: sin datos dice «Todavía nadie ha activado los avisos»', 'Todavía nadie ha activado los avisos' in pg.inner_text('[aria-labelledby="hAvisos"]'))
+    err.revisar()
+    ctx.close()
+
+    # --- ¿Se usan los avisos? (tablero 25)
+    from datetime import timedelta
+    hace = lambda d: (datetime.now(timezone.utc) - timedelta(days=d)).strftime('%Y-%m-%dT%H:%M:%SZ')
+    seed_av = {'admins': {'uidA': True}, 'stats': {
+        'avisos': {'personas': 3, 'aparatos': 4, 'tipos': {'iphone': 1, 'android': 2, 'pc': 0, 'sinDato': 1}, 'minutos': {'m15': 1, 'm30': 3}, 'actualizado': 1},
+        'tablesLog': {'a': _ficha(hace(3), ['u1', 'u2', 'u3'], 'u4'), 'b': _ficha(hace(10), ['u5', 'u1'], 'u1'),
+                      'viejo': _ficha(hace(45), ['u9'], 'u9'), 'pres': _ficha(hace(2), ['p1', 'p2'], 'p1', 'presencial')}}}
+    ctx = nuevo_contexto(nav); pg = ctx.new_page(); err = r.errores_de_pagina(pg, 'sin errores de JavaScript (avisos en estadísticas)')
+    pg.goto(url_archivo(armar_pagina('estadisticas.html', seed_av, 'est_avisos.html'))); pg.wait_for_timeout(300)
+    pg.click('#gateLoginBtn'); pg.wait_for_timeout(400)
+    t = pg.inner_text('[aria-labelledby="hAvisos"]')
+    tn = ' '.join(t.split())  # cada número va en su propia pastilla: se juntan los renglones
+    r.caso('avisos: «Personas con avisos» 3 de 5 que jugaron virtuales en 30 días (60%)', 'Personas con avisos' in t and 'de 5 personas que jugaron mesas virtuales en los últimos 30 días (60%)' in t, t)
+    r.caso('avisos: «Aparatos con avisos» 4', 'Aparatos con avisos\n4' in t, t)
+    r.caso('avisos: tipo de aparato con Android 2 (50%), iPhone 1 y «Sin dato» 1', 'Android 2 (50%)' in tn and 'iPhone 1 (25%)' in tn and 'Sin dato 1 (25%)' in tn, tn)
+    r.caso('avisos: 30 minutos 3 (75%) y 15 minutos 1 (25%)', '30 minutos 3 (75%)' in tn and '15 minutos 1 (25%)' in tn, tn)
+    r.caso('avisos: explica «Sin dato» y que no se guarda quién es quién', 'Sin dato»: aparatos' in t and 'No se guarda quién es quién' in t, t)
+    r.caso('avisos: el recuadro va después de «¿Se usan los suplentes?»',
+           pg.evaluate("document.getElementById('hSubs').compareDocumentPosition(document.getElementById('hAvisos')) & Node.DOCUMENT_POSITION_FOLLOWING") > 0)
+    pg.set_viewport_size({'width': 390, 'height': 844}); pg.wait_for_timeout(200)
+    r.caso('avisos: nada se sale de la pantalla en celular (390 px)', pg.evaluate("document.documentElement.scrollWidth - window.innerWidth") <= 1, pg.evaluate("document.documentElement.scrollWidth"))
     err.revisar()
     ctx.close()
 

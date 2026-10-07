@@ -1,6 +1,6 @@
 // Pruebas de la lógica de avisos del servidor (avisos-servidor.js), sin internet.
 // La corre prueba_20_avisos.py y escribe una lista JSON de [nombre, ok, detalle].
-import { planear, mensaje, aparatosDe, mandar, estable, cuando } from '../avisos-servidor.js';
+import { planear, mensaje, aparatosDe, mandar, estable, cuando, resumenAvisos } from '../avisos-servidor.js';
 
 const casos = [];
 const caso = (n, ok, d = '') => casos.push([n, !!ok, ok ? '' : JSON.stringify(d).slice(0, 300)]);
@@ -97,5 +97,15 @@ const enviar = async (tok, m, link) => { llamadas.push([tok, link]); return tok 
 const res = await mandar([{ tipo: 'completa', mesaId: 'm1', mesa: mesa(5), uids: ['u1'] }], avisos, enviar, 'https://uat.eternalschedule.com', AHORA);
 caso('al tocar el aviso se abre la mesa (#mesa-…)', llamadas[0] && llamadas[0][1] === 'https://uat.eternalschedule.com/#mesa-m1', llamadas);
 caso('los aparatos que ya no existen se borran de avisos/', JSON.stringify(res.borrar) === '{"avisos/u1/d2":null}' && res.enviados === 1, res);
+
+// --- Totales para Estadísticas (tablero 25)
+const res2 = resumenAvisos({
+  ana: { d1: { token: 'a', minutos: 30, tipo: 'iphone' }, d2: { token: 'b', minutos: 15, tipo: 'pc' } },
+  beto: { d3: { token: 'c', minutos: 30, tipo: 'android' } },
+  caro: { d4: { token: 'd', minutos: 30 } },
+  vacio: {}
+});
+caso('Estadísticas: personas, aparatos, tipo y 15/30', estable(res2) === estable({ personas: 3, aparatos: 4, tipos: { iphone: 1, android: 1, pc: 1, sinDato: 1 }, minutos: { m15: 1, m30: 3 } }), res2);
+caso('Estadísticas: los totales no llevan uid, token ni nombres', !/ana|beto|caro|"a"|token/.test(JSON.stringify(res2)), res2);
 
 console.log(JSON.stringify(casos));
