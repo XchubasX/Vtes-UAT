@@ -71,6 +71,11 @@ def correr(nav, r):
     ver = re.search(r'firebasejs/([\d.]+)/firebase-app-compat', idx).group(1)
     r.caso('service worker: usa config.js y la misma versión de Firebase que la página (' + ver + ')',
            "importScripts('config.js" in sw and sw.count('firebasejs/' + ver + '/') == 2)
+    r.caso('service worker: atiende el toque ANTES que Firebase (abre la mesa aunque Elysium ya esté abierto)',
+           sw.find("addEventListener('notificationclick'") != -1 and sw.find("addEventListener('notificationclick'") < sw.find('importScripts(')
+           and 'stopImmediatePropagation' in sw and "postMessage({ tipo: 'abrirMesa'" in sw and 'openWindow(link)' in sw)
+    srv = (REPO / 'avisos-servidor.js').read_text(encoding='utf-8')
+    r.caso('servidor: el aviso lleva el enlace y la mesa en sus datos', 'data: { link: enlace, mesa:' in srv)
     r.caso('la página carga firebase-messaging-compat de la misma versión', 'firebasejs/' + ver + '/firebase-messaging-compat.js' in idx)
     code = ("import('" + (REPO / 'worker.js').as_uri() + "').then(async m => { const env = { FIREBASE_AUTH_HOST: 'x.firebaseapp.com', ASSETS: { fetch: () => new Response('sitio') } };"
             "const a = await m.default.fetch(new Request('https://uat.eternalschedule.com/api/aviso-prueba'), env);"
@@ -123,6 +128,8 @@ def correr(nav, r):
     r.caso('aviso de prueba: avisa que ya se envió', 'Aviso de prueba enviado' in pg.inner_text('body'))
     pg.evaluate("window.__alMensaje({ notification: { title: '¡Mesa completa! 🦇', body: 'Martes de V5' } })"); pg.wait_for_timeout(100)
     r.caso('con Elysium abierto, el aviso sale como mensaje en la página', '¡Mesa completa!' in pg.inner_text('#toastContainer'))
+    pg.evaluate("abrirMesaDeAviso('m1')"); pg.wait_for_timeout(400)
+    r.caso('al tocar el aviso con Elysium abierto, se va a la mesa (#mesa-m1)', pg.evaluate('location.hash') == '#mesa-m1' and 'ya terminó' not in pg.inner_text('#toastContainer'))
     pg.click('#authBar >> text=Avisos'); pg.wait_for_timeout(100)
     pg.click('#avisosMenu >> text=Desactivar'); pg.wait_for_timeout(300)
     r.caso('«Desactivar» borra el aparato y su token', aparatos(pg) == {} and pg.evaluate('window.__tokensBorrados') == 1, aparatos(pg))

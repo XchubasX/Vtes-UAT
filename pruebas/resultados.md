@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 511 de 511 casos pasaron.
+**✅ TODO BIEN** — 514 de 514 casos pasaron.
 
-- Fecha: 06/10/2026 17:42 (hora de Ciudad de México)
-- Versión probada: `310992a` + cambios aún sin guardar
-- Duración: 76 s
+- Fecha: 06/10/2026 18:18 (hora de Ciudad de México)
+- Versión probada: `0c2325c` + cambios aún sin guardar
+- Duración: 92 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -31,7 +31,7 @@
 | 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 28 | ✅ |
 | 18 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
 | 19 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
-| 20 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 86 | ✅ |
+| 20 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 89 | ✅ |
 
 ## Todos los casos
 
@@ -603,45 +603,48 @@
 | 42 | wrangler: los avisos abren el sitio correcto (pruebas → uat) | ✅ |
 | 43 | avisos-servidor.js no se publica como archivo del sitio | ✅ |
 | 44 | service worker: usa config.js y la misma versión de Firebase que la página (9.23.0) | ✅ |
-| 45 | la página carga firebase-messaging-compat de la misma versión | ✅ |
-| 46 | worker: /api/aviso-prueba solo acepta POST | ✅ |
-| 47 | worker: sin el secreto configurado responde «falta la cuenta de servicio» (503) | ✅ |
-| 48 | worker: las páginas del sitio siguen igual | ✅ |
-| 49 | worker: tiene la tarea programada (scheduled) | ✅ |
-| 50 | sin sesión no aparece el botón «Avisos» | ✅ |
-| 51 | con sesión aparece «🔕 Avisos» junto a «Cerrar sesión» | ✅ |
-| 52 | al unirse aparece «🔔 ¿Te avisamos?» | ✅ |
-| 53 | la ventana explica los 3 avisos y la regla de «al menos 4» | ✅ |
-| 54 | 30 minutos viene elegido | ✅ |
-| 55 | «No guardamos tu correo ni tu número» | ✅ |
-| 56 | «Activar avisos» pide permiso al navegador | ✅ |
-| 57 | se guarda el aparato con su token, 15 min y zona horaria | ✅ |
-| 58 | no se guarda correo ni teléfono | ✅ |
-| 59 | usa la llave pública de config.js y el service worker firebase-messaging-sw.js | ✅ |
-| 60 | avisa «Avisos activados (15 min antes)» y la barra cambia a «🔔 Avisos» | ✅ |
-| 61 | la ventana se cierra | ✅ |
-| 62 | menú: «Avisos en este celular» · ACTIVADOS | ✅ |
-| 63 | menú: cambiar a 30 minutos se guarda de inmediato | ✅ |
-| 64 | aviso de prueba: lo pide al servidor (/api/aviso-prueba) con la sesión | ✅ |
-| 65 | aviso de prueba: avisa que ya se envió | ✅ |
-| 66 | con Elysium abierto, el aviso sale como mensaje en la página | ✅ |
-| 67 | «Desactivar» borra el aparato y su token | ✅ |
-| 68 | después de desactivar la barra dice «🔕 Avisos» | ✅ |
-| 69 | la ventana «¿Te avisamos?» sale una sola vez por aparato | ✅ |
-| 70 | desde el menú también se activan | ✅ |
-| 71 | al cerrar sesión se borran los avisos de esa cuenta en este aparato | ✅ |
-| 72 | sin errores de JavaScript (avisos en computadora) | ✅ |
-| 73 | al volver: «🔔 Avisos» (sigue activado en este aparato) | ✅ |
-| 74 | al volver: si el token cambió se actualiza | ✅ |
-| 75 | al volver: el menú recuerda 15 minutos | ✅ |
-| 76 | si no da permiso: explica cómo activarlo (candado → Notificaciones) | ✅ |
-| 77 | si no da permiso: no se guarda nada | ✅ |
-| 78 | iPhone en Safari: «Activar avisos» muestra la guía «En iPhone, primero instala Elysium» | ✅ |
-| 79 | la guía tiene los 4 pasos (Compartir, Agregar a pantalla de inicio, abrir desde el ícono, Activar avisos) | ✅ |
-| 80 | la guía dice quitar el ícono viejo y que necesita iOS 16.4 | ✅ |
-| 81 | iPhone en Safari: NO pide permiso (no funcionaría) | ✅ |
-| 82 | sin errores de JavaScript (iPhone) | ✅ |
-| 83 | iPhone desde el ícono: pide permiso y se activan como en Android | ✅ |
-| 84 | iPhone viejo (antes de iOS 16.4): sugiere usar «Calendario» | ✅ |
-| 85 | computadora con navegador sin avisos: la ventana no se ofrece | ✅ |
-| 86 | sin la llave pública en config.js la ventana no aparece | ✅ |
+| 45 | service worker: atiende el toque ANTES que Firebase (abre la mesa aunque Elysium ya esté abierto) | ✅ |
+| 46 | servidor: el aviso lleva el enlace y la mesa en sus datos | ✅ |
+| 47 | la página carga firebase-messaging-compat de la misma versión | ✅ |
+| 48 | worker: /api/aviso-prueba solo acepta POST | ✅ |
+| 49 | worker: sin el secreto configurado responde «falta la cuenta de servicio» (503) | ✅ |
+| 50 | worker: las páginas del sitio siguen igual | ✅ |
+| 51 | worker: tiene la tarea programada (scheduled) | ✅ |
+| 52 | sin sesión no aparece el botón «Avisos» | ✅ |
+| 53 | con sesión aparece «🔕 Avisos» junto a «Cerrar sesión» | ✅ |
+| 54 | al unirse aparece «🔔 ¿Te avisamos?» | ✅ |
+| 55 | la ventana explica los 3 avisos y la regla de «al menos 4» | ✅ |
+| 56 | 30 minutos viene elegido | ✅ |
+| 57 | «No guardamos tu correo ni tu número» | ✅ |
+| 58 | «Activar avisos» pide permiso al navegador | ✅ |
+| 59 | se guarda el aparato con su token, 15 min y zona horaria | ✅ |
+| 60 | no se guarda correo ni teléfono | ✅ |
+| 61 | usa la llave pública de config.js y el service worker firebase-messaging-sw.js | ✅ |
+| 62 | avisa «Avisos activados (15 min antes)» y la barra cambia a «🔔 Avisos» | ✅ |
+| 63 | la ventana se cierra | ✅ |
+| 64 | menú: «Avisos en este celular» · ACTIVADOS | ✅ |
+| 65 | menú: cambiar a 30 minutos se guarda de inmediato | ✅ |
+| 66 | aviso de prueba: lo pide al servidor (/api/aviso-prueba) con la sesión | ✅ |
+| 67 | aviso de prueba: avisa que ya se envió | ✅ |
+| 68 | con Elysium abierto, el aviso sale como mensaje en la página | ✅ |
+| 69 | al tocar el aviso con Elysium abierto, se va a la mesa (#mesa-m1) | ✅ |
+| 70 | «Desactivar» borra el aparato y su token | ✅ |
+| 71 | después de desactivar la barra dice «🔕 Avisos» | ✅ |
+| 72 | la ventana «¿Te avisamos?» sale una sola vez por aparato | ✅ |
+| 73 | desde el menú también se activan | ✅ |
+| 74 | al cerrar sesión se borran los avisos de esa cuenta en este aparato | ✅ |
+| 75 | sin errores de JavaScript (avisos en computadora) | ✅ |
+| 76 | al volver: «🔔 Avisos» (sigue activado en este aparato) | ✅ |
+| 77 | al volver: si el token cambió se actualiza | ✅ |
+| 78 | al volver: el menú recuerda 15 minutos | ✅ |
+| 79 | si no da permiso: explica cómo activarlo (candado → Notificaciones) | ✅ |
+| 80 | si no da permiso: no se guarda nada | ✅ |
+| 81 | iPhone en Safari: «Activar avisos» muestra la guía «En iPhone, primero instala Elysium» | ✅ |
+| 82 | la guía tiene los 4 pasos (Compartir, Agregar a pantalla de inicio, abrir desde el ícono, Activar avisos) | ✅ |
+| 83 | la guía dice quitar el ícono viejo y que necesita iOS 16.4 | ✅ |
+| 84 | iPhone en Safari: NO pide permiso (no funcionaría) | ✅ |
+| 85 | sin errores de JavaScript (iPhone) | ✅ |
+| 86 | iPhone desde el ícono: pide permiso y se activan como en Android | ✅ |
+| 87 | iPhone viejo (antes de iOS 16.4): sugiere usar «Calendario» | ✅ |
+| 88 | computadora con navegador sin avisos: la ventana no se ofrece | ✅ |
+| 89 | sin la llave pública en config.js la ventana no aparece | ✅ |

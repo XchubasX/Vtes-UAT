@@ -182,6 +182,7 @@ export function conexion(env, token) {
       body: JSON.stringify({ message: {
         token: tokenAparato,
         notification: { title: msj.titulo, body: msj.texto },
+        data: { link: enlace, mesa: (enlace.match(/#mesa-(.+)$/) || [])[1] || '' },
         webpush: { notification: { icon: '/iconos/icono-192.png' }, fcm_options: { link: enlace } }
       } })
     });

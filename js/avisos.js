@@ -221,8 +221,20 @@ function quitarAvisosAlSalir() {
   return db.ref(`avisos/${avisosUidActual}/${idAparato()}`).remove().catch(() => {}).then(() => { avisosActivos = false; });
 }
 
+// Al tocar un aviso con Elysium ya abierto, el service worker pide abrir la mesa
+function abrirMesaDeAviso(mesa) {
+  if (!mesa) return;
+  if (window.location.hash === '#mesa-' + mesa) { tableFromHashHandled = false; openTableFromHash(); }
+  else window.location.hash = 'mesa-' + mesa; // el aviso de hashchange (arranque.js) la abre
+}
+
 // Con Elysium abierto, el aviso llega como mensaje en la página
 function escucharAvisosEnPagina() {
+  if ('serviceWorker' in navigator && navigator.serviceWorker.addEventListener) {
+    navigator.serviceWorker.addEventListener('message', e => {
+      if (e.data && e.data.tipo === 'abrirMesa') abrirMesaDeAviso(e.data.mesa);
+    });
+  }
   if (!navegadorPermiteAvisos() || !avisosConfigurados()) return;
   try {
     firebase.messaging().onMessage(p => {
