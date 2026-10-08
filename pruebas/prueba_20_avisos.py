@@ -56,7 +56,7 @@ def correr(nav, r):
     wj = json.loads(re.sub(r'^\s*//.*$', '', w, flags=re.M))
     cfg = (REPO / 'config.js').read_text(encoding='utf-8')
     proyecto = re.search(r'projectId:\s*"([^"]+)"', cfg).group(1)
-    r.caso('wrangler: cron cada 5 minutos', wj.get('triggers', {}).get('crons') == ['*/5 * * * *'], wj.get('triggers'))
+    r.caso('wrangler: cron cada 3 minutos', wj.get('triggers', {}).get('crons') == ['*/3 * * * *'], wj.get('triggers'))
     r.caso('wrangler: el worker atiende /api/* (aviso de prueba)', '/api/*' in wj['assets'].get('run_worker_first', []))
     v = wj.get('vars', {})
     r.caso('wrangler: base de datos y llave del MISMO proyecto que config.js (' + proyecto + ')',

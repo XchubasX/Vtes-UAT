@@ -2,9 +2,9 @@
 
 **✅ TODO BIEN** — 530 de 530 casos pasaron.
 
-- Fecha: 06/10/2026 20:40 (hora de Ciudad de México)
-- Versión probada: `f53477c` + cambios aún sin guardar
-- Duración: 85 s
+- Fecha: 07/10/2026 18:29 (hora de Ciudad de México)
+- Versión probada: `ed11efe` + cambios aún sin guardar
+- Duración: 84 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -606,7 +606,7 @@
 | 36 | servidor: los aparatos que ya no existen se borran de avisos/ | ✅ |
 | 37 | servidor: Estadísticas: personas, aparatos, tipo y 15/30 | ✅ |
 | 38 | servidor: Estadísticas: los totales no llevan uid, token ni nombres | ✅ |
-| 39 | wrangler: cron cada 5 minutos | ✅ |
+| 39 | wrangler: cron cada 3 minutos | ✅ |
 | 40 | wrangler: el worker atiende /api/* (aviso de prueba) | ✅ |
 | 41 | wrangler: base de datos y llave del MISMO proyecto que config.js (vtes-uat) | ✅ |
 | 42 | wrangler: la cuenta de servicio NO está en el archivo (es secreto de Cloudflare) | ✅ |
