@@ -30,6 +30,17 @@ def correr(nav, r):
                                ('workers.dev', 'elysium.chubas.workers.dev', '/'), ('otro repositorio de GitHub', 'xchubasx.github.io', '/liga-vtes-cdmx/')]:
         r.caso(f'en {nombre} no hace nada (ni franja ni salto)', pg.evaluate('([h, r]) => mudanzaDestino(h, r, "", "")', [host, ruta]) is None)
 
+    for nombre, host, origen, ruta, ciudad, esperado in [
+        ('sitio viejo', 'xchubasx.github.io', 'https://xchubasx.github.io', '/Organizador-Vtes/', False, 'https://eternalschedule.com/'),
+        ('sitio viejo sin diagonal final', 'xchubasx.github.io', 'https://xchubasx.github.io', '/Organizador-Vtes', False, 'https://eternalschedule.com/'),
+        ('sitio viejo con ciudad', 'xchubasx.github.io', 'https://xchubasx.github.io', '/Organizador-Vtes/Zaragoza', True, 'https://eternalschedule.com/'),
+        ('pruebas viejo', 'xchubasx.github.io', 'https://xchubasx.github.io', '/Vtes-UAT/', False, 'https://uat.eternalschedule.com/'),
+        ('eternalschedule.com', 'eternalschedule.com', 'https://eternalschedule.com', '/', False, 'https://eternalschedule.com/'),
+        ('eternalschedule.com con ciudad', 'eternalschedule.com', 'https://eternalschedule.com', '/Zaragoza', True, 'https://eternalschedule.com/'),
+        ('uat.eternalschedule.com', 'uat.eternalschedule.com', 'https://uat.eternalschedule.com', '/', False, 'https://uat.eternalschedule.com/')]:
+        got = pg.evaluate('([h, o, p, c]) => siteBaseUrlFor(h, o, p, c)', [host, origen, ruta, ciudad])
+        r.caso(f'enlace de invitación desde {nombre} → {esperado}', got == esperado, got)
+
     r.caso('fecha del salto: domingo 11 oct 2026, 00:00 hora de México', pg.evaluate("MUDANZA_REDIRIGE_DESDE === Date.parse('2026-10-11T06:00:00Z')"))
     r.caso('sábado 10 oct 23:59 (México) todavía no salta', not pg.evaluate("mudanzaDebeRedirigir(Date.parse('2026-10-11T05:59:00Z'))"))
     r.caso('domingo 11 oct 00:00 (México) ya salta', pg.evaluate("mudanzaDebeRedirigir(Date.parse('2026-10-11T06:00:00Z'))"))

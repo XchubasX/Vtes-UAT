@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 530 de 530 casos pasaron.
+**✅ TODO BIEN** — 537 de 537 casos pasaron.
 
-- Fecha: 07/10/2026 18:29 (hora de Ciudad de México)
-- Versión probada: `ed11efe` + cambios aún sin guardar
-- Duración: 84 s
+- Fecha: 08/10/2026 06:47 (hora de Ciudad de México)
+- Versión probada: `cac7436` + cambios aún sin guardar
+- Duración: 83 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -28,7 +28,7 @@
 | 14 | Mesas privadas: plegadas al final de la lista | 22 | ✅ |
 | 15 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
 | 16 | Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica | 15 | ✅ |
-| 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 28 | ✅ |
+| 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 35 | ✅ |
 | 18 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
 | 19 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
 | 20 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 96 | ✅ |
@@ -514,21 +514,28 @@
 | 11 | en uat.eternalschedule.com no hace nada (ni franja ni salto) | ✅ |
 | 12 | en workers.dev no hace nada (ni franja ni salto) | ✅ |
 | 13 | en otro repositorio de GitHub no hace nada (ni franja ni salto) | ✅ |
-| 14 | fecha del salto: domingo 11 oct 2026, 00:00 hora de México | ✅ |
-| 15 | sábado 10 oct 23:59 (México) todavía no salta | ✅ |
-| 16 | domingo 11 oct 00:00 (México) ya salta | ✅ |
-| 17 | fuera de GitHub NO se pone el contador de visitas | ✅ |
-| 18 | el contador de la dirección vieja usa Cloudflare Web Analytics con su token | ✅ |
-| 19 | fuera de GitHub la franja no aparece | ✅ |
-| 20 | en GitHub aparece la franja "Elysium se mudó a eternalschedule.com" | ✅ |
-| 21 | la franja dice la fecha "domingo 11 de octubre" | ✅ |
-| 22 | la franja explica entrar con Google una vez y volver a agregar el ícono | ✅ |
-| 23 | la franja no tiene botón de cerrar | ✅ |
-| 24 | el botón lleva a la misma página en la dirección nueva | ✅ |
-| 25 | en el sitio de pruebas de GitHub la franja apunta a uat.eternalschedule.com | ✅ |
-| 26 | la franja va arriba de las pestañas | ✅ |
-| 27 | con la franja nada se sale de la pantalla (390 px) | ✅ |
-| 28 | sin errores de JavaScript (mudanza) | ✅ |
+| 14 | enlace de invitación desde sitio viejo → https://eternalschedule.com/ | ✅ |
+| 15 | enlace de invitación desde sitio viejo sin diagonal final → https://eternalschedule.com/ | ✅ |
+| 16 | enlace de invitación desde sitio viejo con ciudad → https://eternalschedule.com/ | ✅ |
+| 17 | enlace de invitación desde pruebas viejo → https://uat.eternalschedule.com/ | ✅ |
+| 18 | enlace de invitación desde eternalschedule.com → https://eternalschedule.com/ | ✅ |
+| 19 | enlace de invitación desde eternalschedule.com con ciudad → https://eternalschedule.com/ | ✅ |
+| 20 | enlace de invitación desde uat.eternalschedule.com → https://uat.eternalschedule.com/ | ✅ |
+| 21 | fecha del salto: domingo 11 oct 2026, 00:00 hora de México | ✅ |
+| 22 | sábado 10 oct 23:59 (México) todavía no salta | ✅ |
+| 23 | domingo 11 oct 00:00 (México) ya salta | ✅ |
+| 24 | fuera de GitHub NO se pone el contador de visitas | ✅ |
+| 25 | el contador de la dirección vieja usa Cloudflare Web Analytics con su token | ✅ |
+| 26 | fuera de GitHub la franja no aparece | ✅ |
+| 27 | en GitHub aparece la franja "Elysium se mudó a eternalschedule.com" | ✅ |
+| 28 | la franja dice la fecha "domingo 11 de octubre" | ✅ |
+| 29 | la franja explica entrar con Google una vez y volver a agregar el ícono | ✅ |
+| 30 | la franja no tiene botón de cerrar | ✅ |
+| 31 | el botón lleva a la misma página en la dirección nueva | ✅ |
+| 32 | en el sitio de pruebas de GitHub la franja apunta a uat.eternalschedule.com | ✅ |
+| 33 | la franja va arriba de las pestañas | ✅ |
+| 34 | con la franja nada se sale de la pantalla (390 px) | ✅ |
+| 35 | sin errores de JavaScript (mudanza) | ✅ |
 
 ### 18. Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno)
 
