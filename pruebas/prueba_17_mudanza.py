@@ -41,9 +41,11 @@ def correr(nav, r):
         got = pg.evaluate('([h, o, p, c]) => siteBaseUrlFor(h, o, p, c)', [host, origen, ruta, ciudad])
         r.caso(f'enlace de invitación desde {nombre} → {esperado}', got == esperado, got)
 
-    r.caso('fecha del salto: domingo 11 oct 2026, 00:00 hora de México', pg.evaluate("MUDANZA_REDIRIGE_DESDE === Date.parse('2026-10-11T06:00:00Z')"))
-    r.caso('sábado 10 oct 23:59 (México) todavía no salta', not pg.evaluate("mudanzaDebeRedirigir(Date.parse('2026-10-11T05:59:00Z'))"))
-    r.caso('domingo 11 oct 00:00 (México) ya salta', pg.evaluate("mudanzaDebeRedirigir(Date.parse('2026-10-11T06:00:00Z'))"))
+    r.caso('fecha del salto (adelantada): jueves 8 oct 2026, 15:00 hora de México', pg.evaluate("MUDANZA_REDIRIGE_DESDE === Date.parse('2026-10-08T21:00:00Z')"))
+    r.caso('jueves 8 oct 14:59 (México) todavía no salta', not pg.evaluate("mudanzaDebeRedirigir(Date.parse('2026-10-08T20:59:00Z'))"))
+    r.caso('jueves 8 oct 15:00 (México) ya salta', pg.evaluate("mudanzaDebeRedirigir(Date.parse('2026-10-08T21:00:00Z'))"))
+    r.caso('hoy (ahora mismo) ya salta', pg.evaluate("mudanzaDebeRedirigir(Date.now())"))
+    r.caso('las 3 páginas cargan la versión nueva de mudanza.js', all('mudanza.js?v=20261008a' in open(f).read() for f in ['index.html','sorteo.html','estadisticas.html']))
 
     r.caso('fuera de GitHub NO se pone el contador de visitas', pg.evaluate("!document.querySelector('script[data-cf-beacon]')"))
     n = pg.evaluate("(() => { const s = mudanzaPonerContador(); return [s.src, JSON.parse(s.getAttribute('data-cf-beacon')).token]; })()")
