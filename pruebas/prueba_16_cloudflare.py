@@ -28,6 +28,13 @@ def correr(nav, r):
     for nombre, host, ruta, esperado in casos:
         got = pg.evaluate('([h, p]) => destino404(h, p)', [host, ruta])
         r.caso(f'404: {nombre} → {esperado}', got == esperado, got)
+    for nombre, host, ruta, q, esperado in [
+        ('ciudad con la marca de la mudanza', 'eternalschedule.com', '/Zaragoza', '?desde=github', '/?city=Zaragoza&desde=github'),
+        ('sin ciudad con la marca', 'eternalschedule.com', '/no-existe/', '?desde=github', '/?city=no-existe&desde=github'),
+        ('otros datos en la dirección no se pasan', 'eternalschedule.com', '/Zaragoza', '?x=1', '/?city=Zaragoza'),
+        ('raíz con la marca', 'eternalschedule.com', '/', '?desde=github', '/?desde=github')]:
+        got = pg.evaluate('([h, p, q]) => destino404(h, p, q)', [host, ruta, q])
+        r.caso(f'404: {nombre} → {esperado}', got == esperado, got)
     ctx.close()
 
     # Lo que publica Cloudflare: correr el mismo script en una copia del repositorio

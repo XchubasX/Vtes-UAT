@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 539 de 539 casos pasaron.
+**✅ TODO BIEN** — 588 de 588 casos pasaron.
 
-- Fecha: 08/10/2026 15:28 (hora de Ciudad de México)
-- Versión probada: `de75e71` + cambios aún sin guardar
-- Duración: 83 s
+- Fecha: 08/10/2026 15:59 (hora de Ciudad de México)
+- Versión probada: `11bbda5` + cambios aún sin guardar
+- Duración: 85 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -27,8 +27,8 @@
 | 13 | Aviso temporal del ícono nuevo | 8 | ✅ |
 | 14 | Mesas privadas: plegadas al final de la lista | 22 | ✅ |
 | 15 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
-| 16 | Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica | 15 | ✅ |
-| 17 | Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com | 37 | ✅ |
+| 16 | Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica | 19 | ✅ |
+| 17 | Mudanza: salto automático a eternalschedule.com y aviso «¿Despertando del Torpor?» | 82 | ✅ |
 | 18 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
 | 19 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
 | 20 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 96 | ✅ |
@@ -491,13 +491,17 @@
 | 8 | 404: Dominio propio con ciudad → /?city=Zaragoza | ✅ |
 | 9 | 404: Dominio propio con www y acento → /?city=M%C3%A1laga | ✅ |
 | 10 | 404: Dominio propio, raíz → / | ✅ |
-| 11 | el script de publicación de Cloudflare termina sin errores | ✅ |
-| 12 | se publican las páginas y archivos del sitio | ✅ |
-| 13 | NO se publica la carpeta de pruebas ni archivos internos | ✅ |
-| 14 | wrangler.jsonc: publica la carpeta "publicado" y usa 404.html para lo que no existe | ✅ |
-| 15 | se publican todos los archivos de js/ | ✅ |
+| 11 | 404: ciudad con la marca de la mudanza → /?city=Zaragoza&desde=github | ✅ |
+| 12 | 404: sin ciudad con la marca → /?city=no-existe&desde=github | ✅ |
+| 13 | 404: otros datos en la dirección no se pasan → /?city=Zaragoza | ✅ |
+| 14 | 404: raíz con la marca → /?desde=github | ✅ |
+| 15 | el script de publicación de Cloudflare termina sin errores | ✅ |
+| 16 | se publican las páginas y archivos del sitio | ✅ |
+| 17 | NO se publica la carpeta de pruebas ni archivos internos | ✅ |
+| 18 | wrangler.jsonc: publica la carpeta "publicado" y usa 404.html para lo que no existe | ✅ |
+| 19 | se publican todos los archivos de js/ | ✅ |
 
-### 17. Mudanza: franja en GitHub hasta el 10 oct y salto automático a eternalschedule.com
+### 17. Mudanza: salto automático a eternalschedule.com y aviso «¿Despertando del Torpor?»
 
 | # | Caso | Resultado |
 |---|---|---|
@@ -538,6 +542,51 @@
 | 35 | la franja va arriba de las pestañas | ✅ |
 | 36 | con la franja nada se sale de la pantalla (390 px) | ✅ |
 | 37 | sin errores de JavaScript (mudanza) | ✅ |
+| 38 | el salto agrega la marca: https://eternalschedule.com/ → https://eternalschedule.com/?desde=github | ✅ |
+| 39 | el salto agrega la marca: https://eternalschedule.com/#mesa-abc → https://eternalschedule.com/?desde=github#mesa-abc | ✅ |
+| 40 | el salto agrega la marca: https://eternalschedule.com/?city=Zaragoza → https://eternalschedule.com/?city=Zaragoza&desde=github | ✅ |
+| 41 | el salto agrega la marca: https://eternalschedule.com/sorteo.html?event=p1 → https://eternalschedule.com/sorteo.html?event=p1&desde=github | ✅ |
+| 42 | las invitaciones NO llevan la marca | ✅ |
+| 43 | sin la marca el aviso Torpor no aparece | ✅ |
+| 44 | al llegar con la marca aparece el aviso Torpor | ✅ |
+| 45 | título «¿Despertando del Torpor?» | ✅ |
+| 46 | dice que Elysium cambió de sede a eternalschedule.com | ✅ |
+| 47 | pide actualizar favoritos y volver a agregar a la pantalla de inicio | ✅ |
+| 48 | tiene los botones «Cómo agregarla» y «Entendido» | ✅ |
+| 49 | la marca se borra de la barra de direcciones | ✅ |
+| 50 | el enlace a la mesa (#mesa-v1) se conserva | ✅ |
+| 51 | el aviso va arriba de las pestañas | ✅ |
+| 52 | con el aviso nada se sale de la pantalla (390 px) | ✅ |
+| 53 | si recarga sin cerrarlo, el aviso sigue (aún no lo ha visto) | ✅ |
+| 54 | «Entendido» lo cierra | ✅ |
+| 55 | ya visto: aunque vuelva a llegar desde la dirección vieja, no sale otra vez | ✅ |
+| 56 | sin errores de JavaScript (aviso Torpor) | ✅ |
+| 57 | con ciudad (?city=Zaragoza) también aparece el aviso | ✅ |
+| 58 | con ciudad, el filtro de ciudad sigue funcionando (pestaña Presencial) | ✅ |
+| 59 | con ciudad, la dirección queda limpia (/Zaragoza, sin la marca) | ✅ |
+| 60 | sin errores de JavaScript (aviso Torpor con ciudad) | ✅ |
+| 61 | llegando al sorteo: la marca se borra de la dirección | ✅ |
+| 62 | llegando al sorteo: el aviso queda pendiente para la página principal | ✅ |
+| 63 | al pasar después a la página principal, aparece el aviso | ✅ |
+| 64 | sin errores de JavaScript (marca en sorteo) | ✅ |
+| 65 | iPhone: «Cómo agregarla» abre la guía | ✅ |
+| 66 | iPhone: muestra los pasos de iPhone = True y de Android = False | ✅ |
+| 67 | iPhone: la guía incluye «Borra el ícono viejo» y entrar con Google | ✅ |
+| 68 | iPhone: al abrir la guía el aviso se cierra para siempre | ✅ |
+| 69 | iPhone: «Entendido» cierra la guía | ✅ |
+| 70 | sin errores de JavaScript (guía en iPhone) | ✅ |
+| 71 | Android: «Cómo agregarla» abre la guía | ✅ |
+| 72 | Android: muestra los pasos de iPhone = False y de Android = True | ✅ |
+| 73 | Android: la guía incluye «Borra el ícono viejo» y entrar con Google | ✅ |
+| 74 | Android: al abrir la guía el aviso se cierra para siempre | ✅ |
+| 75 | Android: «Entendido» cierra la guía | ✅ |
+| 76 | sin errores de JavaScript (guía en Android) | ✅ |
+| 77 | computadora: «Cómo agregarla» abre la guía | ✅ |
+| 78 | computadora: muestra los pasos de iPhone = True y de Android = True | ✅ |
+| 79 | computadora: la guía incluye «Borra el ícono viejo» y entrar con Google | ✅ |
+| 80 | computadora: al abrir la guía el aviso se cierra para siempre | ✅ |
+| 81 | computadora: «Entendido» cierra la guía | ✅ |
+| 82 | sin errores de JavaScript (guía en computadora) | ✅ |
 
 ### 18. Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno)
 
