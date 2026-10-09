@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 588 de 588 casos pasaron.
+**✅ TODO BIEN** — 580 de 580 casos pasaron.
 
-- Fecha: 08/10/2026 15:59 (hora de Ciudad de México)
-- Versión probada: `11bbda5` + cambios aún sin guardar
-- Duración: 85 s
+- Fecha: 09/10/2026 08:22 (hora de Ciudad de México)
+- Versión probada: `3a7d1db` + cambios aún sin guardar
+- Duración: 86 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -24,14 +24,13 @@
 | 10 | Revisión del código: sintaxis, versiones e integridad | 28 | ✅ |
 | 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 36 | ✅ |
 | 12 | Ícono del sitio e instalación en el celular | 11 | ✅ |
-| 13 | Aviso temporal del ícono nuevo | 8 | ✅ |
-| 14 | Mesas privadas: plegadas al final de la lista | 22 | ✅ |
-| 15 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
-| 16 | Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica | 19 | ✅ |
-| 17 | Mudanza: salto automático a eternalschedule.com y aviso «¿Despertando del Torpor?» | 82 | ✅ |
-| 18 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
-| 19 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
-| 20 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 96 | ✅ |
+| 13 | Mesas privadas: plegadas al final de la lista | 22 | ✅ |
+| 14 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
+| 15 | Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica | 19 | ✅ |
+| 16 | Mudanza: salto automático a eternalschedule.com y aviso «¿Despertando del Torpor?» | 82 | ✅ |
+| 17 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
+| 18 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
+| 19 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 96 | ✅ |
 
 ## Todos los casos
 
@@ -366,20 +365,7 @@
 | 10 | estadisticas.html: enlaza ícono, ícono de iPhone y manifest en el <head> | ✅ |
 | 11 | sitio servido: todos los archivos del ícono responden (200) | ✅ |
 
-### 13. Aviso temporal del ícono nuevo
-
-| # | Caso | Resultado |
-|---|---|---|
-| 1 | celular: el aviso se ve | ✅ |
-| 2 | el texto menciona la "G" (Android) y la "V" (iPhone) | ✅ |
-| 3 | "Entendido" lo cierra | ✅ |
-| 4 | no vuelve a salir tras recargar | ✅ |
-| 5 | a partir del 9 oct (hora de México) ya no se muestra | ✅ |
-| 6 | el 8 oct a las 23:59 (México) todavía se muestra | ✅ |
-| 7 | sin errores de JavaScript (aviso del ícono) | ✅ |
-| 8 | computadora: el aviso no se muestra | ✅ |
-
-### 14. Mesas privadas: plegadas al final de la lista
+### 13. Mesas privadas: plegadas al final de la lista
 
 | # | Caso | Resultado |
 |---|---|---|
@@ -406,7 +392,7 @@
 | 21 | sin errores de JavaScript (mesas privadas) | ✅ |
 | 22 | enlace directo (#mesa-…) a una privada la abre desplegada | ✅ |
 
-### 15. Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps
+### 14. Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps
 
 | # | Caso | Resultado |
 |---|---|---|
@@ -477,7 +463,7 @@
 | 65 | archivo de calendario: conserva acentos y emojis de las notas | ✅ |
 | 66 | el calendario no incluye la contraseña de la partida | ✅ |
 
-### 16. Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica
+### 15. Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica
 
 | # | Caso | Resultado |
 |---|---|---|
@@ -501,7 +487,7 @@
 | 18 | wrangler.jsonc: publica la carpeta "publicado" y usa 404.html para lo que no existe | ✅ |
 | 19 | se publican todos los archivos de js/ | ✅ |
 
-### 17. Mudanza: salto automático a eternalschedule.com y aviso «¿Despertando del Torpor?»
+### 16. Mudanza: salto automático a eternalschedule.com y aviso «¿Despertando del Torpor?»
 
 | # | Caso | Resultado |
 |---|---|---|
@@ -588,7 +574,7 @@
 | 81 | computadora: «Entendido» cierra la guía | ✅ |
 | 82 | sin errores de JavaScript (guía en computadora) | ✅ |
 
-### 18. Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno)
+### 17. Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno)
 
 | # | Caso | Resultado |
 |---|---|---|
@@ -600,7 +586,7 @@
 | 6 | con la tarjeta nada se sale de la pantalla (390 px) | ✅ |
 | 7 | sin errores de JavaScript (tarjeta de ligas) | ✅ |
 
-### 19. Modo app desde el ícono e inicio de sesión con Google por nuestro dominio
+### 18. Modo app desde el ícono e inicio de sesión con Google por nuestro dominio
 
 | # | Caso | Resultado |
 |---|---|---|
@@ -622,7 +608,7 @@
 | 16 | al regresar de Google avisa «Sesión iniciada» | ✅ |
 | 17 | sin errores de JavaScript (modo app) | ✅ |
 
-### 20. Avisos de mesa en el celular (completa, suplente que entra y aviso previo)
+### 19. Avisos de mesa en el celular (completa, suplente que entra y aviso previo)
 
 | # | Caso | Resultado |
 |---|---|---|
