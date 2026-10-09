@@ -80,7 +80,7 @@ def correr(nav, r):
         page.fill('#joinNick', nick); page.click('#joinSubmitBtn'); page.wait_for_timeout(300)
     page.evaluate("window.__setUser({uid:'uidE', displayName:'Eli'})"); page.wait_for_timeout(200)
     card = page.inner_text(f'#card-custom-{nid}')
-    r.caso('mesa llena (5/5) dice "Mesa llena" y ofrece suplente', 'Mesa llena (5/5)' in card and 'Apuntarme como suplente' in card)
+    r.caso('mesa llena (5 de 5) dice "Mesa llena" y ofrece suplente', 'Mesa llena' in card and '5 de 5' in card and 'Apuntarme como suplente' in card)
     page.click(f'#card-custom-{nid} >> text=Apuntarme como suplente'); page.wait_for_timeout(100)
     page.fill('#joinNick', 'Eli'); page.click('#joinSubmitBtn'); page.wait_for_timeout(300)
     card = page.inner_text(f'#card-custom-{nid}')

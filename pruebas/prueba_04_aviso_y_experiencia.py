@@ -39,8 +39,14 @@ def correr(nav, r):
         'stats': {}}
     ctx = nuevo_contexto(nav, viewport={'width': 390, 'height': 844}); pg = ctx.new_page(); err = r.errores_de_pagina(pg, 'sin errores de JavaScript (tarjetas)')
     pg.goto(url_archivo(armar_pagina('index.html', seed, 'experiencia.html'))); pg.wait_for_timeout(400)
-    r.caso('con 4 jugadores dice "Lista para jugar (4/5)"', 'Lista para jugar (4/5)' in pg.inner_text('#card-custom-m4'))
-    r.caso('con 5 jugadores dice "Mesa llena (5/5)"', 'Mesa llena (5/5)' in pg.inner_text('#card-custom-m5'))
+    t4 = pg.inner_text('#card-custom-m4'); t5 = pg.inner_text('#card-custom-m5')
+    r.caso('con 4 jugadores dice "Lista para jugar" y "4 de 5"', 'Lista para jugar' in t4 and '4 de 5' in t4)
+    r.caso('con 5 jugadores dice "Mesa llena" y "5 de 5"', 'Mesa llena' in t5 and '5 de 5' in t5)
+    r.caso('mesa del ícono con 4: 4 lugares iluminados, 1 libre y centro verde',
+           pg.eval_on_selector('#card-custom-m4 .cupo-mesa svg', "s => [s.querySelectorAll('.lugar-ocupado').length, s.querySelectorAll('.lugar-libre').length, s.querySelector('circle').getAttribute('stroke')]") == [4, 1, '#22C55E'])
+    r.caso('mesa del ícono con 5: los 5 lugares iluminados',
+           pg.eval_on_selector('#card-custom-m5 .cupo-mesa svg', "s => [s.querySelectorAll('.lugar-ocupado').length, s.querySelectorAll('.lugar-libre').length]") == [5, 0])
+    r.caso('el dibujo se oculta a lectores de pantalla (el texto ya lo dice)', pg.get_attribute('#card-custom-m4 .cupo-mesa svg', 'aria-hidden') == 'true')
     r.caso('ya no aparece "Mesa Completa"', 'Completa' not in pg.inner_text('#customTablesContainer'))
     pequenos = []
     for rel in ['index.html', 'sorteo.html'] + [f'js/{p.name}' for p in sorted((REPO / 'js').glob('*.js'))]:

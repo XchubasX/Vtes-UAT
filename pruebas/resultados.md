@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 580 de 580 casos pasaron.
+**✅ TODO BIEN** — 584 de 584 casos pasaron.
 
-- Fecha: 09/10/2026 08:22 (hora de Ciudad de México)
-- Versión probada: `3a7d1db` + cambios aún sin guardar
-- Duración: 86 s
+- Fecha: 09/10/2026 09:52 (hora de Ciudad de México)
+- Versión probada: `fbb5d59` + cambios aún sin guardar
+- Duración: 85 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -15,14 +15,14 @@
 | 1 | Página principal: sesión, mesas, suplentes y veto | 44 | ✅ |
 | 2 | Limpieza de vencidas, eventos semanales, salir, editar horario y cerrar | 16 | ✅ |
 | 3 | Fichas de estadísticas por cuenta y guardado separado | 12 | ✅ |
-| 4 | Aviso de bienvenida y experiencia de uso | 23 | ✅ |
+| 4 | Aviso de bienvenida y experiencia de uso | 26 | ✅ |
 | 5 | Las 3 páginas: config.js, comun.js, 💬, "Acerca de" y aviso legal | 49 | ✅ |
 | 6 | Arranque: enlace por ciudad y enlace directo a una mesa | 9 | ✅ |
 | 7 | Sitio servido como en GitHub, con sus archivos separados | 8 | ✅ |
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
 | 9 | Página de estadísticas: acceso y conteo de personas | 26 | ✅ |
 | 10 | Revisión del código: sintaxis, versiones e integridad | 28 | ✅ |
-| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 36 | ✅ |
+| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 37 | ✅ |
 | 12 | Ícono del sitio e instalación en el celular | 11 | ✅ |
 | 13 | Mesas privadas: plegadas al final de la lista | 22 | ✅ |
 | 14 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
@@ -61,7 +61,7 @@
 | 21 | un nick repetido (sin importar mayúsculas) se rechaza | ✅ |
 | 22 | Beto queda anotado con su cuenta | ✅ |
 | 23 | Beto no ve × para quitar a otros | ✅ |
-| 24 | mesa llena (5/5) dice "Mesa llena" y ofrece suplente | ✅ |
+| 24 | mesa llena (5 de 5) dice "Mesa llena" y ofrece suplente | ✅ |
 | 25 | Eli aparece como suplente 1 con su botón de salir | ✅ |
 | 26 | la ficha de estadísticas registra al suplente | ✅ |
 | 27 | la organizadora ve × en los demás jugadores | ✅ |
@@ -132,22 +132,25 @@
 | 5 | el botón del aviso abre el inicio de sesión | ✅ |
 | 6 | con sesión desaparecen el aviso y el botón | ✅ |
 | 7 | sin errores de JavaScript (aviso) | ✅ |
-| 8 | con 4 jugadores dice "Lista para jugar (4/5)" | ✅ |
-| 9 | con 5 jugadores dice "Mesa llena (5/5)" | ✅ |
-| 10 | ya no aparece "Mesa Completa" | ✅ |
-| 11 | no quedan textos de 10–11 px | ✅ |
-| 12 | botones × con descripción para lectores de pantalla | ✅ |
-| 13 | zona táctil ampliada en × | ✅ |
-| 14 | quitar suplente con descripción | ✅ |
-| 15 | ✏️ más grande y con descripción | ✅ |
-| 16 | 💬 con descripción | ✅ |
-| 17 | sin errores de JavaScript (tarjetas) | ✅ |
-| 18 | mientras llegan los datos dice "Cargando mesas…" | ✅ |
-| 19 | al cambiar de pestaña sigue diciendo "Cargando" (no "no hay mesas") | ✅ |
-| 20 | al llegar los datos aparecen las mesas | ✅ |
-| 21 | sin errores de JavaScript (carga lenta) | ✅ |
-| 22 | si Firebase falla muestra "No se pudo conectar" y botón para recargar | ✅ |
-| 23 | sin errores de JavaScript (sin conexión) | ✅ |
+| 8 | con 4 jugadores dice "Lista para jugar" y "4 de 5" | ✅ |
+| 9 | con 5 jugadores dice "Mesa llena" y "5 de 5" | ✅ |
+| 10 | mesa del ícono con 4: 4 lugares iluminados, 1 libre y centro verde | ✅ |
+| 11 | mesa del ícono con 5: los 5 lugares iluminados | ✅ |
+| 12 | el dibujo se oculta a lectores de pantalla (el texto ya lo dice) | ✅ |
+| 13 | ya no aparece "Mesa Completa" | ✅ |
+| 14 | no quedan textos de 10–11 px | ✅ |
+| 15 | botones × con descripción para lectores de pantalla | ✅ |
+| 16 | zona táctil ampliada en × | ✅ |
+| 17 | quitar suplente con descripción | ✅ |
+| 18 | ✏️ más grande y con descripción | ✅ |
+| 19 | 💬 con descripción | ✅ |
+| 20 | sin errores de JavaScript (tarjetas) | ✅ |
+| 21 | mientras llegan los datos dice "Cargando mesas…" | ✅ |
+| 22 | al cambiar de pestaña sigue diciendo "Cargando" (no "no hay mesas") | ✅ |
+| 23 | al llegar los datos aparecen las mesas | ✅ |
+| 24 | sin errores de JavaScript (carga lenta) | ✅ |
+| 25 | si Firebase falla muestra "No se pudo conectar" y botón para recargar | ✅ |
+| 26 | sin errores de JavaScript (sin conexión) | ✅ |
 
 ### 5. Las 3 páginas: config.js, comun.js, 💬, "Acerca de" y aviso legal
 
@@ -314,40 +317,41 @@
 |---|---|---|
 | 1 | la tarjeta empieza con la fecha, luego la hora y después el nombre | ✅ |
 | 2 | la fecha lleva el día completo ("martes 30 sep") | ✅ |
-| 3 | el cupo va junto a la fecha: "Faltan 2 · 3/5" | ✅ |
-| 4 | se ven 2 lugares "libre" | ✅ |
-| 5 | virtual: dice "hora de Ciudad de México" (la zona de quien mira) | ✅ |
-| 6 | zona sin nombre en la lista: usa la última parte ("Europe/Oslo" → "Oslo") | ✅ |
-| 7 | plataforma y formato en una sola línea: "LackeyCCG · V5" | ✅ |
-| 8 | sin sesión (espectador) se ve el Discord | ✅ |
-| 9 | sin sesión se ve el renglón de contraseña, oculta con puntitos | ✅ |
-| 10 | "Ver" muestra la contraseña y el botón cambia a "Ocultar" | ✅ |
-| 11 | "Ocultar" la vuelve a esconder | ✅ |
-| 12 | sin sesión no hay botones de editar Discord ni contraseña | ✅ |
-| 13 | los botones ya no llevan emojis | ✅ |
-| 14 | botón principal "¡Unirme a esta Mesa!" y secundarios Invitar · Calendario; ya no hay "Compartir" | ✅ |
-| 15 | el menú de Invitar empieza cerrado | ✅ |
-| 16 | al tocar Invitar se abre con "Mensaje por WhatsApp" y "Copiar enlace" | ✅ |
-| 17 | el botón avisa a lectores de pantalla que el menú está abierto | ✅ |
-| 18 | tocar fuera cierra el menú | ✅ |
-| 19 | Escape cierra el menú | ✅ |
-| 20 | "Mensaje por WhatsApp" abre WhatsApp con la invitación y cierra el menú | ✅ |
-| 21 | en computadora abre WhatsApp Web directo (sin la página que daña los emojis) | ✅ |
-| 22 | los emojis y saltos de línea van codificados correctamente | ✅ |
-| 23 | las fechas de México, España y Chile usan el mismo formato ("jue, 8 oct") | ✅ |
-| 24 | en celular usa api.whatsapp.com (abre la app) | ✅ |
-| 25 | "Copiar enlace" copia el enlace directo (aunque el celular tenga menú de compartir) | ✅ |
-| 26 | al copiar avisa "Enlace copiado" | ✅ |
-| 27 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
-| 28 | presencial: dice "hora de Zaragoza" | ✅ |
-| 29 | presencial: "Presencial · cada …" en una línea | ✅ |
-| 30 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
-| 31 | presencial: sin lugares "libre" ni Discord | ✅ |
-| 32 | presencial: cupo "1 confirmado" | ✅ |
-| 33 | presencial: "Orden de Asientos" visible para todos | ✅ |
-| 34 | organizador: "Organizas tú" en la línea de datos | ✅ |
-| 35 | organizador: puede editar Discord y contraseña | ✅ |
-| 36 | sin errores de JavaScript (tarjetas nuevas) | ✅ |
+| 3 | el cupo va junto a la fecha: "Faltan 2" y "3 de 5" | ✅ |
+| 4 | mesa del ícono con 3: 3 lugares iluminados, 2 libres y centro vino | ✅ |
+| 5 | se ven 2 lugares "libre" | ✅ |
+| 6 | virtual: dice "hora de Ciudad de México" (la zona de quien mira) | ✅ |
+| 7 | zona sin nombre en la lista: usa la última parte ("Europe/Oslo" → "Oslo") | ✅ |
+| 8 | plataforma y formato en una sola línea: "LackeyCCG · V5" | ✅ |
+| 9 | sin sesión (espectador) se ve el Discord | ✅ |
+| 10 | sin sesión se ve el renglón de contraseña, oculta con puntitos | ✅ |
+| 11 | "Ver" muestra la contraseña y el botón cambia a "Ocultar" | ✅ |
+| 12 | "Ocultar" la vuelve a esconder | ✅ |
+| 13 | sin sesión no hay botones de editar Discord ni contraseña | ✅ |
+| 14 | los botones ya no llevan emojis | ✅ |
+| 15 | botón principal "¡Unirme a esta Mesa!" y secundarios Invitar · Calendario; ya no hay "Compartir" | ✅ |
+| 16 | el menú de Invitar empieza cerrado | ✅ |
+| 17 | al tocar Invitar se abre con "Mensaje por WhatsApp" y "Copiar enlace" | ✅ |
+| 18 | el botón avisa a lectores de pantalla que el menú está abierto | ✅ |
+| 19 | tocar fuera cierra el menú | ✅ |
+| 20 | Escape cierra el menú | ✅ |
+| 21 | "Mensaje por WhatsApp" abre WhatsApp con la invitación y cierra el menú | ✅ |
+| 22 | en computadora abre WhatsApp Web directo (sin la página que daña los emojis) | ✅ |
+| 23 | los emojis y saltos de línea van codificados correctamente | ✅ |
+| 24 | las fechas de México, España y Chile usan el mismo formato ("jue, 8 oct") | ✅ |
+| 25 | en celular usa api.whatsapp.com (abre la app) | ✅ |
+| 26 | "Copiar enlace" copia el enlace directo (aunque el celular tenga menú de compartir) | ✅ |
+| 27 | al copiar avisa "Enlace copiado" | ✅ |
+| 28 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
+| 29 | presencial: dice "hora de Zaragoza" | ✅ |
+| 30 | presencial: "Presencial · cada …" en una línea | ✅ |
+| 31 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
+| 32 | presencial: sin lugares "libre" ni Discord | ✅ |
+| 33 | presencial: cupo "1 confirmado" | ✅ |
+| 34 | presencial: "Orden de Asientos" visible para todos | ✅ |
+| 35 | organizador: "Organizas tú" en la línea de datos | ✅ |
+| 36 | organizador: puede editar Discord y contraseña | ✅ |
+| 37 | sin errores de JavaScript (tarjetas nuevas) | ✅ |
 
 ### 12. Ícono del sitio e instalación en el celular
 

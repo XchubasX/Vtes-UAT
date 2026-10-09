@@ -25,7 +25,9 @@ def correr(nav, r):
     r.caso('la tarjeta empieza con la fecha, luego la hora y después el nombre',
            t.find(fecha) == 0 and t.find(fecha) < t.find(hora) < t.find('Martes de V5'), t[:80])
     r.caso('la fecha lleva el día completo ("martes 30 sep")', len(fecha.split()) == 3, fecha)
-    r.caso('el cupo va junto a la fecha: "Faltan 2 · 3/5"', 'Faltan 2 · 3/5' in t)
+    r.caso('el cupo va junto a la fecha: "Faltan 2" y "3 de 5"', 'Faltan 2' in t and '3 de 5' in t)
+    r.caso('mesa del ícono con 3: 3 lugares iluminados, 2 libres y centro vino',
+           pg.eval_on_selector('#card-custom-v1 .cupo-mesa svg', "s => [s.querySelectorAll('.lugar-ocupado').length, s.querySelectorAll('.lugar-libre').length, s.querySelector('circle').getAttribute('stroke')]") == [3, 2, '#8C2F45'])
     r.caso('se ven 2 lugares "libre"', t.count('libre') == 2, t.count('libre'))
     r.caso('virtual: dice "hora de Ciudad de México" (la zona de quien mira)', 'hora de Ciudad de México' in t and 'tu hora' not in t)
     r.caso('zona sin nombre en la lista: usa la última parte ("Europe/Oslo" → "Oslo")', pg.evaluate("nombreZona('Europe/Oslo')") == 'Oslo')
