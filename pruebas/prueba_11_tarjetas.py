@@ -10,6 +10,8 @@ def correr(nav, r):
         'v1': {'type': 'custom_table', 'name': 'Martes de V5', 'utcTime': iso(fut), 'utcMs': fut, 'modality': 'virtual',
                'platform': 'Lackey', 'format': 'v5', 'discord': 'vtes.gg/mx', 'gamePassword': 'sangre123', 'ownerUid': 'u1',
                'signups': {f'u{i}': {'uid': f'u{i}', 'nick': f'J{i}', 'at': i} for i in range(1, 4)}},
+        'v2': {'type': 'custom_table', 'name': 'Sin organizador', 'utcTime': iso(fut + 3600000), 'utcMs': fut + 3600000, 'modality': 'virtual',
+               'platform': 'Lackey', 'ownerUid': 'u9', 'signups': {'u2': {'uid': 'u2', 'nick': 'J2', 'at': 1}}},
         'p1': {'type': 'custom_table', 'name': 'Jueves en El Dragón', 'utcTime': iso(fut), 'utcMs': fut, 'modality': 'presencial',
                'originTz': 'Europe/Madrid', 'recurrence': 'weekly', 'venue': 'Tienda El Dragón', 'city': 'Zaragoza', 'country': 'España',
                'mapsLink': 'https://maps.google.com/?q=dragon', 'ownerUid': 'u1',
@@ -32,6 +34,8 @@ def correr(nav, r):
     r.caso('virtual: dice "hora de Ciudad de México" (la zona de quien mira)', 'hora de Ciudad de México' in t and 'tu hora' not in t)
     r.caso('zona sin nombre en la lista: usa la última parte ("Europe/Oslo" → "Oslo")', pg.evaluate("nombreZona('Europe/Oslo')") == 'Oslo')
     r.caso('plataforma y formato en una sola línea: "LackeyCCG · V5"', 'LackeyCCG · V5' in t)
+    r.caso('mesa virtual: dice quién la organiza ("Organiza J1")', 'LackeyCCG · V5 · Organiza J1' in t, t[:200])
+    r.caso('mesa virtual sin el organizador anotado: no muestra "Organiza"', 'Organiza' not in pg.inner_text('#card-custom-v2'))
     r.caso('sin sesión (espectador) se ve el Discord', 'vtes.gg/mx' in t)
     r.caso('sin sesión se ve el renglón de contraseña, oculta con puntitos', 'Contraseña' in t and '••••••' in t and 'sangre123' not in t)
     pg.click('#gamepwd-v1-boton'); pg.wait_for_timeout(100)

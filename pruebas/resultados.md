@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 584 de 584 casos pasaron.
+**✅ TODO BIEN** — 586 de 586 casos pasaron.
 
-- Fecha: 09/10/2026 09:52 (hora de Ciudad de México)
-- Versión probada: `fbb5d59` + cambios aún sin guardar
-- Duración: 85 s
+- Fecha: 25/10/2026 14:10 (hora de Ciudad de México)
+- Versión probada: `eb47197` + cambios aún sin guardar
+- Duración: 83 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -22,7 +22,7 @@
 | 8 | Orden de Asientos: confirmados, una mesa y reparto en mesas | 9 | ✅ |
 | 9 | Página de estadísticas: acceso y conteo de personas | 26 | ✅ |
 | 10 | Revisión del código: sintaxis, versiones e integridad | 28 | ✅ |
-| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 37 | ✅ |
+| 11 | Tarjetas: fecha y hora al frente, datos de la partida siempre visibles | 39 | ✅ |
 | 12 | Ícono del sitio e instalación en el celular | 11 | ✅ |
 | 13 | Mesas privadas: plegadas al final de la lista | 22 | ✅ |
 | 14 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
@@ -323,35 +323,37 @@
 | 6 | virtual: dice "hora de Ciudad de México" (la zona de quien mira) | ✅ |
 | 7 | zona sin nombre en la lista: usa la última parte ("Europe/Oslo" → "Oslo") | ✅ |
 | 8 | plataforma y formato en una sola línea: "LackeyCCG · V5" | ✅ |
-| 9 | sin sesión (espectador) se ve el Discord | ✅ |
-| 10 | sin sesión se ve el renglón de contraseña, oculta con puntitos | ✅ |
-| 11 | "Ver" muestra la contraseña y el botón cambia a "Ocultar" | ✅ |
-| 12 | "Ocultar" la vuelve a esconder | ✅ |
-| 13 | sin sesión no hay botones de editar Discord ni contraseña | ✅ |
-| 14 | los botones ya no llevan emojis | ✅ |
-| 15 | botón principal "¡Unirme a esta Mesa!" y secundarios Invitar · Calendario; ya no hay "Compartir" | ✅ |
-| 16 | el menú de Invitar empieza cerrado | ✅ |
-| 17 | al tocar Invitar se abre con "Mensaje por WhatsApp" y "Copiar enlace" | ✅ |
-| 18 | el botón avisa a lectores de pantalla que el menú está abierto | ✅ |
-| 19 | tocar fuera cierra el menú | ✅ |
-| 20 | Escape cierra el menú | ✅ |
-| 21 | "Mensaje por WhatsApp" abre WhatsApp con la invitación y cierra el menú | ✅ |
-| 22 | en computadora abre WhatsApp Web directo (sin la página que daña los emojis) | ✅ |
-| 23 | los emojis y saltos de línea van codificados correctamente | ✅ |
-| 24 | las fechas de México, España y Chile usan el mismo formato ("jue, 8 oct") | ✅ |
-| 25 | en celular usa api.whatsapp.com (abre la app) | ✅ |
-| 26 | "Copiar enlace" copia el enlace directo (aunque el celular tenga menú de compartir) | ✅ |
-| 27 | al copiar avisa "Enlace copiado" | ✅ |
-| 28 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
-| 29 | presencial: dice "hora de Zaragoza" | ✅ |
-| 30 | presencial: "Presencial · cada …" en una línea | ✅ |
-| 31 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
-| 32 | presencial: sin lugares "libre" ni Discord | ✅ |
-| 33 | presencial: cupo "1 confirmado" | ✅ |
-| 34 | presencial: "Orden de Asientos" visible para todos | ✅ |
-| 35 | organizador: "Organizas tú" en la línea de datos | ✅ |
-| 36 | organizador: puede editar Discord y contraseña | ✅ |
-| 37 | sin errores de JavaScript (tarjetas nuevas) | ✅ |
+| 9 | mesa virtual: dice quién la organiza ("Organiza J1") | ✅ |
+| 10 | mesa virtual sin el organizador anotado: no muestra "Organiza" | ✅ |
+| 11 | sin sesión (espectador) se ve el Discord | ✅ |
+| 12 | sin sesión se ve el renglón de contraseña, oculta con puntitos | ✅ |
+| 13 | "Ver" muestra la contraseña y el botón cambia a "Ocultar" | ✅ |
+| 14 | "Ocultar" la vuelve a esconder | ✅ |
+| 15 | sin sesión no hay botones de editar Discord ni contraseña | ✅ |
+| 16 | los botones ya no llevan emojis | ✅ |
+| 17 | botón principal "¡Unirme a esta Mesa!" y secundarios Invitar · Calendario; ya no hay "Compartir" | ✅ |
+| 18 | el menú de Invitar empieza cerrado | ✅ |
+| 19 | al tocar Invitar se abre con "Mensaje por WhatsApp" y "Copiar enlace" | ✅ |
+| 20 | el botón avisa a lectores de pantalla que el menú está abierto | ✅ |
+| 21 | tocar fuera cierra el menú | ✅ |
+| 22 | Escape cierra el menú | ✅ |
+| 23 | "Mensaje por WhatsApp" abre WhatsApp con la invitación y cierra el menú | ✅ |
+| 24 | en computadora abre WhatsApp Web directo (sin la página que daña los emojis) | ✅ |
+| 25 | los emojis y saltos de línea van codificados correctamente | ✅ |
+| 26 | las fechas de México, España y Chile usan el mismo formato ("jue, 8 oct") | ✅ |
+| 27 | en celular usa api.whatsapp.com (abre la app) | ✅ |
+| 28 | "Copiar enlace" copia el enlace directo (aunque el celular tenga menú de compartir) | ✅ |
+| 29 | al copiar avisa "Enlace copiado" | ✅ |
+| 30 | el tiempo relativo sigue actualizándose (clase rel-time) | ✅ |
+| 31 | presencial: dice "hora de Zaragoza" | ✅ |
+| 32 | presencial: "Presencial · cada …" en una línea | ✅ |
+| 33 | presencial: lugar, ciudad y "Ver mapa" | ✅ |
+| 34 | presencial: sin lugares "libre" ni Discord | ✅ |
+| 35 | presencial: cupo "1 confirmado" | ✅ |
+| 36 | presencial: "Orden de Asientos" visible para todos | ✅ |
+| 37 | organizador: "Organizas tú" en la línea de datos | ✅ |
+| 38 | organizador: puede editar Discord y contraseña | ✅ |
+| 39 | sin errores de JavaScript (tarjetas nuevas) | ✅ |
 
 ### 12. Ícono del sitio e instalación en el celular
 
