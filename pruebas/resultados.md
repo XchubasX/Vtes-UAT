@@ -1,10 +1,10 @@
 # Resultados de las pruebas
 
-**✅ TODO BIEN** — 586 de 586 casos pasaron.
+**✅ TODO BIEN** — 592 de 592 casos pasaron.
 
-- Fecha: 25/10/2026 14:10 (hora de Ciudad de México)
-- Versión probada: `eb47197` + cambios aún sin guardar
-- Duración: 83 s
+- Fecha: 31/10/2026 09:31 (hora de Ciudad de México)
+- Versión probada: `ca501fb` + cambios aún sin guardar
+- Duración: 97 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -31,6 +31,7 @@
 | 17 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
 | 18 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
 | 19 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 96 | ✅ |
+| 20 | Tarjeta «Juez de reglas» (beta privada, arriba de Ligas) | 6 | ✅ |
 
 ## Todos los casos
 
@@ -714,3 +715,14 @@
 | 94 | iPhone viejo (antes de iOS 16.4): sugiere usar «Calendario» | ✅ |
 | 95 | computadora con navegador sin avisos: la ventana no se ofrece | ✅ |
 | 96 | sin la llave pública en config.js la ventana no aparece | ✅ |
+
+### 20. Tarjeta «Juez de reglas» (beta privada, arriba de Ligas)
+
+| # | Caso | Resultado |
+|---|---|---|
+| 1 | se ve la tarjeta «Juez de reglas» | ✅ |
+| 2 | dice «BETA PRIVADA · SOLICITA ACCESO» | ✅ |
+| 3 | va arriba de la tarjeta de Ligas | ✅ |
+| 4 | lleva a https://juez.eternalschedule.com/beta | ✅ |
+| 5 | con la tarjeta nada se sale de la pantalla (390 px) | ✅ |
+| 6 | sin errores de JavaScript (tarjeta del juez) | ✅ |
