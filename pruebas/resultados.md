@@ -2,9 +2,9 @@
 
 **✅ TODO BIEN** — 592 de 592 casos pasaron.
 
-- Fecha: 31/10/2026 09:31 (hora de Ciudad de México)
-- Versión probada: `ca501fb` + cambios aún sin guardar
-- Duración: 97 s
+- Fecha: 05/11/2026 17:25 (hora de Ciudad de México)
+- Versión probada: `3572a20` + cambios aún sin guardar
+- Duración: 84 s
 - Grupos corridos: todos
 - Cómo se prueba: navegador automatizado con Firebase simulado (no toca datos reales). No sustituye la revisión en el sitio de pruebas: estilos y servicios de Google reales solo se ven ahí.
 
@@ -28,10 +28,10 @@
 | 14 | Aparatos: Android, iPhone, iPad, computadora y navegadores dentro de apps | 66 | ✅ |
 | 15 | Cloudflare: enlaces de ciudad en GitHub y en dominio propio; qué se publica | 19 | ✅ |
 | 16 | Mudanza: salto automático a eternalschedule.com y aviso «¿Despertando del Torpor?» | 82 | ✅ |
-| 17 | Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
+| 17 | Botón «Ligas y torneos» (enlace al sitio de ligas del mismo entorno) | 7 | ✅ |
 | 18 | Modo app desde el ícono e inicio de sesión con Google por nuestro dominio | 17 | ✅ |
 | 19 | Avisos de mesa en el celular (completa, suplente que entra y aviso previo) | 96 | ✅ |
-| 20 | Tarjeta «Juez de reglas» (beta privada, arriba de Ligas) | 6 | ✅ |
+| 20 | Botón «Juez de reglas» (beta privada, en la misma línea que Ligas) | 6 | ✅ |
 
 ## Todos los casos
 
@@ -581,17 +581,17 @@
 | 81 | computadora: «Entendido» cierra la guía | ✅ |
 | 82 | sin errores de JavaScript (guía en computadora) | ✅ |
 
-### 17. Tarjeta «Ligas y torneos casuales» (enlace al sitio de ligas del mismo entorno)
+### 17. Botón «Ligas y torneos» (enlace al sitio de ligas del mismo entorno)
 
 | # | Caso | Resultado |
 |---|---|---|
-| 1 | se ve la tarjeta «Ligas y torneos casuales» | ✅ |
-| 2 | dice «100% CASUAL · NO SANCIONADOS POR VEKN» | ✅ |
+| 1 | se ve el botón «Ligas y torneos» | ✅ |
+| 2 | el botón pide al menos 44 px de alto para tocarlo fácil | ✅ |
 | 3 | va arriba de las pestañas Virtual / Presencial | ✅ |
 | 4 | en el sitio de pruebas lleva a uat-ligas.eternalschedule.com (nunca a producción) | ✅ |
 | 5 | en el sitio real llevaría a ligas.eternalschedule.com | ✅ |
-| 6 | con la tarjeta nada se sale de la pantalla (390 px) | ✅ |
-| 7 | sin errores de JavaScript (tarjeta de ligas) | ✅ |
+| 6 | con el botón nada se sale de la pantalla (390 px) | ✅ |
+| 7 | sin errores de JavaScript (botón de ligas) | ✅ |
 
 ### 18. Modo app desde el ícono e inicio de sesión con Google por nuestro dominio
 
@@ -716,13 +716,13 @@
 | 95 | computadora con navegador sin avisos: la ventana no se ofrece | ✅ |
 | 96 | sin la llave pública en config.js la ventana no aparece | ✅ |
 
-### 20. Tarjeta «Juez de reglas» (beta privada, arriba de Ligas)
+### 20. Botón «Juez de reglas» (beta privada, en la misma línea que Ligas)
 
 | # | Caso | Resultado |
 |---|---|---|
-| 1 | se ve la tarjeta «Juez de reglas» | ✅ |
-| 2 | dice «BETA PRIVADA · SOLICITA ACCESO» | ✅ |
-| 3 | va arriba de la tarjeta de Ligas | ✅ |
+| 1 | se ve el botón «Juez de reglas» | ✅ |
+| 2 | va antes del botón de Ligas | ✅ |
+| 3 | los botones de Juez y Ligas comparten el mismo contenedor | ✅ |
 | 4 | lleva a https://juez.eternalschedule.com/beta | ✅ |
-| 5 | con la tarjeta nada se sale de la pantalla (390 px) | ✅ |
-| 6 | sin errores de JavaScript (tarjeta del juez) | ✅ |
+| 5 | con el botón nada se sale de la pantalla (390 px) | ✅ |
+| 6 | sin errores de JavaScript (botón del juez) | ✅ |
